@@ -45,6 +45,7 @@ exports.init_table = function (sequelize) {
         },
     });
 
+    // TODO: No need to have id anymore?
     Item.beforeCreate((item) => {
         return item.id = uuidv4();
     });
