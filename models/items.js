@@ -14,10 +14,29 @@ exports.init_table = function (sequelize) {
             unique: "nameDescConstraint",
             primaryKey: true,
         },
-		barcode: {
+        type: {
+            type: Sequelize.ENUM('suits', 'shirts', 'pants', 'shoes'),
+            allowNull: false,
+        },
+        gender: {
+            type: Sequelize.ENUM('male', 'female'),
+            allowNull: false,
+        },
+        image: {
+            // TODO: base64 is longer
             type: Sequelize.STRING,
-            allowNull: true,
-            unique: true
+            // TODO: should we allow null?
+            allowNull: false,
+        },
+        brand: {
+            type: Sequelize.STRING,
+            // should we allow null?
+            allowNull: false,
+        },
+        color: {
+            // TODO: any other color?
+            type: Sequelize.ENUM('white', 'black', 'brown', 'blue', 'gray'),
+            allowNull: false,
         },
 		count: {
             type: Sequelize.INTEGER,
@@ -28,14 +47,9 @@ exports.init_table = function (sequelize) {
                 min: 0
             }
         },
-		description: {
-            type: Sequelize.STRING,
-            allowNull: true,
-            unique: "nameDescConstraint",
-            primaryKey: true,
-        }
     });
 
+    // TODO: No need to have id anymore?
     Item.beforeCreate((item) => {
         return item.id = uuidv4();
     });

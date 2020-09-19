@@ -14,7 +14,6 @@ exports.init_table = function (sequelize) {
         type: {
             type: Sequelize.ENUM([
                 'admin',
-                'volunteer',
                 'user',
                 'disabled'
             ]),
@@ -38,6 +37,8 @@ exports.init_table = function (sequelize) {
             type: Sequelize.DATE,
             allowNull: true,
         },
+
+        // TODO: no need for this?
         numItemsReceived: {
             type: Sequelize.INTEGER,
             allowNull: false,

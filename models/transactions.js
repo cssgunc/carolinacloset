@@ -18,6 +18,7 @@ exports.init_table = function (sequelize) {
             allowNull: false,
         },
 
+        // TODO: Do we really need item_name
         item_name: {
             type: Sequelize.STRING,
             allowNull: true,
@@ -38,17 +39,23 @@ exports.init_table = function (sequelize) {
             }
         },
 
-		volunteer_id: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-
 		status: {
+            // TODO: Should we change enum
             type: Sequelize.STRING,
             allowNull: false,
             validate: {
-                isIn: [['pending', 'complete', 'cancelled']]
+                isIn: [['pending', 'complete', 'cancelled', 'late']]
             }
+        },
+
+        return_date: {
+            type: Sequelize.DATE,
+            allowNull: false,
+        },
+
+        is_returned: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
         }
     });
 
