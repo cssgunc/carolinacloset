@@ -15,9 +15,5 @@ exports.init_table = function (sequelize) {
         },
     });
 
-    Suits.beforeCreate((suits) => {
-        return suits.id = uuidv4();
-    });
-
     return suits;
 }

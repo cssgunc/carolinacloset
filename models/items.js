@@ -31,7 +31,7 @@ exports.init_table = function (sequelize) {
         brand: {
             type: Sequelize.STRING,
             // should we allow null?
-            allowNull: false,
+            allowNull: true,
         },
         color: {
             // TODO: any other color?
@@ -49,7 +49,6 @@ exports.init_table = function (sequelize) {
         },
     });
 
-    // TODO: No need to have id anymore?
     Item.beforeCreate((item) => {
         return item.id = uuidv4();
     });

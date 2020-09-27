@@ -15,9 +15,5 @@ exports.init_table = function (sequelize) {
         },
     });
 
-    Shirts.beforeCreate((shirts) => {
-        return shirts.id = uuidv4();
-    });
-
     return shirts;
 }
