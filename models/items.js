@@ -7,12 +7,12 @@ exports.init_table = function (sequelize) {
             type: Sequelize.UUID,
             allowNull: false,
             unique: true,
+            primaryKey: true,
         },
         name: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: "nameDescConstraint",
-            primaryKey: true,
         },
         type: {
             type: Sequelize.ENUM('suits', 'shirts', 'pants', 'shoes'),
@@ -23,10 +23,8 @@ exports.init_table = function (sequelize) {
             allowNull: false,
         },
         image: {
-            // TODO: base64 is longer
-            type: Sequelize.STRING,
-            // TODO: should we allow null?
-            allowNull: false,
+            type: Sequelize.BLOB,
+            allowNull: true,
         },
         brand: {
             type: Sequelize.STRING,
@@ -34,8 +32,7 @@ exports.init_table = function (sequelize) {
             allowNull: true,
         },
         color: {
-            // TODO: any other color?
-            type: Sequelize.ENUM('white', 'black', 'brown', 'blue', 'gray'),
+            type: Sequelize.ENUM('white', 'black', 'beige', 'navy', 'blue', 'multicolored'),
             allowNull: false,
         },
 		count: {

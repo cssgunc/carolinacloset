@@ -1,19 +1,20 @@
-const   { v4: uuidv4 } = require("uuid"),
-        Sequelize = require("sequelize");
+const Sequelize = require("sequelize");
 
 exports.init_table = function (sequelize) {
     let Shirts = sequelize.define('shirts', {
         id: {
             type: Sequelize.UUID,
             allowNull: false,
-            unique: true,
+            references: {
+                model: 'items',
+                key: 'id'
+            }
         },
         size: {
-            // TODO: what are the available sizes?
             type: Sequelize.ENUM('XS', 'S', 'M', 'L', 'XL', 'XXL'),
             allowNull: false,
         },
     });
 
-    return shirts;
+    return Shirts;
 }

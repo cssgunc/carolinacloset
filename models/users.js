@@ -38,7 +38,6 @@ exports.init_table = function (sequelize) {
             allowNull: true,
         },
 
-        // TODO: no need for this?
         numItemsReceived: {
             type: Sequelize.INTEGER,
             allowNull: false,

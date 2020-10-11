@@ -18,7 +18,6 @@ exports.init_table = function (sequelize) {
             allowNull: false,
         },
 
-        // TODO: Do we really need item_name
         item_name: {
             type: Sequelize.STRING,
             allowNull: true,
@@ -40,7 +39,6 @@ exports.init_table = function (sequelize) {
         },
 
 		status: {
-            // TODO: Should we change enum
             type: Sequelize.STRING,
             allowNull: false,
             validate: {
