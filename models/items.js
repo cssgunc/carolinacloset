@@ -28,7 +28,6 @@ exports.init_table = function (sequelize) {
         },
         brand: {
             type: Sequelize.STRING,
-            // should we allow null?
             allowNull: true,
         },
         color: {
