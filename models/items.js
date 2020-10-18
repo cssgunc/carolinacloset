@@ -7,17 +7,32 @@ exports.init_table = function (sequelize) {
             type: Sequelize.UUID,
             allowNull: false,
             unique: true,
+            primaryKey: true,
         },
         name: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: "nameDescConstraint",
-            primaryKey: true,
         },
-		barcode: {
+        type: {
+            type: Sequelize.ENUM('suits', 'shirts', 'pants', 'shoes'),
+            allowNull: false,
+        },
+        gender: {
+            type: Sequelize.ENUM('male', 'female'),
+            allowNull: false,
+        },
+        image: {
+            type: Sequelize.BLOB,
+            allowNull: true,
+        },
+        brand: {
             type: Sequelize.STRING,
             allowNull: true,
-            unique: true
+        },
+        color: {
+            type: Sequelize.ENUM('white', 'black', 'beige', 'navy', 'blue', 'multicolored'),
+            allowNull: false,
         },
 		count: {
             type: Sequelize.INTEGER,
@@ -28,12 +43,6 @@ exports.init_table = function (sequelize) {
                 min: 0
             }
         },
-		description: {
-            type: Sequelize.STRING,
-            allowNull: true,
-            unique: "nameDescConstraint",
-            primaryKey: true,
-        }
     });
 
     Item.beforeCreate((item) => {

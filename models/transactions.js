@@ -38,17 +38,22 @@ exports.init_table = function (sequelize) {
             }
         },
 
-		volunteer_id: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-
 		status: {
             type: Sequelize.STRING,
             allowNull: false,
             validate: {
-                isIn: [['pending', 'complete', 'cancelled']]
+                isIn: [['pending', 'complete', 'cancelled', 'late']]
             }
+        },
+
+        return_date: {
+            type: Sequelize.DATE,
+            allowNull: false,
+        },
+
+        is_returned: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
         }
     });
 
