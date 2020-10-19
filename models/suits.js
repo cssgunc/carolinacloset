@@ -5,6 +5,7 @@ exports.init_table = function (sequelize) {
         id: {
             type: Sequelize.UUID,
             allowNull: false,
+            unique: true,
             references: {
                 model: 'items',
                 key: 'id'
