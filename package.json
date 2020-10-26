@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run prod",
+    "build": "webpack",
+    "start2": "webpack-dev-server --open",
     "dev": "cross-env NODE_ENV=dev nodemon index.js",
     "prod": "cross-env NODE_ENV=prod node index.js",
     "test": "cross-env nyc --reporter=lcov --reporter=text mocha --recursive --exit 'tests'",
@@ -14,6 +16,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.1",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
     "body-parser": "^1.18.3",
     "cross-env": "^5.2.0",
     "csv": "^5.3.0",
@@ -31,6 +37,9 @@
     "pg-hstore": "^2.3.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "request": "^2.88.0",
     "sequelize": "^5.21.9",
     "should": "^13.2.3",
@@ -41,6 +50,11 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "chai-http": "^4.2.0"
+    "chai-http": "^4.2.0",
+    "html-webpack-plugin": "^4.5.0",
+    "source-map-loader": "^1.1.1",
+    "webpack": "^5.2.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
   }
 }
