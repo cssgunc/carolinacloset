@@ -48,8 +48,9 @@ const typeInGroup = (type, group) => {
 
 // Checks if user is an admin, volunteer, or user
 // Blocks access from banned visitors
+// Edit: Removed volunteer
 exports.userIsBasicUser = async (req, res, next) => {
-    if (res.locals.userType && typeInGroup(res.locals.userType, ['admin', 'volunteer', 'user'])) {
+    if (res.locals.userType && typeInGroup(res.locals.userType, ['admin', /*'volunteer'*/, 'user'])) {
         next();
     } else {
         return res.sendStatus(403);
@@ -58,13 +59,14 @@ exports.userIsBasicUser = async (req, res, next) => {
 
 // Checks if user is an admin or volunteer
 // Blocks access from basic users and banned visitors
-exports.userIsVolunteer = async (req, res, next) => {
-    if (res.locals.userType && typeInGroup(res.locals.userType, ['admin', 'volunteer'])) {
-        next();
-    } else {
-        return res.sendStatus(403);
-    }
-}
+// Edit: Removed volunteer function
+// exports.userIsVolunteer = async (req, res, next) => {
+//     if (res.locals.userType && typeInGroup(res.locals.userType, ['admin', /*'volunteer'*/])) {
+//         next();
+//     } else {
+//         return res.sendStatus(403);
+//     }
+// }
 
 // Checks if user is an admin
 // Blocks access from volunteers, basic users, and banned visitors

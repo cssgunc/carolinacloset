@@ -51,7 +51,8 @@ async function initAdmin(exit) {
  * @param {boolean} exit - If true, exit the process after finishing
  */
 async function initTestUsers(exit) {
-    await userService.createUser(testUtil.volunteerAuthHeaders.uid, "volunteer", 2, "volunteer@admin.com");
+    //Edit: removed first test as there are no volunteer users
+    //await userService.createUser(testUtil.volunteerAuthHeaders.uid, "volunteer", 2, "volunteer@admin.com");
     await userService.createUser(testUtil.userAuthHeaders.uid, "user", 3, "user@admin.com");
     if (exit) process.exit(0);
 }
