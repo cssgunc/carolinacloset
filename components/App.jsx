@@ -22,6 +22,7 @@ export default function App() {
         <React.Fragment>
           <Helmet>
             <title>Carolina Closet</title>
+            <link rel="icon" href="/static/favicon.png" />
             <meta charset="utf-8" />
             <meta
               name="viewport"
