@@ -1,19 +1,21 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Home from './Home';
-import HeaderContainer from './HeaderContainer';
-import OrderHistory from './OrderHistory';
-import BackupDeleteData from './BackupDeleteData';
-import ViewItems from './ViewItems';
-import Preorders from './Preorders';
-import Entry from './Entry';
-import ImportCSV from './ImportCSV';
 import TransactionHistory from './TransactionHistory';
+import BackupDeleteData from './BackupDeleteData';
+import HeaderContainer from './HeaderContainer';
 import UpdateAccount from './UpdateAccount';
-import Cart from './Cart';
+import OrderHistory from './OrderHistory';
+import ManageUsers from './ManageUsers';
 import ManualEntry from './ManualEntry';
 import SearchEntry from './SearchEntry';
+import { Helmet } from 'react-helmet';
+import ImportItems from './ImportItems';
+import ImportUsers from './ImportUsers';
+import Preorders from './Preorders';
+import ViewItems from './ViewItems';
+import Entry from './Entry';
+import Cart from './Cart';
+import Home from './Home';
+import React from 'react';
 
 export default function App() {
     return (
@@ -66,11 +68,17 @@ export default function App() {
               <Route path='/admin/history'>
                 <TransactionHistory />
               </Route>
+              <Route path='/admin/users/import'>
+                <ImportUsers />
+              </Route>
+              <Route path='/admin/users'>
+                <ManageUsers />
+              </Route>
               <Route path='/cart'>
                 <Cart />
               </Route>
               <Route path='/entry/import'>
-                <ImportCSV />
+                <ImportItems />
               </Route>
               <Route path='/entry/manual'>
                 <ManualEntry />

@@ -11,6 +11,16 @@ export default function AdminOptions() {
       <div class="row">
         <div class="col-sm-12 col-md-4">
           <div class="card">
+            <button class="card-link" onClick={() => history.push('/admin/users')}>
+              <div class="card-body">
+                <p class="card-title">Manage Users</p>
+                <p class="card-text">Add, delete, and edit volunteers and admins</p>
+              </div>
+            </button>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+          <div class="card">
             <button class="card-link" onClick={() => history.push('/admin/history')}>
               <div class="card-body">
                 <p class="card-title">Transaction History</p>

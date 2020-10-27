@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function ImportCSV() {
+export default function ImportItems() {
   return (
     <React.Fragment>
       <div class="container">
