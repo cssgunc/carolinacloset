@@ -8,8 +8,12 @@ import BackupDeleteData from './BackupDeleteData';
 import ViewItems from './ViewItems';
 import Preorders from './Preorders';
 import Entry from './Entry';
-import Import from './Import';
+import ImportCSV from './ImportCSV';
 import TransactionHistory from './TransactionHistory';
+import UpdateAccount from './UpdateAccount';
+import Cart from './Cart';
+import ManualEntry from './ManualEntry';
+import SearchEntry from './SearchEntry';
 
 export default function App() {
     return (
@@ -56,14 +60,26 @@ export default function App() {
               <Route path='/' exact>
                 <Home />
               </Route>
+              <Route path='/account/update'>
+                <UpdateAccount />
+              </Route>
               <Route path='/admin/history'>
                 <TransactionHistory />
               </Route>
-              <Route path='/entry'>
-                <Entry />
+              <Route path='/cart'>
+                <Cart />
               </Route>
               <Route path='/entry/import'>
-                <Import />
+                <ImportCSV />
+              </Route>
+              <Route path='/entry/manual'>
+                <ManualEntry />
+              </Route>
+              <Route path='/entry/search'>
+                <SearchEntry />
+              </Route>
+              <Route path='/entry'>
+                <Entry />
               </Route>
               <Route path='/history'>
                 <OrderHistory />

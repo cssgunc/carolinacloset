@@ -1,8 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 const userType = 'admin';
 
 export default function Header() {
+  const history = useHistory();
+
   return (
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
@@ -56,13 +59,13 @@ export default function Header() {
 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item rounded">
-              <a class="nav-link rounded" href="/account/update">Update Account Info</a>
+              <button class="nav-link" onClick={() => history.push('/account/update')}>Update Account Info</button>
             </li>
             <li class="nav-item rounded float-right">
-              <a class="nav-link rounded" href="https://sso.unc.edu/idp/logout.jsp">Logout</a>
+              <button class="nav-link" onClick={() => history.push('/cart')}><i class="fas fa-shopping-cart"></i>Cart</button>
             </li>
             <li class="nav-item rounded float-right">
-              <a class="nav-link rounded" href="/cart"><i class="fas fa-shopping-cart"></i>Cart</a>
+              <button class="nav-link" onClick={() => window.location = 'https://sso.unc.edu/idp/logout.jsp'}>Logout</button>
             </li>
           </ul>
         </div>

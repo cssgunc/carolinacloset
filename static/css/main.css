@@ -4,6 +4,10 @@ body {
   font-family: "Open Sans";
 }
 
+button {
+  background: none;
+}
+
 .btn-primary {
   background-color: #1C4AA2;
 }
