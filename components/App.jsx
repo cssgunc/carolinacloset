@@ -3,10 +3,13 @@ import { Helmet } from 'react-helmet';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './Home';
 import HeaderContainer from './HeaderContainer';
-import History from './History';
+import OrderHistory from './OrderHistory';
 import BackupDeleteData from './BackupDeleteData';
 import ViewItems from './ViewItems';
 import Preorders from './Preorders';
+import Entry from './Entry';
+import Import from './Import';
+import TransactionHistory from './TransactionHistory';
 
 export default function App() {
     return (
@@ -53,8 +56,17 @@ export default function App() {
               <Route path='/' exact>
                 <Home />
               </Route>
+              <Route path='/admin/history'>
+                <TransactionHistory />
+              </Route>
+              <Route path='/entry'>
+                <Entry />
+              </Route>
+              <Route path='/entry/import'>
+                <Import />
+              </Route>
               <Route path='/history'>
-                <History />
+                <OrderHistory />
               </Route>
               <Route path='/items'>
                 <ViewItems />
@@ -64,6 +76,9 @@ export default function App() {
               </Route>
               <Route path='/admin/backup'>
                 <BackupDeleteData />
+              </Route>
+              <Route>
+                <p>Page not found.</p>
               </Route>
             </Switch>
           </BrowserRouter>

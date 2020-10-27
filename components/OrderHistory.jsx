@@ -2,7 +2,7 @@ import React from 'react';
 
 const transactions = ''
 
-export default function History() {
+export default function OrderHistory() {
   return (
     <div class="container">
       <h1>Transaction History</h1>
