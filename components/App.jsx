@@ -4,6 +4,9 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Home from './Home';
 import HeaderContainer from './HeaderContainer';
 import History from './History';
+import BackupDeleteData from './BackupDeleteData';
+import ViewItems from './ViewItems';
+import Preorders from './Preorders';
 
 export default function App() {
     return (
@@ -52,6 +55,15 @@ export default function App() {
               </Route>
               <Route path='/history'>
                 <History />
+              </Route>
+              <Route path='/items'>
+                <ViewItems />
+              </Route>
+              <Route path='/preorders'>
+                <Preorders />
+              </Route>
+              <Route path='/admin/backup'>
+                <BackupDeleteData />
               </Route>
             </Switch>
           </BrowserRouter>

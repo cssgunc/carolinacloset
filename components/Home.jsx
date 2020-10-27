@@ -18,7 +18,7 @@ export default function Home() {
       <div class="row">
         <div class="col-sm-12 col-md-4">
           <div class="card">
-            <button class="card-link" onClick={history.push('/items')}>
+            <button class="card-link" onClick={() => history.push('/items')}>
               <div class="card-body">
                 <p class="card-title">View Catalog & Preorder</p>
                 <p class="card-text">Check out Carolina Cupboard's current inventory</p>
@@ -28,12 +28,12 @@ export default function Home() {
         </div>
         <div class="col-sm-12 col-md-4">
           <div class="card">
-            <a class="card-link" onClick={history.push('/history')}>
+            <button class="card-link" onClick={() => history.push('/history')}>
               <div class="card-body">
                 <p class="card-title">Your Orders</p>
                 <p class="card-text">View your preorders and order history</p>
               </div>
-            </a>
+            </button>
           </div>
         </div>
       </div>
