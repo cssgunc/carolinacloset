@@ -7,7 +7,7 @@ const   { v4: uuidv4 } = require("uuid"),
         userService = require("./user-service"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaClosetException = require("../exceptions/carolina-cupboard-exception"),
+        CarolinaClosetException = require("../exceptions/carolina-closet-exception"),
         exceptionHandler = require("../exceptions/exception-handler"),
         csvParser = require("csv-parse");
 
