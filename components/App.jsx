@@ -2,6 +2,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import TransactionHistory from './TransactionHistory';
 import BackupDeleteData from './BackupDeleteData';
 import HeaderContainer from './HeaderContainer';
+import AdminDatabase from './AdminDatabase';
 import UpdateAccount from './UpdateAccount';
 import OrderHistory from './OrderHistory';
 import ManageUsers from './ManageUsers';
@@ -66,6 +67,12 @@ export default function App() {
               <Route path='/account/update'>
                 <UpdateAccount />
               </Route>
+              <Route path='/admin/backup'>
+                <BackupDeleteData />
+              </Route>
+              <Route path='/admin/database'>
+                <AdminDatabase />
+              </Route>
               <Route path='/admin/history'>
                 <TransactionHistory />
               </Route>
@@ -74,6 +81,9 @@ export default function App() {
               </Route>
               <Route path='/admin/users'>
                 <ManageUsers />
+              </Route>
+              <Route path='/admin'>
+                <Admin />
               </Route>
               <Route path='/cart'>
                 <Cart />
@@ -98,9 +108,6 @@ export default function App() {
               </Route>
               <Route path='/preorders'>
                 <Preorders />
-              </Route>
-              <Route path='/admin/backup'>
-                <BackupDeleteData />
               </Route>
               <Route>
                 <p>Page not found.</p>
