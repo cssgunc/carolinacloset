@@ -1,8 +1,6 @@
 const   User = require("../db/sequelize").users,
         Sequelize = require("sequelize"),
-        BadRequestException = require("../exceptions/bad-request-exception"),
-        InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
+        CarolinaClosetException = require("../exceptions/carolina-closet-exception");
 
 /**
  * Gets the onyen from the uid request header
@@ -31,7 +29,7 @@ exports.getUserType = async function (onyen) {
         }
         return user.type;
     } catch (e) {
-        if(e instanceof CarolinaCupboardException) {
+        if(e instanceof CarolinaClosetException) {
             throw e;
         }
         throw e;

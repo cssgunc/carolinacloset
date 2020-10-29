@@ -2,7 +2,7 @@ const User = require("../db/sequelize").users,
     Sequelize = require("sequelize"),
     BadRequestException = require("../exceptions/bad-request-exception"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
-    CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
+    CarolinaClosetException = require("../exceptions/carolina-closet-exception"),
     csvParser = require("csv-parse");
 
 /**
@@ -254,7 +254,7 @@ exports.deleteUser = async function (onyen) {
                 { where: { onyen: onyen } }
             );
         } catch (e) {
-            if (e instanceof CarolinaCupboardException) {
+            if (e instanceof CarolinaClosetException) {
                 throw e;
             }
 
@@ -278,7 +278,7 @@ exports.deleteAllUsers = async function () {
             await this.createUser(process.env.DEFAULT_ADMIN, "admin", 1, "admin@admin.com");
         }
     } catch (e) {
-        if (e instanceof CarolinaCupboardException) {
+        if (e instanceof CarolinaClosetException) {
             throw e;
         }
 

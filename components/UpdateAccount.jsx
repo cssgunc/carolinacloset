@@ -12,7 +12,7 @@ export default function UpdateAccount() {
           <div class="col-sm-12">
             {firstTime ? (
               <React.Fragment>
-                <h1>Welcome to Carolina Cupboard!</h1>
+                <h1>Welcome to Carolina Closet!</h1>
                 <p>Before you enter, please fill out some information about yourself. As a student organization, we use this information to track our growth and progress.</p>
               </React.Fragment>
             ) : (

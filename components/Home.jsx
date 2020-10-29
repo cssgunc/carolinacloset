@@ -21,7 +21,7 @@ export default function Home() {
             <button class="card-link" onClick={() => history.push('/items')}>
               <div class="card-body">
                 <p class="card-title">View Catalog & Preorder</p>
-                <p class="card-text">Check out Carolina Cupboard's current inventory</p>
+                <p class="card-text">Check out Carolina Closet's current inventory</p>
               </div>
             </button>
           </div>

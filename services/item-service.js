@@ -7,7 +7,7 @@ const   { v4: uuidv4 } = require("uuid"),
         userService = require("./user-service"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
+        CarolinaClosetException = require("../exceptions/carolina-cupboard-exception"),
         exceptionHandler = require("../exceptions/exception-handler"),
         csvParser = require("csv-parse");
 
@@ -23,7 +23,7 @@ exports.getItem = async function (itemId) {
         }
         return item;
     } catch (e) {
-        if(e instanceof CarolinaCupboardException) {
+        if(e instanceof CarolinaClosetException) {
             throw e;
         }
 
@@ -334,7 +334,7 @@ exports.deleteAllItems = async function() {
             throw e;
         }
 
-        if(e instanceof CarolinaCupboardException) {
+        if(e instanceof CarolinaClosetException) {
             throw e;
         }
         
@@ -354,7 +354,7 @@ exports.deleteOutOfStock = async function() {
             truncate: false
         });
     } catch(e) {
-        if(e instanceof CarolinaCupboardException) {
+        if(e instanceof CarolinaClosetException) {
             throw e;
         }
         

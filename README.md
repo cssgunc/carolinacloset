@@ -1,6 +1,6 @@
-# carolinacupboard-inventory
+# carolinacloset
 
-This is an inventory management app developed by UNC-CH CS+Social Good for Carolina Cupboard.
+This is an inventory management app developed by UNC-CH CS+Social Good for Carolina Closet.
 
 ## Development Setup
 1. Install [nodejs and npm](https://nodejs.org).
@@ -116,7 +116,7 @@ This section will go over functionality of the app that is not obvious, not expl
 
 ### CSV Import
 
-CSV import (`appendCSV()` in `item-service.js`) currently uses a custom SQL query to insert items. Ideally, we would like to use Sequelize's built-in functions, like [`bulkCreate`](https://sequelize.org/master/class/lib/model.js~Model.html#static-method-bulkCreate). However, Carolina Cupboard would like to add counts if they try to import an already existing item. Currently, `bulkCreate` does not support this feature, and can only replace counts. Please keep an eye on updates to Sequelize that may allow this functionality. 
+CSV import (`appendCSV()` in `item-service.js`) currently uses a custom SQL query to insert items. Ideally, we would like to use Sequelize's built-in functions, like [`bulkCreate`](https://sequelize.org/master/class/lib/model.js~Model.html#static-method-bulkCreate). However, Carolina Closet would like to add counts if they try to import an already existing item. Currently, `bulkCreate` does not support this feature, and can only replace counts. Please keep an eye on updates to Sequelize that may allow this functionality. 
 
 ### Deleting Items/Transactions
 

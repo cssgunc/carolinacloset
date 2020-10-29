@@ -1,8 +1,8 @@
-const CarolinaCupboardException = require("./carolina-cupboard-exception"),
+const CarolinaClosetException = require("./carolina-closet-exception"),
     InternalErrorException = require("./internal-error-exception");
 
 exports.retrieveException = function (err) {
-    if (err instanceof CarolinaCupboardException) {
+    if (err instanceof CarolinaClosetException) {
         if (err instanceof InternalErrorException) {
             console.error(`INTERNAL ERROR "${err.message}": ${err.e.stack}`);
         }
