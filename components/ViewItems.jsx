@@ -29,7 +29,7 @@ export default function ViewItems() {
                     <td>{item.description}</td>
                     <td class="text-right pr-1">
                       <div>
-                        <input class="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max="<%= item.count %>" value={1} />
+                        <input class="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max={item.count} value={1} />
                         <div class="btn-group" role="group">
                           <button 
                             type="button" 

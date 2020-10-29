@@ -1,5 +1,5 @@
-import React from 'react';
 import { useHistory } from 'react-router-dom';
+import React from 'react';
 
 export default function Admin() {
   const history = useHistory();

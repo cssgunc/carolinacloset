@@ -1,6 +1,5 @@
-import React from 'react';
 import { useHistory } from 'react-router-dom';
-import BackupDeleteData from './BackupDeleteData';
+import React from 'react';
 
 export default function AdminOptions() {
   const history = useHistory();
