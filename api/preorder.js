@@ -12,7 +12,7 @@ module.exports = (app, Item, Order, Transaction) => {
           status: "pending"
         }
       });
-      return preorders;
+      res.send(preorders);
     } catch (e) {
       throw new InternalErrorException("A problem occurred when retrieving all preorders", e);
     }
@@ -24,7 +24,7 @@ module.exports = (app, Item, Order, Transaction) => {
       if (!preorder || preorder.volunteer_id !== 'PREORDER') {
         throw new BadRequestException("The transaction could not be retrieved.");
       }
-      return preorder;
+      res.send(preorder);
     } catch (e) {
       if (e instanceof CarolinaClosetException) {
         throw e;
@@ -90,7 +90,7 @@ module.exports = (app, Item, Order, Transaction) => {
         delete processQueue[id];
         completedTransactions.push(transaction);
       }
-      return true;
+      res.send();
     } catch (e) {
       console.error(e);
       // If one transaction fails, we delete each of them and revert the counts

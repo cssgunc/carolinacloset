@@ -6,7 +6,7 @@ module.exports = (app, Transaction) => {
   app.get('/transactions', (req, res) => {
     try {
       let trans = await Transaction.findAll();
-      return trans;
+      res.send(trans);
     } catch (e) {
       if(e instanceof CarolinaClosetException) {
         throw e;
@@ -23,7 +23,7 @@ module.exports = (app, Transaction) => {
           count: {[Sequelize.Op.lt]: 0}
         }
       });
-      return trans;
+      res.send(trans);
     } catch(e) {
       if (e instanceof CarolinaClosetException) {
         throw e;

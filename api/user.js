@@ -8,7 +8,7 @@ module.exports = (app, User) => {
   app.get('/users', (req, res) => {
     try {
       let users = await User.findAll();
-      return users;
+      res.send(users);
     } catch (e) {
       throw new InternalErrorException("A problem occurred when retrieving all users", e);
     }
@@ -19,7 +19,7 @@ module.exports = (app, User) => {
       let user = await User.findOne({
         where: { onyen: req.params.onyen }
       });
-      return user;
+      res.send(user);
     } catch (e) {
       throw new InternalErrorException("A problem occurred when retrieving user", e);
     }
@@ -38,7 +38,7 @@ module.exports = (app, User) => {
           email: req.body.email
       });
       await user.save();
-      return user;
+      res.send(user);
     } catch (e) {
       /*if (e instanceof Sequelize.ValidationError) {
         let errorMessage = "The following values are invalid:";
@@ -63,7 +63,7 @@ module.exports = (app, User) => {
       let user = await User.upsert(newInfo, {
         returning: true
       });
-      return user;
+      res.send(user);
     } catch (e) {
       /*if (e instanceof Sequelize.ValidationError) {
         let errorMessage = "The following values are invalid:";
@@ -88,7 +88,7 @@ module.exports = (app, User) => {
         { where: { onyen: req.body.onyen } }
       );
 
-      return user;
+      res.send(user);
     } catch (e) {
       /*if (e instanceof Sequelize.ValidationError) {
         let errorMessage = "The following values are invalid:";
@@ -104,15 +104,11 @@ module.exports = (app, User) => {
   app.put('/users/:firstItemDate', (req, res) => {
     try {
       let user = await User.update(
-        {
-          firstItemDate: req.params.firstItemDate
-        },
-        {
-          where: { onyen: onyen }
-        },
+        { firstItemDate: req.params.firstItemDate },
+        { where: { onyen: onyen } },
       );
 
-      return user;
+      res.send(user);
     } catch (e) {
       /*if (e instanceof Sequelize.ValidationError) {
         let errorMessage = "The following values are invalid:";
@@ -135,7 +131,6 @@ module.exports = (app, User) => {
         if (e instanceof CarolinaClosetException) {
           throw e;
         }
-
         throw new InternalErrorException("A problem occurred when deleting the user", e);
       }
     }
@@ -156,7 +151,6 @@ module.exports = (app, User) => {
       if (e instanceof CarolinaClosetException) {
         throw e;
       }
-
       throw e;
     }
   });

@@ -10,7 +10,7 @@ module.exports = (app, Item) => {
   app.get('/items', (req, res) => {
     try {
       let items = await db.findAll();
-      return items;
+      res.send(items);
     } catch (e) {
       throw new InternalErrorException("A problem occurred when retrieving items",e);
     }
@@ -22,7 +22,7 @@ module.exports = (app, Item) => {
       if (!item) {
         throw new BadRequestException("The item could not be retrieved.");
       }
-      return item;
+      res.send(item);
     } catch (e) {
       if(e instanceof CarolinaClosetException) {
         throw e;
@@ -35,7 +35,7 @@ module.exports = (app, Item) => {
     try {
       desc = req.body.desc ? desc : '';
       let item = await Item.findOne({ where: { name: req.params.name, description: desc }});
-      return item;
+      res.send(item);
     } catch (e) {
       throw e;
     }
@@ -49,7 +49,7 @@ module.exports = (app, Item) => {
           description: req.body.description ? req.body.description : '',
           count: req.body.count
       });
-      return item;
+      res.send(item);
     } catch (e) {
       /*if (e instanceof Sequelize.ValidationError) {
         let errorMessage = "The following values are invalid:";
@@ -73,7 +73,7 @@ module.exports = (app, Item) => {
         fields: ['name', 'barcode', 'description'],
         returning: true
       });
-      return item;
+      res.send(item);
     } catch (e) {
       /*if (e instanceof Sequelize.ValidationError) {
         let errorMessage = "The following values are invalid:";
