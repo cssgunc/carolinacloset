@@ -14,10 +14,13 @@ const apiItem = require('./api/item');
 const db = require('./db/sequelize');
 
 // API
-apiTransaction(app, db.transactions);
-apiPreorder(app, db.items, db.orders, db.transactions);
-apiUser(app, db.users);
-apiItem(app, db.items);
+const router = express.Router();
+router.use('/transaction', apiTransaction(app, db.transactions));
+router.use('/preorder', apiPreorder(app, db.items, db.orders, db.transactions));
+router.use('/user', apiUser(app, db.users));
+router.use('/item', apiItem(app, db.items));
+
+app.use('/api', router);
 
 if (process.env.NODE_ENV === 'prod') {
     app.set('trust proxy', 1);
