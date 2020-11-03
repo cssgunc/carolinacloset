@@ -5,7 +5,7 @@ const CarolinaClosetException = require("../exceptions/carolina-closet-exception
 const csvParser = require("csv-parse");
 
 module.exports = (app, User) => {
-  app.get('/users', (req, res) => {
+  app.get('/users', async (req, res) => {
     try {
       let users = await User.findAll();
       res.send(users);
@@ -14,7 +14,7 @@ module.exports = (app, User) => {
     }
   });
 
-  app.get('/user/:onyen', (req, res) => {
+  app.get('/user/:onyen', async (req, res) => {
     try {
       let user = await User.findOne({
         where: { onyen: req.params.onyen }
@@ -25,7 +25,7 @@ module.exports = (app, User) => {
     }
   });
 
-  app.post('/user', (req, res) => {
+  app.post('/user', async (req, res) => {
     try {
       // If user already exists, do nothing
       if (await User.count({ where: { onyen: req.body.onyen } }) > 0) {
@@ -51,7 +51,7 @@ module.exports = (app, User) => {
     }
   });
 
-  api.post('/users/upsert', (req, res) => {
+  api.post('/users/upsert', async (req, res) => {
     try {
       let newInfo = {
         onyen: req.body.onyen,
@@ -76,7 +76,7 @@ module.exports = (app, User) => {
     }
   });
 
-  app.put('/users', (req, res) => {
+  app.put('/users', async (req, res) => {
     try {
       let newInfo = {};
       if (req.body.type) newInfo.type = req.body.type;
@@ -101,7 +101,7 @@ module.exports = (app, User) => {
     }
   });
 
-  app.put('/users/:firstItemDate', (req, res) => {
+  app.put('/users/:firstItemDate', async (req, res) => {
     try {
       let user = await User.update(
         { firstItemDate: req.params.firstItemDate },
@@ -121,7 +121,7 @@ module.exports = (app, User) => {
     }
   });
 
-  app.delete('/user/:onyen', (req, res) => {
+  app.delete('/user/:onyen', async (req, res) => {
     if (onyen !== "PREORDER") {
       try {
         User.destroy(
@@ -136,7 +136,7 @@ module.exports = (app, User) => {
     }
   });
 
-  app.delete('/users', (req, res) => {
+  app.delete('/users', async (req, res) => {
     try {
       await User.destroy({
         where: {},

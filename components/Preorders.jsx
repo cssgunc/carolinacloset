@@ -1,8 +1,9 @@
+import api from '../api/api';
 import React from 'react';
 
-const preorders = '';
-
 export default function Preorders() {
+  const preorders = api.get('/preorders');
+
   return (
     <React.Fragment>
       <div class="container">
@@ -22,7 +23,7 @@ export default function Preorders() {
             </thead>
             <tbody>
               {preorders && (
-                response.preorders.forEach((trans) => {
+                preorders.forEach((trans) => {
                   <tr>
                     <td>{trans.id}</td>
                     <td>{trans.createdAt.toLocaleString()}</td>

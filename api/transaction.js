@@ -3,7 +3,7 @@ const InternalErrorException = require("../exceptions/internal-error-exception")
 const CarolinaClosetException = require("../exceptions/carolina-closet-exception");
 
 module.exports = (app, Transaction) => {
-  app.get('/transactions', (req, res) => {
+  app.get('/transactions', async (req, res) => {
     try {
       let trans = await Transaction.findAll();
       res.send(trans);
@@ -15,7 +15,7 @@ module.exports = (app, Transaction) => {
     }
   });
 
-  app.get('/transaction/removal/:onyen', (req, res) => {
+  app.get('/transaction/removal/:onyen', async (req, res) => {
     try {
       let trans = await Transaction.findAll({
         where: {
@@ -32,7 +32,7 @@ module.exports = (app, Transaction) => {
     }
   });
 
-  app.delete('/transactions', (req, res) => {
+  app.delete('/transactions', async (req, res) => {
     try {
       await Transaction.destroy({
         where: {},

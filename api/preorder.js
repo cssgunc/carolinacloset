@@ -4,7 +4,7 @@ const InternalErrorException = require("../exceptions/internal-error-exception")
 const CarolinaClosetException = require("../exceptions/carolina-closet-exception");
 
 module.exports = (app, Item, Order, Transaction) => {
-  app.get('/preorders', (req, res) => {
+  app.get('/preorders', async (req, res) => {
     try {
       let preorders = await Transaction.findAll({
         where: {
@@ -18,7 +18,7 @@ module.exports = (app, Item, Order, Transaction) => {
     }
   });
 
-  app.get('/preorder/:id', (req, res) => {
+  app.get('/preorder/:id', async (req, res) => {
     try {
       let preorder = await Transaction.findOne({ where: { id: req.params.id } });
       if (!preorder || preorder.volunteer_id !== 'PREORDER') {
@@ -33,7 +33,7 @@ module.exports = (app, Item, Order, Transaction) => {
     }
   });
 
-  app.post('/preorder', (req, res) => {
+  app.post('/preorder', async (req, res) => {
     let processQueue = {};
     let completedTransactions = [];
 
@@ -106,7 +106,7 @@ module.exports = (app, Item, Order, Transaction) => {
     }
   });
 
-  app.put('/preorder/complete/:id', (req, res) => {
+  app.put('/preorder/complete/:id', async (req, res) => {
     try {
       let preorder = await this.getPreorder(req.params.id);
       preorder.volunteer_id = req.body.volunteerId;
@@ -117,7 +117,7 @@ module.exports = (app, Item, Order, Transaction) => {
     }
   });
 
-  app.put('/preorder/cancel/:id', (req, res) => {
+  app.put('/preorder/cancel/:id', async (req, res) => {
     try {
       let preorder = await this.getPreorder(req.params.id);
       preorder.volunteer_id = req.body.volunteerId;
@@ -130,7 +130,7 @@ module.exports = (app, Item, Order, Transaction) => {
     }
   });
 
-  app.put('/preorder/putBack/:id', (req, res) => {
+  app.put('/preorder/putBack/:id', async (req, res) => {
     try {
       let item = await Item.findOne({ where: { id: req.params.id } });
       item.increment('count', { by: count });
@@ -139,7 +139,7 @@ module.exports = (app, Item, Order, Transaction) => {
     }
   });
 
-  app.delete('/preorder/:id', (req, res) => {
+  app.delete('/preorder/:id', async (req, res) => {
     try {
       await Transaction.destroy({
         where: {

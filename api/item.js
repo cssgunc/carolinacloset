@@ -7,7 +7,7 @@ const exceptionHandler = require("../exceptions/exception-handler");
 const csvParser = require("csv-parse");
 
 module.exports = (app, Item) => {
-  app.get('/items', (req, res) => {
+  app.get('/items', async (req, res) => {
     try {
       let items = await db.findAll();
       res.send(items);
@@ -16,7 +16,7 @@ module.exports = (app, Item) => {
     }
   });
 
-  app.get('/items/:id', (req, res) => {
+  app.get('/items/:id', async (req, res) => {
     try {
       let item = await findOne({ where: { id: req.params.id } });
       if (!item) {
@@ -31,7 +31,7 @@ module.exports = (app, Item) => {
     }
   });
 
-  app.get('/items/:name', (req, res) => {
+  app.get('/items/:name', async (req, res) => {
     try {
       desc = req.body.desc ? desc : '';
       let item = await Item.findOne({ where: { name: req.params.name, description: desc }});
@@ -41,7 +41,7 @@ module.exports = (app, Item) => {
     }
   });
 
-  app.post('/item', (req, res) => {
+  app.post('/item', async (req, res) => {
     try {
       let item = await Item.create({
           id: '',
@@ -62,7 +62,7 @@ module.exports = (app, Item) => {
     }
   });
 
-  app.put('/item', (req, res) => {
+  app.put('/item', async (req, res) => {
     try {
       let item = await Item.update({
         name: req.body.name,
@@ -86,7 +86,7 @@ module.exports = (app, Item) => {
     }
   });
 
-  app.delete('/items', (req, res) => {
+  app.delete('/items', async (req, res) => {
     try {
       await Item.destroy({
         where: {},
@@ -105,7 +105,7 @@ module.exports = (app, Item) => {
     }
   });
 
-  app.delete('/items/outOfStock', (req, res) => {
+  app.delete('/items/outOfStock', async (req, res) => {
     try {
       await Item.destroy({
         where: {

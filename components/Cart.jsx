@@ -1,12 +1,29 @@
 import React from 'react';
 
 export default function Cart() {
-  return(
+  const NUM_COLUMNS = 5;
+
+  const clearCart = () => {
+    localStorage.removeItem('cart');
+
+    // Create a cell that notifying the user that the table is empty
+    let cartEmptyCell = document.createElement('td');
+    cartEmptyCell.className = 'text-center';
+    cartEmptyCell.setAttribute('colspan', NUM_COLUMNS);
+    cartEmptyCell.appendChild(document.createTextNode('Cart is Empty'));
+
+    // Clear table body and add empty table notification
+    let tableBody = document.getElementById('cart-tbody');
+    tableBody.innerHTML = '';
+    tableBody.appendChild(cartEmptyCell);
+  }
+
+  return (
     <React.Fragment>
-      <div class="container">
+      <div className="container">
         <h1>Your cart</h1>
-        <div class="table-responsive">
-          <table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+        <div className="table-responsive">
+          <table id="itemsTable" className="table table-striped table-bordered" cellspacing="0" width="99%">
             <thead>
               <tr>
                 <th scope="col">Item</th>
@@ -15,36 +32,35 @@ export default function Cart() {
                 <th scope="col">Update</th>
               </tr>
             </thead>
-            <tbody id="cart-tbody">
-            </tbody>
+            <tbody id="cart-tbody" />
           </table>
         </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <button type="button" class="btn btn-danger float-left" data-toggle="modal" data-target="#clearCartModal">Clear Cart</button>
+        <div className="row">
+          <div className="col-sm-6">
+            <button type="button" className="btn btn-danger float-left" data-toggle="modal" data-target="#clearCartModal">Clear Cart</button>
           </div>
-          <div class="col-sm-6">
-              <button type="button" class="btn btn-primary float-right" id='checkoutButton'>Check Out</button>
+          <div className="col-sm-6">
+            <button type="button" className="btn btn-primary float-right" id='checkoutButton'>Check Out</button>
           </div>
         </div>
       </div>
-      <div class="modal fade" id="clearCartModal" tabindex="-1" role="dialog" aria-labelledby="clearCartModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <p class="modal-title" id="clearCartModalLabel">Clear Cart?</p>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
+      <div className="modal fade" id="clearCartModal" tabindex="-1" role="dialog" aria-labelledby="clearCartModalLabel" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-body">
               <p>Are you sure you want to clear your cart?</p>
-              <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
-              <button class="btn btn-danger float-right" id="clearCartButton" data-dismiss="modal">Clear Cart</button>
+              <button type="button" className="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
+              <button 
+                className="btn btn-danger float-right" 
+                id="clearCartButton" data-dismiss="modal"
+                onClick={() => clearCart()}
+              >
+                Clear Cart
+              </button>
             </div>
           </div>
         </div>
       </div>
     </React.Fragment>
-  ); // TODO cart script (and response.success message div ID=clear-cart)
+  );
 }
