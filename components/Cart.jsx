@@ -2,7 +2,7 @@ import api from '../api/api';
 import React from 'react';
 
 export default function Cart() {
-  const [checkoutMessage, setCheckoutMessage] = React.useState('')l
+  const [checkoutMessage, setCheckoutMessage] = React.useState('');
 
   const NUM_COLUMNS = 5;
 
@@ -22,7 +22,7 @@ export default function Cart() {
   }
 
   const checkout = () => {
-    const res = api.post('/preorders', params: { cart: JSON.parse(localStorage.getItem('cart')) });
+    const res = api.post('/preorders', { params: { cart: JSON.parse(localStorage.getItem('cart')) } });
     if (res.status() == 200) {
       localStorage.removeItem('cart');
       setCheckoutMessage('Your preorder has been successfully placed! Visit Carolina Closet to pickup your items within the next 24 hours.');
