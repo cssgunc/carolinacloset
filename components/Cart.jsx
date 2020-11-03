@@ -1,6 +1,9 @@
+import api from '../api/api';
 import React from 'react';
 
 export default function Cart() {
+  const [checkoutMessage, setCheckoutMessage] = React.useState('')l
+
   const NUM_COLUMNS = 5;
 
   const clearCart = () => {
@@ -16,6 +19,16 @@ export default function Cart() {
     let tableBody = document.getElementById('cart-tbody');
     tableBody.innerHTML = '';
     tableBody.appendChild(cartEmptyCell);
+  }
+
+  const checkout = () => {
+    const res = api.post('/preorders', params: { cart: JSON.parse(localStorage.getItem('cart')) });
+    if (res.status() == 200) {
+      localStorage.removeItem('cart');
+      setCheckoutMessage('Your preorder has been successfully placed! Visit Carolina Closet to pickup your items within the next 24 hours.');
+    } else {
+      setCheckoutMessage('Unknown error occurred. Please try again later or contact Carolina Closet staff.');
+    }
   }
 
   return (
@@ -35,12 +48,21 @@ export default function Cart() {
             <tbody id="cart-tbody" />
           </table>
         </div>
+        {checkoutMessage && (
+          <div className="success">{checkoutMessage}</div>
+        )}
         <div className="row">
           <div className="col-sm-6">
             <button type="button" className="btn btn-danger float-left" data-toggle="modal" data-target="#clearCartModal">Clear Cart</button>
           </div>
           <div className="col-sm-6">
-            <button type="button" className="btn btn-primary float-right" id='checkoutButton'>Check Out</button>
+            <button 
+              type="button" id='checkoutButton'
+              className="btn btn-primary float-right"
+              onClick={() => checkout()}
+            >
+              Check Out
+            </button>
           </div>
         </div>
       </div>
