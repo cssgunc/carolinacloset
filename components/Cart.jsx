@@ -4,6 +4,7 @@ import React from 'react';
 export default function Cart() {
   const [checkoutMessage, setCheckoutMessage] = React.useState('');
 
+  const cart = JSON.parse(localStorage.getItem('cart'));
   const NUM_COLUMNS = 5;
 
   const clearCart = () => {
@@ -22,12 +23,29 @@ export default function Cart() {
   }
 
   const checkout = () => {
-    const res = api.post('/preorders', { params: { cart: JSON.parse(localStorage.getItem('cart')) } });
+    const res = api.post('/preorders', { params: { cart: cart } });
     if (res.status() == 200) {
       localStorage.removeItem('cart');
       setCheckoutMessage('Your preorder has been successfully placed! Visit Carolina Closet to pickup your items within the next 24 hours.');
     } else {
       setCheckoutMessage('Unknown error occurred. Please try again later or contact Carolina Closet staff.');
+    }
+  }
+
+  const removeItemFromCart = () => {
+    // Search for an item with the same item id, and remove it
+    for(let i = 0; i < cart.length; i++) {
+      if (cart[i].id === item.id) {
+        cart.splice(i,1);
+        break;
+      }
+    }
+    // Stringify and save updated cart
+    localStorage.setItem('cart', JSON.stringify(cart));
+    event.target.parentNode.parentNode.outerHTML = '';
+    if (cart.length === 0) {
+      localStorage.removeItem('cart');
+      clearCart();
     }
   }
 
@@ -45,7 +63,24 @@ export default function Cart() {
                 <th scope="col">Update</th>
               </tr>
             </thead>
-            <tbody id="cart-tbody" />
+            <tbody>
+              {cart.forEach((item, i) => {
+                <tr>
+                  <td>{item.name}</td>
+                  <td>INPUT TODO</td>
+                  <td>{item.description ? item.description : ''}</td>
+                  <td className="text-right">
+                    <button 
+                      className="btn btn-danger"
+                      data-id={item.id}
+                      onClick={() => removeItemFromCart()}
+                    >
+                      Remove From Cart
+                    </button>
+                  </td>
+                </tr>
+              })}
+            </tbody>
           </table>
         </div>
         {checkoutMessage && (
