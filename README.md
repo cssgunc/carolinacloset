@@ -201,10 +201,23 @@ Create the following environment variables using `Add Value from Config Map or S
     - key = `database-password`
 
 ### Initializing the Database
+Please install the Openshift CLI [here](https://uncch.service-now.com/sp?id=kb_article_view&sysparm_article=KB0010400&sys_kb_id=94c9a178db5b37086cf4710439961909). Once it's installed, you can login by following the instruction [here](https://console.cloudapps.unc.edu/console/command-line). You may also login by  `oc login` and input your oynen and password.
 
-Please install the Openshift CLI here: https://uncch.service-now.com/sp?id=kb_article_view&sysparm_article=KB0010400&sys_kb_id=94c9a178db5b37086cf4710439961909
+After login, `oc get pods` will list all active pods in the project. You can find the name of the pod for postgresql here.
 
-Once it's installed and you've logged in with `oc login ...`, run `oc get pods`. Find the name of your current Node.js deployment pod. Run `oc rsh NAME_OF_NODE_DEPLOYMENT_POD`. Once you're connected, run `npm run bootstrap`. 
+Then you need to copy your pgdump script into the pod using oc `oc rsync <LOCAL DIR OF PGDUMP> postgresql-<NUMBER>:<DIR FOR PGDUMP>`. 
+If you have no permission for that, try `oc rsync <LOCAL DIR OF PGDUMP> postgresql-<NUMBER>:/tmp --no-perms`.
+
+To remote shell into the postgres pod, use `oc rsh <NAME OF THE POD>`. You can verify that your pgdumps are transferred successfully by `ls <DIR FOR PGDUMP>`.
+
+Now it's time to create tables! First, you need to know the database name: Type `psql` in the shell for the postgresql pod. Here are several useful commands for postgres:
+
+- `\l`: list all databases, you can get db name using this
+- `\c <DB NAME>`: switch to <DB_NAME>
+- `\dt`: list all tables in the current database
+- `\q`: get out of `psql`
+
+After you know your database name, username&password (can be find at `Secrets/postgresql` in console), create tables using `psql -U <USERNAME> -W -d <DB NAME> -f <PATH TO THE PGDUMP FILE>`. For example, I want to create tables in the `mapy_test` database using pgdump at `/tmp/db.sql`, my command should be `psql -U <USERNAME> -W -d mapy_test -f /tmp/db.sql`.
 
 **WARNING**: This will delete all existing data in the database.
 
