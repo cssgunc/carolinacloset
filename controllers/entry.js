@@ -1,5 +1,3 @@
-const { userIsAdmin } = require("./util/auth");
-
 const express = require("express"),
     router = express.Router(),
     url = require('url'),
@@ -7,10 +5,6 @@ const express = require("express"),
     userService = require("../services/user-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
     userIsVolunteer = require("./util/auth.js").userIsVolunteer;
-    userIsAdmin = require("./util/auth.js").userIsAdmin;
-    // Edit: changed volunteer to Admin throughout
-    // Edit: changed barcode and desc to type throughout
-   
 
 const MANUAL_UPDATE_SUCCESS_MESSAGE = "Item successfully updated!";
 const MANUAL_UPDATE_ERROR_MESSAGE = "Error updating item.";
@@ -18,15 +12,15 @@ const MANUAL_UPDATE_ERROR_MESSAGE = "Error updating item.";
 /**
  * Route serving homepage for item entry
  */
-router.get("/", [userisAdmin], async function (req, res) {
+router.get("/", [userIsVolunteer], async function (req, res) {
     let response = {};
-    res.render("admin/entry.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 /**
  * Route serving page for item entry table
  */
-router.get("/search", [userisAdmin], async function (req, res) {
+router.get("/search", [userIsVolunteer], async function (req, res) {
     let response = {};
     if (req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
     try {
@@ -35,13 +29,13 @@ router.get("/search", [userisAdmin], async function (req, res) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("admin/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry-search.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 /**
  * Route serving page for manual item entry
  */
-router.get("/manual", [userisAdmin], async function (req, res) {
+router.get("/manual", [userIsVolunteer], async function (req, res) {
     response = {};
 
     // this success field is passed back by a redirect from /entry/manual/update
@@ -57,13 +51,11 @@ router.get("/manual", [userisAdmin], async function (req, res) {
 
     response.foundItem = {
         name: req.query.name,
-        type: req.query.type,
-        // Edit: idk if this is right for below function needs
-        /* barcode: req.query.barcode,
-        desc: req.query.decr*/
+        barcode: req.query.barcode,
+        desc: req.query.decr
     };
 
-    res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 /**
@@ -72,29 +64,27 @@ router.get("/manual", [userisAdmin], async function (req, res) {
  * If the item exists, we pass the existing item back to the view
  * Else we create a new item
  */
-router.post('/manual', [userisAdmin], async function (req, res) {
+router.post('/manual', [userIsVolunteer], async function (req, res) {
     let response = {};
     try {
         let name = req.body.name;
-        let type = req.body.type;
-        //Edit: idk if this is right to change getItem function
-        /*let barcode = req.body.barcode === "" ? null : req.body.barcode;
+        let barcode = req.body.barcode === "" ? null : req.body.barcode;
         let description = req.body.description;
-        let count = parseInt(req.body.count);*/
+        let count = parseInt(req.body.count);
 
-        if (type || name) {
-            // try searching by type, then by name
-            let item = await itemService.getItemByTypeThenName(type, name);
+        if (barcode || name) {
+            // try searching by barcode, then by name and desc
+            let item = await itemService.getItemByBarcodeThenNameDesc(barcode, name, description);
 
             // if the item is found, we send back a message and the found item
             if (item) {
                 response.itemFound = item;
-                res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+                res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
                 return;
             }
         }
 
-        let item = await itemService.createItem(name, /*barcode, description,*/type, count);
+        let item = await itemService.createItem(name, barcode, description, count);
         if (item) {
             response.success = 'New item successfully created, id: ' + item.id;
         } else {
@@ -104,7 +94,7 @@ router.post('/manual', [userisAdmin], async function (req, res) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render("volunteer/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 /**
@@ -112,7 +102,7 @@ router.post('/manual', [userisAdmin], async function (req, res) {
  * Expects an item id and quantity in request body
  * Updates the item and then redirects back to /manual with query params to signal success or error
  */
-router.post("/manual/update", [userisAdmin], async function (req, res) {
+router.post("/manual/update", [userIsVolunteer], async function (req, res) {
     let id = req.body.id;
     let quantity = parseInt(req.body.quantity);
 
@@ -155,7 +145,7 @@ router.post("/manual/update", [userisAdmin], async function (req, res) {
  * Expects an item id and quantity in request body
  * Redirects to /entry/search
  */
-router.post("/add", [userisAdmin], async function (req, res) {
+router.post("/add", [userIsVolunteer], async function (req, res) {
     let id = req.body.id;
     let quantity = parseInt(req.body.quantity);
 
@@ -172,10 +162,10 @@ router.post("/add", [userisAdmin], async function (req, res) {
  * Route receiving quantity to remove from an existing item
  * Expects an item id, visitor onyen, and quantity in request body
  * If the visitor onyen is not in the user database, or their account info is not filled out
- * the admin is shown a view to update this info
+ * the volunteer is shown a view to update this info
  * Redirects to /entry/search
  */
-router.post("/remove", [userisAdmin], async function (req, res) {
+router.post("/remove", [userIsVolunteer], async function (req, res) {
     let response = {};
 
     let id = req.body.id;
@@ -191,12 +181,12 @@ router.post("/remove", [userisAdmin], async function (req, res) {
     if (!user) {
         user = await userService.createUser(onyen, 'user', null, null);
     }
-    // If user is missing account info, render a view for the admin to fill out the user's info
+    // If user is missing account info, render a view for the volunteer to fill out the user's info
     if (!user.get('pid') || !user.get('email')) {
         response.onyen = onyen;
         response.pid = user.get('pid');
         response.email = user.get('email');
-        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+        res.render('volunteer/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
         return;
     }
 
@@ -213,7 +203,7 @@ router.post("/remove", [userisAdmin], async function (req, res) {
  * Expects visitor onyen, pid, and email address in request body
  * Redirects to /entry/search
  */
-router.post("/remove/update", [userisAdmin], async function (req, res) {
+router.post("/remove/update", [userIsVolunteer], async function (req, res) {
     let response = {};
 
     let onyen = req.body.onyen;
@@ -226,7 +216,7 @@ router.post("/remove/update", [userisAdmin], async function (req, res) {
         response.pid = pid;
         response.email = email;
         response.error = "Please input both a PID and an email address."
-        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+        res.render('volunteer/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
     } else {
         try {
             await userService.editUser(onyen, null, pid, email);
@@ -248,16 +238,15 @@ router.post("/remove/update", [userisAdmin], async function (req, res) {
  * Expects item id, name, barcode, and description in request body
  * Redirects to /entry/search
  */
-router.post("/edit", [userisAdmin], async function (req, res) {
+router.post("/edit", [userIsVolunteer], async function (req, res) {
     let response = {};
 
     let id = req.body.id;
     let name = req.body.name;
-    /*let barcode = req.body.barcode === '' ? null : req.body.barcode;
-    let description = req.body.description; */
-    let type = req.body.type;
+    let barcode = req.body.barcode === '' ? null : req.body.barcode;
+    let description = req.body.description; 
     try {
-        let item = await itemService.editItem(id, name, /*barcode, description*/ type);
+        let item = await itemService.editItem(id, name, barcode, description);
         console.log(item);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
@@ -268,16 +257,16 @@ router.post("/edit", [userisAdmin], async function (req, res) {
 /**
  * Route serving the item CSV import page
  */
-router.get('/import', [userisAdmin], async function (req, res, next) {
+router.get('/import', [userIsVolunteer], async function (req, res, next) {
     let response = {};
-    res.render('admin/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 /**
  * Route receiving a CSV file upload for item import
  * expects CSV file in request files
  */
-router.post('/import', [userisAdmin], async function (req, res, next) {
+router.post('/import', [userIsVolunteer], async function (req, res, next) {
     let response = {};
 
     if (req.files != null) {
@@ -298,7 +287,7 @@ router.post('/import', [userisAdmin], async function (req, res, next) {
     }
     else response.error = "Please select a CSV file to upload"; // user never selected a file
 
-    res.render('admin/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('volunteer/entry-import.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = router;
