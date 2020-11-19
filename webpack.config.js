@@ -9,7 +9,10 @@ module.exports = {
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      'pg-native': path.join(__dirname, 'aliases/pg-native.js'),
+    },
   },
   target: 'node',
   module: {
