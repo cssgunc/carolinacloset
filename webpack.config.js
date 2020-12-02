@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './index2.js',
+  entry: './frontend/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
@@ -14,6 +14,16 @@ module.exports = {
       'pg-native': path.join(__dirname, 'aliases/pg-native.js'),
     },
   },
+  devServer: {
+    host: 'localhost',
+    port: 3000,
+    proxy: {
+      '^/api/*': {
+        target: 'https://localhost:8080/api/',
+        secure: false,
+      }
+    }
+  },
   target: 'node',
   module: {
     rules: [
@@ -21,7 +31,11 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-      }
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
     ]
   },
   externals: {
@@ -31,7 +45,7 @@ module.exports = {
   devtool: 'source-map',
   plugins: [
     new HtmlWebpackPlugin({
-        template: './public/index.html'
+        template: './frontend/public/index.html'
     })
   ]
 };
