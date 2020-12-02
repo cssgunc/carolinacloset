@@ -6,10 +6,7 @@
   "scripts": {
     "start": "npm run prod",
     "build": "webpack",
-    "start2": "webpack-dev-server --open",
-    "serve": "npm-run-all --parallel serve:webpack serve:backend",
-    "serve:webpack": "webpack --progress --colors --watch",
-    "serve:backend": "cross-env NODE_ENV=dev nodemon ./dist/bundle.js --watch ./dist",
+    "start:dev": "npm-run-all --parallel dev:client dev:server",
     "dev:client": "webpack-dev-server --open --port 3000",
     "dev:server": "cross-env NODE_ENV=dev nodemon ./backend/index.js",
     "dev": "cross-env NODE_ENV=dev nodemon index.js",

@@ -4,10 +4,10 @@ const transactions = ''
 
 export default function OrderHistory() {
   return (
-    <div class="container">
+    <div className="container">
       <h1>Transaction History</h1>
-      <div class="table-responsive">
-        <table id="historyTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+      <div className="table-responsive">
+        <table id="historyTable" className="table table-striped table-bordered" cellspacing="0" width="99%">
           <thead>
             <tr>
               <th scope="col">Time</th>

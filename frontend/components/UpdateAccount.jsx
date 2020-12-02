@@ -7,9 +7,9 @@ const email = 'admin@admin.com';
 export default function UpdateAccount() {
   return (
     <React.Fragment>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-12">
             {firstTime ? (
               <React.Fragment>
                 <h1>Welcome to Carolina Closet!</h1>
@@ -23,18 +23,18 @@ export default function UpdateAccount() {
             )}
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12">
+        <div className="row">
+          <div className="col-sm-12">
             <form action="/account/update" method="POST">
-              <div class="form-group">
+              <div className="form-group">
                 <label for="pid">PID:</label>
-                <input type="number" class="pid form-control" id="pid" name="pid" value={pid} />
+                <input type="number" className="pid form-control" id="pid" name="pid" value={pid} />
               </div>
-              <div class="form-group">
+              <div className="form-group">
                 <label for="email">Email Address:</label>
-                <input type="email" class="form-control" id="email" name="email" value={email} />
+                <input type="email" className="form-control" id="email" name="email" value={email} />
               </div>
-              <button type="submit" class="btn btn-primary">Save</button>
+              <button type="submit" className="btn btn-primary">Save</button>
             </form>
           </div>
         </div>

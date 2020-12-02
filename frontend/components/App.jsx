@@ -24,7 +24,7 @@ export default function App() {
         <React.Fragment>
           <Helmet>
             <title>Carolina Closet</title>
-            <link rel="icon" href="/static/favicon.png" />
+            <link rel="icon" href="/frontend/static/favicon.png" />
             <meta charset="utf-8" />
             <meta
               name="viewport"
@@ -48,14 +48,6 @@ export default function App() {
             />
             <link
               href="https://fonts.googleapis.com/css?family=Merriweather|Open+Sans"
-              rel="stylesheet"
-            />
-            <link
-              href="/static/css/main.css"
-              rel="stylesheet"
-            />
-            <link
-              href="/static/css/index.css"
               rel="stylesheet"
             />
           </Helmet>

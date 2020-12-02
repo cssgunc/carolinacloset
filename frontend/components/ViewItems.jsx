@@ -4,13 +4,13 @@ const items = '';
 
 export default function ViewItems() {
   return(
-    <div class="container">
+    <div className="container">
       <div id="toast-div">
-        <div id="toast-pos" class="toast-pos" />
+        <div id="toast-pos" className="toast-pos" />
       </div>
       <h1>Search for items to add to your cart</h1>
-      <div class="table-responsive">
-        <table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+      <div className="table-responsive">
+        <table id="itemsTable" className="table table-striped table-bordered" cellspacing="0" width="99%">
           <thead>
             <tr>
               <th scope="col">Item</th>
@@ -27,13 +27,13 @@ export default function ViewItems() {
                     <th scope="row">{item.name}</th>
                     <td>{item.count}</td>
                     <td>{item.description}</td>
-                    <td class="text-right pr-1">
+                    <td className="text-right pr-1">
                       <div>
-                        <input class="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max={item.count} value={1} />
-                        <div class="btn-group" role="group">
+                        <input className="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max={item.count} value={1} />
+                        <div className="btn-group" role="group">
                           <button 
                             type="button" 
-                            class="btn btn-success addToCartButton" 
+                            className="btn btn-success addToCartButton" 
                             data-id={item.id} 
                             data-name={item.name}
                             data-barcode={item.barcode}

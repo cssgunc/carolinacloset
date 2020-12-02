@@ -6,23 +6,23 @@ const items = '';
 export default function SearchEntry() {
   return (
     <React.Fragment>
-      <div class="container">
+      <div className="container">
         <h1>Search for an item to add or remove</h1>
-        <div class="form-group">
+        <div className="form-group">
           {/*<label for="customerOnyen"></label>*/}
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="basic-addon3">Quick Checkout ONYEN</span>
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <span className="input-group-text" id="basic-addon3">Quick Checkout ONYEN</span>
             </div>
             <input 
-              id="customerOnyen" type="text" class="form-control" 
+              id="customerOnyen" type="text" className="form-control" 
               name="customerOnyen" aria-label="Customer ONYEN"
               value={prevOnyen ? prevOnyen : ''}
             />
           </div>
         </div>
-        <div class="table-responsive">
-          <table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+        <div className="table-responsive">
+          <table id="itemsTable" className="table table-striped table-bordered" cellspacing="0" width="99%">
             <thead>
               <tr>
                 <th scope="col">Item</th>
@@ -40,28 +40,28 @@ export default function SearchEntry() {
                   <td>{item.barcode}</td>
                   <td>{item.count}</td>
                   <td>{item.description}</td>
-                  <td class="text-right pr-1">
-                    <div class="btn-group" role="group">
-                      <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
+                  <td className="text-right pr-1">
+                    <div className="btn-group" role="group">
+                      <button type="button" className="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
                         data-target="#addModal" data-id={item.id} data-name={item.name}
                         data-barcode={item.barcode} data-count={item.count}
                         data-description={item.description}
                       >
-                        <i class="fas fa-plus"></i>
+                        <i className="fas fa-plus"></i>
                       </button>
-                      <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
+                      <button type="button" className="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
                         data-target="#removeModal" data-id={item.id} data-name={item.name}
                         data-barcode={item.barcode} data-count={item.count}
                         data-description={item.description}
                       >
-                        <i class="fas fa-minus"></i>
+                        <i className="fas fa-minus"></i>
                       </button>
-                      <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
+                      <button type="button" className="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
                         data-target="#editModal" data-id={item.id} data-name={item.name}
                         data-barcode={item.barcode} data-count={item.count}
                         data-description={item.description}
                       >
-                        <i class="fas fa-pencil-alt"></i>
+                        <i className="fas fa-pencil-alt"></i>
                       </button>
                     </div>
                   </td>
@@ -72,105 +72,105 @@ export default function SearchEntry() {
           </table>
         </div>
       </div>
-      <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <p class="modal-title" id="addModalLabel">Add item</p>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <div className="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <p className="modal-title" id="addModalLabel">Add item</p>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <form name="addForm" id="addForm" action="/entry/add" method="POST">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="id" id="addModalId" readonly hidden aria-label="item id" />
+                <div className="form-group">
+                  <input className="form-control" type="text" name="id" id="addModalId" readonly hidden aria-label="item id" />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="addModalName">Item Name</label>
-                  <input class="form-control" type="text" name="name" id="addModalName" placeholder="Item Name" readonly />
+                  <input className="form-control" type="text" name="name" id="addModalName" placeholder="Item Name" readonly />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="addModalBarcode">Barcode</label>
-                  <input class="form-control" type="text" name="barcode" id="addModalBarcode" placeholder="Barcode" readonly />
+                  <input className="form-control" type="text" name="barcode" id="addModalBarcode" placeholder="Barcode" readonly />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="addModalQuantity">Quantity to add</label>
-                  <input class="form-control" type="number" name="quantity" id="addModalQuantity" min="1" />
+                  <input className="form-control" type="number" name="quantity" id="addModalQuantity" min="1" />
                 </div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="submitAdd">Submit</button>
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" className="btn btn-primary" id="submitAdd">Submit</button>
               </form>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+      <div className="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <p class="modal-title" id="editModalLabel">Edit item</p>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <p className="modal-title" id="editModalLabel">Edit item</p>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <form name="editForm" id="editForm" action="/entry/edit" method="POST">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="id" id="editModalId" readonly hidden aria-label="item id" />
+                <div className="form-group">
+                  <input className="form-control" type="text" name="id" id="editModalId" readonly hidden aria-label="item id" />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="editModalName">Item Name</label>
-                  <input class="form-control" type="text" name="name" id="editModalName" placeholder="Ex. Campbell's Chicken Noodle Soup" />
+                  <input className="form-control" type="text" name="name" id="editModalName" placeholder="Ex. Campbell's Chicken Noodle Soup" />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="editModalBarcode">Barcode</label>
-                  <input class="form-control" type="text" name="barcode" id="editModalBarcode" />
+                  <input className="form-control" type="text" name="barcode" id="editModalBarcode" />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="editModalDescription">Description</label>
-                  <input class="form-control" type="text" name="description" id="editModalDescription" />
+                  <input className="form-control" type="text" name="description" id="editModalDescription" />
                 </div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="submitEdit">Submit</button>
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" className="btn btn-primary" id="submitEdit">Submit</button>
               </form>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <p class="modal-title" id="removeModalLabel">Remove item</p>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <div className="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <p className="modal-title" id="removeModalLabel">Remove item</p>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <form name="removeForm" id="removeForm" action="/entry/remove" method="POST">
-                <div class="form-group">
-                  <input class="form-control" type="text" name="id" id="removeModalId" readonly hidden aria-label="item id" />
+                <div className="form-group">
+                  <input className="form-control" type="text" name="id" id="removeModalId" readonly hidden aria-label="item id" />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="removeModalName">Item Name</label>
-                  <input class="form-control" type="text" name="name" id="removeModalName" placeholder="Item Name" readonly />
+                  <input className="form-control" type="text" name="name" id="removeModalName" placeholder="Item Name" readonly />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="removeModalBarcode">Barcode</label>
-                  <input class="form-control" type="text" name="barcode" id="removeModalBarcode" placeholder="Barcode" readonly />
+                  <input className="form-control" type="text" name="barcode" id="removeModalBarcode" placeholder="Barcode" readonly />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="removeModalOnyen">Visitor's ONYEN</label>
-                  <input class="form-control" type="text" name="onyen" id="removeModalOnyen" placeholder="Who is taking this item?" required />
+                  <input className="form-control" type="text" name="onyen" id="removeModalOnyen" placeholder="Who is taking this item?" required />
                 </div>
-                <div class="form-group">
+                <div className="form-group">
                   <label for="removeModalQuantity">Quantity to remove</label>
-                  <input class="form-control" type="number" name="quantity" id="removeModalQuantity" min="1" />
+                  <input className="form-control" type="number" name="quantity" id="removeModalQuantity" min="1" />
                 </div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="submitRemove">Submit</button>
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" className="btn btn-primary" id="submitRemove">Submit</button>
               </form>
             </div>
           </div>

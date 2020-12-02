@@ -8,14 +8,14 @@ export default function HeaderContainer() {
   return (
     <React.Fragment>
       <Header />
-      <div class="container">
+      <div className="container">
         {successAlert && (
-          <div class="alert alert-success" role="alert">
+          <div className="alert alert-success" role="alert">
             <p>{successAlert}</p>
           </div>
         )}
         {errorAlert && (
-          <div class="alert alert-danger" role="alert">
+          <div className="alert alert-danger" role="alert">
             <p>{errorAlert}</p>
           </div>
         )}

@@ -3,11 +3,11 @@ import React from 'react';
 export default function ImportItems() {
   return (
     <React.Fragment>
-      <div class="container">
+      <div className="container">
         <h1>Import Items</h1>
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="alert alert-secondary">
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="alert alert-secondary">
               <p>Expected formats:</p>
               <ul>
                 <li>item name, barcode, quantity, item description</li>
@@ -21,14 +21,14 @@ export default function ImportItems() {
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12">
+        <div className="row">
+          <div className="col-sm-12">
             <form method="POST" encType="multipart/form-data">
               <label for="file">Upload a CSV file</label>
-              <div class="form-group">
-                <input type="file" class="form-control-file" id="file" name="file" />
+              <div className="form-group">
+                <input type="file" className="form-control-file" id="file" name="file" />
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" className="btn btn-primary">Submit</button>
             </form>
           </div>
         </div>

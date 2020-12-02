@@ -9,29 +9,29 @@ export default function Home() {
   const history = useHistory();
 
   return (
-    <div class="container">
+    <div className="container">
       <p>Hi {onyen}. Welcome to Carolina Closet!</p>
 
       {isAdmin && <AdminOptions />}
       
       <h2>Your Account</h2>
-      <div class="row">
-        <div class="col-sm-12 col-md-4">
-          <div class="card">
-            <button class="card-link" onClick={() => history.push('/items')}>
-              <div class="card-body">
-                <p class="card-title">View Catalog & Preorder</p>
-                <p class="card-text">Check out Carolina Closet's current inventory</p>
+      <div className="row">
+        <div className="col-sm-12 col-md-4">
+          <div className="card">
+            <button className="card-link" onClick={() => history.push('/items')}>
+              <div className="card-body">
+                <p className="card-title">View Catalog & Preorder</p>
+                <p className="card-text">Check out Carolina Closet's current inventory</p>
               </div>
             </button>
           </div>
         </div>
-        <div class="col-sm-12 col-md-4">
-          <div class="card">
-            <button class="card-link" onClick={() => history.push('/history')}>
-              <div class="card-body">
-                <p class="card-title">Your Orders</p>
-                <p class="card-text">View your preorders and order history</p>
+        <div className="col-sm-12 col-md-4">
+          <div className="card">
+            <button className="card-link" onClick={() => history.push('/history')}>
+              <div className="card-body">
+                <p className="card-title">Your Orders</p>
+                <p className="card-text">View your preorders and order history</p>
               </div>
             </button>
           </div>

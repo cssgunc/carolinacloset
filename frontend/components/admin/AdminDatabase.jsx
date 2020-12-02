@@ -2,33 +2,33 @@ import React from 'react';
 
 export default function AdminDatabase() {
   return (
-    <div class="container">
+    <div className="container">
       <h1>Factory Reset</h1>
       <p>Warning this will delete all data in your database and reset it to a clean slate. Please backup any data you want
         to keep before doing this.</p>
-      <div class="row">
-        <div class="col-sm-12">
-          <button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#delDataModal">Delete All
+      <div className="row">
+        <div className="col-sm-12">
+          <button type="button" className="btn btn-danger btn-lg" data-toggle="modal" data-target="#delDataModal">Delete All
             Data</button>
         </div>
       </div>
-      <div class="modal fade" id="delDataModal" tabindex="-1" role="dialog" aria-labelledby="delDataModalLabel"
+      <div className="modal fade" id="delDataModal" tabindex="-1" role="dialog" aria-labelledby="delDataModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <p class="modal-title" id="delDataModalLabel">Request a hold</p>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <p className="modal-title" id="delDataModalLabel">Request a hold</p>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <p><b>Please backup data before you delete them.</b> Once deleted, the data will not be recoverable.</p>
               <p>Are you sure you want to delete all data?</p>
-              <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
+              <button type="button" className="btn btn-secondary float-left" data-dismiss="modal">Cancel</button>
               <form method="POST" action="/admin/database">
-                <div class="form-group">
-                  <button class="btn btn-danger float-right" type="submit">Delete All Data</button>
+                <div className="form-group">
+                  <button className="btn btn-danger float-right" type="submit">Delete All Data</button>
                 </div>
               </form>
             </div>
