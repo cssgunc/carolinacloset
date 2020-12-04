@@ -29,8 +29,6 @@
     "pg": "^7.12.1",
     "pg-copy-streams": "^2.2.2",
     "pg-hstore": "^2.3.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "request": "^2.88.0",
     "sequelize": "^5.21.9",
     "should": "^13.2.3",
