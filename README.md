@@ -1,6 +1,6 @@
-# carolinacupboard-inventory
+# carolinacloset
 
-This is an inventory management app developed by UNC-CH CS+Social Good for Carolina Cupboard.
+This is an inventory management app developed by UNC-CH CS+Social Good for Carolina Closet.
 
 ## Development Setup
 1. Install [nodejs and npm](https://nodejs.org).
@@ -87,7 +87,7 @@ This folder contains static client-side content like CSS, client-side JavaScript
 
 This folder contains EJS templates that are pre-processed and rendered as HTML to the client. It may be easy to think of these as HTML files with some dynamically rendered parts. Look [here](https://ejs.co/) for more details on EJS.
 
-The EJS files are split into root, user, volunteer, and admin folders.
+The EJS files are split into root, user, and admin folders.
 
 ### `.env, .env-example`
 The `.env` file used for environment variables. Please see [the above section](#environment-variables) for more information.
