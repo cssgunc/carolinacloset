@@ -1,6 +1,4 @@
-const CarolinaCupboardException = require("./carolina-cupboard-exception");
-
-module.exports = class UnauthorizedRequestException extends CarolinaCupboardException {
+module.exports = class UnauthorizedRequestException extends Error {
     constructor(message) {
         super(message);
         this.name = this.constructor.name;

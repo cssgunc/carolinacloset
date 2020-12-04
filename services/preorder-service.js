@@ -4,8 +4,6 @@ const { v4: uuidv4 } = require("uuid"),
     Item = require("../db/sequelize").items,
     BadRequestException = require("../exceptions/bad-request-exception"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
-    CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
-
 
 /**
  * Retrieves and returns a preorder by id
@@ -19,9 +17,6 @@ exports.getPreorder = async function (id) {
         }
         return preorder;
     } catch (e) {
-        if (e instanceof CarolinaCupboardException) {
-            throw e;
-        }
         throw new InternalErrorException("A problem occurred when retrieving a preorder", e);
     }
 }
