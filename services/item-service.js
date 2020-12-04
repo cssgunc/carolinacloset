@@ -7,7 +7,6 @@ const   { v4: uuidv4 } = require("uuid"),
         userService = require("./user-service"),
         BadRequestException = require("../exceptions/bad-request-exception"),
         InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception"),
         exceptionHandler = require("../exceptions/exception-handler"),
         csvParser = require("csv-parse");
 
@@ -23,11 +22,7 @@ exports.getItem = async function (itemId) {
         }
         return item;
     } catch (e) {
-        if(e instanceof CarolinaCupboardException) {
-            throw e;
-        }
-
-        throw new InternalErrorException("A problem occurred when retrieving the item",e);
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
     }
 }
 
@@ -39,7 +34,7 @@ exports.getAllItems = async function () {
         let items = await Item.findAll();
         return items;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving items",e);
+        throw new InternalErrorException("A problem occurred when retrieving items", e);
     }
 }
 
@@ -117,7 +112,7 @@ exports.createItem = async function (name, barcode, description, count) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when saving the item",e);
+        throw new InternalErrorException("A problem occurred when saving the item", e);
     }
 }
 
@@ -149,7 +144,7 @@ exports.editItem = async function (id, name, barcode, description) {
             });
             throw new BadRequestException(errorMessage);
         }
-        throw new InternalErrorException("A problem occurred when saving the item",e);
+        throw new InternalErrorException("A problem occurred when saving the item", e);
     }
 }
 
@@ -229,7 +224,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerOn
         await transaction.save();
         item.increment('count', {by: quantity});
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when adding the transaction",e);
+        throw new InternalErrorException("A problem occurred when adding the transaction", e);
     }
 }
 
@@ -333,10 +328,6 @@ exports.deleteAllItems = async function() {
         if (e.name === "SequelizeForeignKeyConstraintError") {
             throw e;
         }
-
-        if(e instanceof CarolinaCupboardException) {
-            throw e;
-        }
         
         throw new InternalErrorException("A problem occurred when deleting the items", e);
     }
@@ -354,10 +345,6 @@ exports.deleteOutOfStock = async function() {
             truncate: false
         });
     } catch(e) {
-        if(e instanceof CarolinaCupboardException) {
-            throw e;
-        }
-        
         throw new InternalErrorException("A problem occurred when deleting the out of stock items", e);
     }
 }

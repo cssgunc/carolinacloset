@@ -1,6 +1,4 @@
-const CarolinaCupboardException = require("./carolina-cupboard-exception");
-
-module.exports = class InternalErrorException extends CarolinaCupboardException {
+module.exports = class InternalErrorException extends Error {
     constructor(message, e) {
         super(message);
         this.name = this.constructor.name;

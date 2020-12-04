@@ -114,10 +114,6 @@ These files/folders are used by nodejs and npm.
 
 This section will go over functionality of the app that is not obvious, not explicitly stated, and/or needs to be fixed.
 
-### CSV Import
-
-CSV import (`appendCSV()` in `item-service.js`) currently uses a custom SQL query to insert items. Ideally, we would like to use Sequelize's built-in functions, like [`bulkCreate`](https://sequelize.org/master/class/lib/model.js~Model.html#static-method-bulkCreate). However, Carolina Cupboard would like to add counts if they try to import an already existing item. Currently, `bulkCreate` does not support this feature, and can only replace counts. Please keep an eye on updates to Sequelize that may allow this functionality. 
-
 ### Deleting Items/Transactions
 
 The `Transactions` table has a foreign key from the `Items` table for `item_id` to record which item was transacted. In order to delete items from the `Items` table, all transactions with that `item_id` must be deleted from the `Transactions` table. 

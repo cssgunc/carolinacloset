@@ -1,8 +1,5 @@
 const   User = require("../db/sequelize").users,
-        Sequelize = require("sequelize"),
-        BadRequestException = require("../exceptions/bad-request-exception"),
-        InternalErrorException = require("../exceptions/internal-error-exception"),
-        CarolinaCupboardException = require("../exceptions/carolina-cupboard-exception");
+    InternalErrorException = require("../exceptions/internal-error-exception");
 
 /**
  * Gets the onyen from the uid request header
@@ -31,10 +28,6 @@ exports.getUserType = async function (onyen) {
         }
         return user.type;
     } catch (e) {
-        if(e instanceof CarolinaCupboardException) {
-            throw e;
-        }
-        throw e;
-        // throw new InternalErrorException("A problem occurred when retrieving the user",e);
+        throw new InternalErrorException("A problem occurred when retrieving user", e);
     }
 }
