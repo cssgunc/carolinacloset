@@ -40,7 +40,7 @@ exports.getAllItems = async function () {
 }
 
 /**
- * Looks for an item, first by barcode, then by name and decription
+ * Looks for an item, first by type, then by name
  * Returns the item found or null if nothing is found
  * @param {enum} type
  * @param {string} name 
@@ -57,7 +57,7 @@ exports.getItemByTypeThenName = async function (type, name) {
 }
 
 /**
- * Looks for an item by barcode
+ * Looks for an item by type
  * Returns the item found or null if nothing is found
  * @param {enum} type
  */
@@ -91,8 +91,8 @@ let getItemByName = async function (name) {
 /**
  * Creates a new item in the Items table
  * @param {string} name 
- * @param {number} barcode 
- * @param {number} barcode 
+ * @param {number} type 
+ * @param {number} count 
  */
 
 exports.createItem = async function (name, type, count) {

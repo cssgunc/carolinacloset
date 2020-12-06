@@ -1,3 +1,5 @@
+const { userIsAdmin } = require("./util/auth");
+
 const express = require("express"),
     router = express.Router(),
     url = require('url'),
@@ -51,8 +53,7 @@ router.get("/manual", [userIsAdmin], async function (req, res) {
 
     response.foundItem = {
         name: req.query.name,
-        barcode: req.query.barcode,
-        desc: req.query.decr
+        type: req.query.type,
     };
 
     res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
@@ -60,7 +61,7 @@ router.get("/manual", [userIsAdmin], async function (req, res) {
 
 /**
  * Route receiving form for new manual item creation
- * Expects item name, barcode, description, and count in request body
+ * Expects item name and type in request body
  * If the item exists, we pass the existing item back to the view
  * Else we create a new item
  */
@@ -68,13 +69,11 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
     let response = {};
     try {
         let name = req.body.name;
-        let barcode = req.body.barcode === "" ? null : req.body.barcode;
-        let description = req.body.description;
-        let count = parseInt(req.body.count);
+        let type = req.body.type;
 
-        if (barcode || name) {
-            // try searching by barcode, then by name and desc
-            let item = await itemService.getItemByBarcodeThenNameDesc(barcode, name, description);
+        if (type || name) {
+            // try searching by type, then by name
+            let item = await itemService.getItemByTypeThenName(type, name);
 
             // if the item is found, we send back a message and the found item
             if (item) {
@@ -84,7 +83,7 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
             }
         }
 
-        let item = await itemService.createItem(name, barcode, description, count);
+        let item = await itemService.createItem(name, type, count);
         if (item) {
             response.success = 'New item successfully created, id: ' + item.id;
         } else {
@@ -235,7 +234,7 @@ router.post("/remove/update", [userIsAdmin], async function (req, res) {
 
 /**
  * Route receiving form to edit an item from the table entry view
- * Expects item id, name, barcode, and description in request body
+ * Expects item id, name, and type in request body
  * Redirects to /entry/search
  */
 router.post("/edit", [userIsAdmin], async function (req, res) {
@@ -243,10 +242,9 @@ router.post("/edit", [userIsAdmin], async function (req, res) {
 
     let id = req.body.id;
     let name = req.body.name;
-    let barcode = req.body.barcode === '' ? null : req.body.barcode;
-    let description = req.body.description; 
+    let type = req.body.type;
     try {
-        let item = await itemService.editItem(id, name, barcode, description);
+        let item = await itemService.editItem(id, name, type);
         console.log(item);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
