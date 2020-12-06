@@ -43,6 +43,7 @@ router.get('/users', [userIsAdmin], async function (req, res, next) {
 router.post('/users/create', [userIsAdmin], async function (req, res, next) {
     try {
         let newOnyen = req.body.onyen;
+        let type = req.body.type;
         let pid = req.body.pid;
         let email = req.body.email;
 

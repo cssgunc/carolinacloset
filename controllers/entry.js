@@ -1,5 +1,3 @@
-const { userIsAdmin } = require("./util/auth");
-
 const express = require("express"),
     router = express.Router(),
     url = require('url'),
