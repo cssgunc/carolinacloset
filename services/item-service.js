@@ -10,7 +10,6 @@ const   { v4: uuidv4 } = require("uuid"),
         exceptionHandler = require("../exceptions/exception-handler"),
         csvParser = require("csv-parse");
 
-//Edit: changes made
 
 /**
  * Retrieves and returns an item by id
@@ -47,11 +46,7 @@ exports.getAllItems = async function () {
  * @param {string} name 
  */
 
- // * @param {number} barcode 
- // * @param {string} desc 
-
- // Edit: get item by type and then name instead of barcde and then namedesc
-exports.getItemByTypeThenName = async function (/*barcode*/ type, name, /*desc*/) {
+exports.getItemByTypeThenName = async function (type, name) {
     try {
         let item = await getItemByType(type);
         if(!item) item = await getItemByName(name);
@@ -67,7 +62,6 @@ exports.getItemByTypeThenName = async function (/*barcode*/ type, name, /*desc*/
  * @param {enum} type
  */
 
-  // Edit: remove function to get item by barcode and instead do it by type?
 let getItemByType = async function (type) {
     if (!type) return null;
     try {
@@ -84,14 +78,10 @@ let getItemByType = async function (type) {
  * @param {string} name 
  */
 
-// @param {string} desc 
-
- // Edit: remove desc as description was removed in db ?
-let getItemByName = async function (name, /*desc*/) {
+let getItemByName = async function (name) {
     try {
         name = name ? name : '';
-        // desc = desc ? desc : '';
-        let item = await Item.findOne({ where: { name: name /*, description: desc*/ }});
+        let item = await Item.findOne({ where: { name: name }});
         return item;
     } catch (e) {
         throw e;
@@ -104,19 +94,13 @@ let getItemByName = async function (name, /*desc*/) {
  * @param {number} barcode 
  * @param {number} barcode 
  */
-// @param {string} description 
- // @param {number} count
 
-
-// Edit: remove barcode and description and add type
-exports.createItem = async function (name, /*barcode, description,*/ type, count) {
+exports.createItem = async function (name, type, count) {
     try {
         let item = await Item.create({
             id: '',
             name: name,
             type: type,
-            /*barcode: barcode,
-            description: description ? description : '',*/
             count: count
         });
         return item;
@@ -142,24 +126,17 @@ exports.createItem = async function (name, /*barcode, description,*/ type, count
  * @param {string} brand 
  * @param {enum} color 
  */
-
-/* @param {number} barcode 
-* @param {string} description */
-
- // Edit: remove barcode and description and added name, type, gender, brand, color
-exports.editItem = async function (id, name, type, gender, brand, color /*barcode, description*/) {
+exports.editItem = async function (id, name, type, gender, brand, color) {
     try {
         let item = await Item.update({
             name: name,
-            /*barcode: barcode,
-            description: description ? description : '',*/
             type: type,
             gender: gender,
             brand: brand,
             color: color,
         }, {
             where: { id, id },
-            fields: ['name', 'type', 'gender', 'brand', 'color' /*'barcode', 'description'*/],
+            fields: ['name', 'type', 'gender', 'brand', 'color'],
             returning: true
         });
         return item;
@@ -182,12 +159,9 @@ exports.editItem = async function (id, name, type, gender, brand, color /*barcod
  * @param {string} onyen - onyen of visitor who is taking or donating items
  */
 
- // * @param {number} volunteerOnyen - onyen of volunteer who is helping the visitor
-
- // Edit: remove volunteer onyen
-exports.addItems = async function (itemId, quantity, onyen, /*volunteerOnyen8*/) {
+exports.addItems = async function (itemId, quantity, onyen ) {
     try {
-        await this.createTransaction(itemId, quantity, onyen, /*volunteerOnyen*/);
+        await this.createTransaction(itemId, quantity, onyen );
     } catch (e) {
         if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
         else throw e;
@@ -201,12 +175,9 @@ exports.addItems = async function (itemId, quantity, onyen, /*volunteerOnyen8*/)
  * @param {string} onyen - onyen of visitor who is taking or donating items
  */
 
- // * @param {string} volunteerOnyen - onyen of volunteer who is helping the visitor
-
-// Edit: remove volunteer onen
-exports.removeItems = async function (itemId, quantity, onyen, /*volunteerOnyen*/) {
+exports.removeItems = async function (itemId, quantity, onyen) {
     try {
-        await this.createTransaction(itemId, -quantity, onyen, /*volunteerOnyen*/);
+        await this.createTransaction(itemId, -quantity, onyen);
         let user = await userService.getUser(onyen);
 
         // Update first item date
@@ -234,10 +205,7 @@ exports.removeItems = async function (itemId, quantity, onyen, /*volunteerOnyen*
  * @param {string} onyen - onyen of visitor who is taking or donating items
  */
 
- //* @param {string} volunteerOnyen - onyen of volunteer who is helping the visitor
-
- // Edit: remove volunteerOnyen from create transactions
-exports.createTransaction = async function (itemId, quantity, onyen, /*volunteerOnyen*/) {
+exports.createTransaction = async function (itemId, quantity, onyen) {
     let item = await this.getItem(itemId);
 
     if(quantity < 0 && item.count < Math.abs(quantity)) {
@@ -254,7 +222,6 @@ exports.createTransaction = async function (itemId, quantity, onyen, /*volunteer
             count: quantity,
             onyen: onyen,
             order_id: newOrderId,
-            // volunteer_id: volunteerOnyen,
             status: "complete"
         });
         await transaction.save();
