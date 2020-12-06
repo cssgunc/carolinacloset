@@ -51,7 +51,7 @@ sequelize.transactions = Transactions.init_table(sequelize);
 sequelize.users = Users.init_table(sequelize);
 
 //define relationships
-sequelize.transactions.belongsTo(sequelize.users, {foreignKey: 'volunteer_id'});
+sequelize.transactions.belongsTo(sequelize.users, {foreignKey: 'onyen'});
 sequelize.transactions.belongsTo(sequelize.items, {foreignKey: 'item_id'});
 sequelize.transactions.belongsTo(sequelize.orders, {foreignKey: 'order_id'});
 

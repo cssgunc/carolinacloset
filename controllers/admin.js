@@ -27,7 +27,7 @@ router.get('/', [userIsAdmin], async function (req, res, next) {
  */
 router.get('/users', [userIsAdmin], async function (req, res, next) {
     let response = {};
-    let types = ["admin", "volunteer", "user", "disabled"];
+    let types = ["admin", "user", "disabled"];
 
     try {
         response.users = await userService.getAllUsers();

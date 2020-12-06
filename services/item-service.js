@@ -39,16 +39,16 @@ exports.getAllItems = async function () {
 }
 
 /**
- * Looks for an item, first by barcode, then by name and decription
+ * Looks for an item, first by type, then by name
  * Returns the item found or null if nothing is found
- * @param {number} barcode 
+ * @param {enum} type
  * @param {string} name 
- * @param {string} desc 
  */
-exports.getItemByBarcodeThenNameDesc = async function (barcode, name, desc) {
+
+exports.getItemByTypeThenName = async function (type, name) {
     try {
-        let item = await getItemByBarcode(barcode);
-        if(!item) item = await getItemByNameDesc(name, desc);
+        let item = await getItemByType(type);
+        if(!item) item = await getItemByName(name);
         return item;
     } catch (e) {
         throw e;
@@ -56,14 +56,15 @@ exports.getItemByBarcodeThenNameDesc = async function (barcode, name, desc) {
 }
 
 /**
- * Looks for an item by barcode
+ * Looks for an item by type
  * Returns the item found or null if nothing is found
- * @param {number} barcode 
+ * @param {enum} type
  */
-let getItemByBarcode = async function (barcode) {
-    if (!barcode || barcode === "") return null;
+
+let getItemByType = async function (type) {
+    if (!type) return null;
     try {
-        let item = await Item.findOne({ where: { barcode: barcode }});
+        let item = await Item.findOne({ where: { type: type }});
         return item;
     } catch (e) {
         throw e;
@@ -74,13 +75,12 @@ let getItemByBarcode = async function (barcode) {
  * Looks for an item by name and description
  * Returns the item fround or null if nothing is found
  * @param {string} name 
- * @param {string} desc 
  */
-let getItemByNameDesc = async function (name, desc) {
+
+let getItemByName = async function (name) {
     try {
         name = name ? name : '';
-        desc = desc ? desc : '';
-        let item = await Item.findOne({ where: { name: name, description: desc }});
+        let item = await Item.findOne({ where: { name: name }});
         return item;
     } catch (e) {
         throw e;
@@ -90,17 +90,16 @@ let getItemByNameDesc = async function (name, desc) {
 /**
  * Creates a new item in the Items table
  * @param {string} name 
- * @param {number} barcode 
- * @param {string} description 
+ * @param {number} type 
  * @param {number} count 
  */
-exports.createItem = async function (name, barcode, description, count) {
+
+exports.createItem = async function (name, type, count) {
     try {
         let item = await Item.create({
             id: '',
             name: name,
-            barcode: barcode,
-            description: description ? description : '',
+            type: type,
             count: count
         });
         return item;
@@ -121,18 +120,22 @@ exports.createItem = async function (name, barcode, description, count) {
  * Does not allow editing of count
  * @param {uuid} id 
  * @param {string} name 
- * @param {number} barcode 
- * @param {string} description 
+ * @param {enum} type 
+ * @param {enum} gender 
+ * @param {string} brand 
+ * @param {enum} color 
  */
-exports.editItem = async function (id, name, barcode, description) {
+exports.editItem = async function (id, name, type, gender, brand, color) {
     try {
         let item = await Item.update({
             name: name,
-            barcode: barcode,
-            description: description ? description : '',
+            type: type,
+            gender: gender,
+            brand: brand,
+            color: color,
         }, {
             where: { id, id },
-            fields: ['name', 'barcode', 'description'],
+            fields: ['name', 'type', 'gender', 'brand', 'color'],
             returning: true
         });
         return item;
@@ -153,11 +156,11 @@ exports.editItem = async function (id, name, barcode, description) {
  * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
- * @param {number} volunteerOnyen - onyen of volunteer who is helping the visitor
  */
-exports.addItems = async function (itemId, quantity, onyen, volunteerOnyen) {
+
+exports.addItems = async function (itemId, quantity, onyen) {
     try {
-        await this.createTransaction(itemId, quantity, onyen, volunteerOnyen);
+        await this.createTransaction(itemId, quantity, onyen);
     } catch (e) {
         if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
         else throw e;
@@ -169,11 +172,11 @@ exports.addItems = async function (itemId, quantity, onyen, volunteerOnyen) {
  * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
- * @param {string} volunteerOnyen - onyen of volunteer who is helping the visitor
  */
-exports.removeItems = async function (itemId, quantity, onyen, volunteerOnyen) {
+
+exports.removeItems = async function (itemId, quantity, onyen) {
     try {
-        await this.createTransaction(itemId, -quantity, onyen, volunteerOnyen);
+        await this.createTransaction(itemId, -quantity, onyen);
         let user = await userService.getUser(onyen);
 
         // Update first item date
@@ -199,9 +202,9 @@ exports.removeItems = async function (itemId, quantity, onyen, volunteerOnyen) {
  * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
- * @param {string} volunteerOnyen - onyen of volunteer who is helping the visitor
  */
-exports.createTransaction = async function (itemId, quantity, onyen, volunteerOnyen) {
+
+exports.createTransaction = async function (itemId, quantity, onyen) {
     let item = await this.getItem(itemId);
 
     if(quantity < 0 && item.count < Math.abs(quantity)) {
@@ -218,7 +221,6 @@ exports.createTransaction = async function (itemId, quantity, onyen, volunteerOn
             count: quantity,
             onyen: onyen,
             order_id: newOrderId,
-            volunteer_id: volunteerOnyen,
             status: "complete"
         });
         await transaction.save();
