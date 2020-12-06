@@ -9,7 +9,7 @@ const express = require("express"),
     userIsVolunteer = require("./util/auth.js").userIsVolunteer;
     userIsAdmin = require("./util/auth.js").userIsAdmin;
     // Edit: changed volunteer to Admin throughout
-    // Edit: changed barcode and desc to type throughout
+    // Edit: changed barcode and desc to type throughou
    
 
 const MANUAL_UPDATE_SUCCESS_MESSAGE = "Item successfully updated!";
