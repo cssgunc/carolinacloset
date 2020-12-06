@@ -158,9 +158,9 @@ exports.editItem = async function (id, name, type, gender, brand, color) {
  * @param {string} onyen - onyen of visitor who is taking or donating items
  */
 
-exports.addItems = async function (itemId, quantity, onyen ) {
+exports.addItems = async function (itemId, quantity, onyen) {
     try {
-        await this.createTransaction(itemId, quantity, onyen );
+        await this.createTransaction(itemId, quantity, onyen);
     } catch (e) {
         if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
         else throw e;
