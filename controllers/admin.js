@@ -25,6 +25,7 @@ router.get('/', [userIsAdmin], async function (req, res, next) {
 /**
  * Route serving the view of all users in the system
  */
+// Edit: removed volunteer from users
 router.get('/users', [userIsAdmin], async function (req, res, next) {
     let response = {};
     let types = ["admin", "user", "disabled"];

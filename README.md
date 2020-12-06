@@ -139,9 +139,9 @@ You can only access the CloudApps web portal if you are on UNC network or using 
 
 ### Node.js 10
 
-This service runs our main application code. It is set up to automatically build from our Github repo. You can get the webhook for automatic builds by going to `Builds > ccinventory > Configuration`.
+This service runs our main application code. It is set up to automatically build from our Github repo. You can get the webhook for automatic builds by going to `Builds > carolina-closet > Configuration`.
 
-The deployment's environment variables can be accessed through `Deployments > ccinventory > environments`. The deployment has the following environment variables:
+The deployment's environment variables can be accessed through `Deployments > carolina-closet > environments`. The deployment has the following environment variables:
 - `DATABASE_NAME`: The name of the postgresql server
 - `DATABASE_USER`: The login username for the postgresql server
 - `DATABASE_PASSWORD`: The password for the postgresql login

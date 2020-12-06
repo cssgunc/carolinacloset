@@ -4,6 +4,7 @@ const express = require("express"),
     router = express.Router(),
     preorderService = require("../services/preorder-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
+    userIsVolunteer = require("./util/auth.js").userIsVolunteer;
     userIsAdmin = require("./util/auth.js").userIsAdmin;
 
 /**
