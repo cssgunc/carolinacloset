@@ -14,7 +14,7 @@ const { v4: uuidv4 } = require("uuid"),
 exports.getPreorder = async function (id) {
     try {
         let preorder = await Transaction.findOne({ where: { id: id } });
-        if (!preorder || preorder.volunteer_id !== 'PREORDER') {
+        if (!preorder || preorder.admin_id !== 'PREORDER') {
             throw new BadRequestException("The transaction could not be retrieved.");
         }
         return preorder;
@@ -33,7 +33,7 @@ exports.getAllPreorders = async function () {
     try {
         let preorders = await Transaction.findAll({
             where: {
-                volunteer_id: "PREORDER",
+                admin_id: "PREORDER",
                 status: "pending"
             }
         });
@@ -92,7 +92,7 @@ exports.createPreorder = async function (cart, onyen) {
                 count: -quantity,
                 onyen: onyen,
                 order_id: newOrderId,
-                volunteer_id: "PREORDER",
+                admin_id: "PREORDER",
                 status: 'pending'
             });
 
@@ -129,12 +129,12 @@ exports.createPreorder = async function (cart, onyen) {
 /**
  * Marks a preorder as confirmed/completed
  * @param {number} preorderId 
- * @param {onyen} volunteerId 
+ * @param {onyen} adminId 
  */
-exports.completePreorder = async function (preorderId, volunteerId) {
+exports.completePreorder = async function (preorderId, adminId) {
     try {
         let preorder = await this.getPreorder(preorderId);
-        preorder.volunteer_id = volunteerId;
+        preorder.admin_id = adminId;
         preorder.status = "complete";
         preorder.save();
     } catch (e) {
@@ -145,12 +145,12 @@ exports.completePreorder = async function (preorderId, volunteerId) {
 /**
  * Marks a preorder as cancelled
  * @param {number} preorderId 
- * @param {onyen} volunteerId 
+ * @param {onyen} adminId 
  */
-exports.cancelPreorder = async function (preorderId, volunteerId) {
+exports.cancelPreorder = async function (preorderId, adminId) {
     try {
         let preorder = await this.getPreorder(preorderId);
-        preorder.volunteer_id = volunteerId;
+        preorder.admin_id = adminId;
         preorder.status = "cancelled";
         preorder.save();
         let itemId = preorder.item_id;
