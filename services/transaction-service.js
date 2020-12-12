@@ -1,7 +1,6 @@
 const   Transaction = require("../db/sequelize").transactions,
         Sequelize = require("sequelize"),
-        BadRequestException = require("../exceptions/bad-request-exception"),
-        InternalErrorException = require("../exceptions/internal-error-exception"),
+        InternalErrorException = require("../exceptions/internal-error-exception");
 
 /**
  * Retrieves and returns all transactions

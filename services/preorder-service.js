@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid"),
     Transaction = require("../db/sequelize").transactions,
     Item = require("../db/sequelize").items,
     BadRequestException = require("../exceptions/bad-request-exception"),
-    InternalErrorException = require("../exceptions/internal-error-exception"),
+    InternalErrorException = require("../exceptions/internal-error-exception");
 
 /**
  * Retrieves and returns a preorder by id
