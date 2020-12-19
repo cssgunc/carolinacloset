@@ -1,7 +1,6 @@
 const express = require("express"),
     router = express.Router(),
     itemService = require("../services/item-service"),
-    preorderService = require("../services/preorder-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
     userIsBasicUser = require('./util/auth').userIsBasicUser;
 
