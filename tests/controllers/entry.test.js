@@ -97,38 +97,19 @@ describe('Entry Routes - Entry Workflow', () => {
     describe('POST /entry/manual - attempt to create existing item', () => {
         it('expect success HTTP 200 status', (done) => {
             let requestBody = {
-                name: 'chicken',
-                barcode: '123456789012',
-                description: 'meaty',
-                count: 1
+                name: 'example_shirt',
+                type: 'shirt',
+                gender: 'female',
+                image: null,
+                brand: null,
+                color: 'white',
+                count: 1,
             };
             supertest(app).post('/entry/manual')
                 .set(testUtil.adminAuthHeaders)
                 .send(requestBody)
                 .expect((res) => testUtil.matchResponseText(res, ITEM_FOUND_MESSAGE))
                 .expect(200, done);
-        });
-    });
-
-    describe('POST /entry/manual - attempt to create existing item, no barcode', () => {
-        it('expect success HTTP 200 status', (done) => {
-            let requestBody = {
-                name: 'chicken',
-                description: 'meaty',
-                count: 1
-            };
-
-            supertest(app).post('/entry/manual')
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect((res) => testUtil.matchResponseText(res, ITEM_FOUND_MESSAGE))
-                .expect(200)
-                .end(async (err, res) => {
-                    if (err) done(err);
-                    let items = await itemService.getAllItems();
-                    itemId = items[0].get('id');
-                    done();
-                });
         });
     });
 
@@ -192,9 +173,12 @@ describe('Entry Routes - Entry Workflow', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
                 id: itemId,
-                name: 'newname',
-                barcode: '1234567890',
-                description: 'newname'
+                name: 'new_shirt',
+                type: 'shirt',
+                gender: 'male',
+                image: null,
+                brand: null,
+                color: 'black',
             };
             supertest(app).post('/entry/edit')
                 .set(testUtil.adminAuthHeaders)

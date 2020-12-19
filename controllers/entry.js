@@ -241,8 +241,12 @@ router.post("/edit", [userIsAdmin], async function (req, res) {
     let id = req.body.id;
     let name = req.body.name;
     let type = req.body.type;
+    let gender = req.body.gender;
+    let image = req.body.image;
+    let brand = req.body.brand;
+    let color = req.body.color;
     try {
-        let item = await itemService.editItem(id, name, type);
+        let item = await itemService.editItem(id, name, type, gender, image, brand, color);
         console.log(item);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
