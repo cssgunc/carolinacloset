@@ -82,11 +82,11 @@ exports.createPreorder = async function (cart, onyen) {
 
             let transaction = await Transaction.build({
                 id: '',
+                order_id: newOrderId,
                 item_id: id,
                 item_name: item.name,
                 count: -quantity,
                 onyen: onyen,
-                order_id: newOrderId,
                 admin_id: "PREORDER",
                 status: 'pending'
             });

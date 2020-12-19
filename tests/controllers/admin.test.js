@@ -102,11 +102,11 @@ describe('Admin Routes - Sanity Checks', () => {
         await dbUtil.preTestSetup();
     });
 
-    describe('POST /admin/users/edit - change PREORDER admin to volunteer', () => {
+    describe('POST /admin/users/edit - change PREORDER admin to user', () => {
         it('expect HTTP 403 status', (done) => {
             let requestBody = {
                 onyen: 'PREORDER',
-                type: 'volunteer'
+                type: 'user'
             };
             supertest(app).post('/admin/users/edit')
                 .set(testUtil.commonHeaders)
@@ -129,11 +129,11 @@ describe('Admin Routes - Sanity Checks', () => {
         });
     });
 
-    describe('POST /admin/users/edit - change last remaining admin to volunteer', () => {
+    describe('POST /admin/users/edit - change last remaining admin to user', () => {
         it('expect HTTP 500 status', (done) => {
             let requestBody = {
                 onyen: process.env.DEFAULT_ADMIN,
-                type: 'volunteer'
+                type: 'user'
             };
             supertest(app).post('/admin/users/edit')
                 .set(testUtil.commonHeaders)
@@ -178,11 +178,11 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
         });
     });
 
-    describe('POST /admin/users/edit - change newly created admin to volunteer', () => {
+    describe('POST /admin/users/edit - change newly created admin to user', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
                 onyen: 'admin',
-                type: 'volunteer',
+                type: 'user',
                 pid: '20',
                 email: "vol@test.com"
             };
@@ -204,79 +204,6 @@ describe('Admin Routes - Volunteer Management Workflow', () => {
                 .set(testUtil.adminAuthHeaders)
                 .send(requestBody)
                 .expect(302, done);
-        });
-    });
-
-    describe('POST /admin/users/create - create new volunteer', () => {
-        it('expect success HTTP 302 status', (done) => {
-            let requestBody = {
-                onyen: 'volunteer',
-                type: 'volunteer',
-                pid: '10',
-                email: "test@test.com"
-            };
-            supertest(app).post('/admin/users/create')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(302, done);
-        });
-    });
-
-    describe('POST /admin/users/edit - change newly created volunteer to admin', () => {
-        it('expect success HTTP 302 status', (done) => {
-            let requestBody = {
-                onyen: 'volunteer',
-                type: 'admin',
-                pid: '20',
-                email: "admin@test.com"
-            };
-            supertest(app).post('/admin/users/edit')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(302, done);
-        });
-    });
-
-    describe('POST /admin/users/edit - change newly created volunteer to invalid role', () => {
-        it('expect http 500 status', (done) => {
-            let requestBody = {
-                onyen: 'volunteer',
-                type: 'invalidRole'
-            };
-            supertest(app).post('/admin/users/edit')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(500, done);
-        });
-    });
-
-    describe('POST /admin/users/delete - delete newly created volunteer', () => {
-        it('expect success HTTP 302 status', (done) => {
-            let requestBody = {
-                onyen: 'volunteer'
-            };
-            supertest(app).post('/admin/users/delete')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(302, done);
-        });
-    });
-
-    describe('POST /admin/users/create - create new volunteer with invalid role', () => {
-        it('expect http 500 status', (done) => {
-            let requestBody = {
-                onyen: 'volunteer',
-                type: 'invalidRole'
-            };
-            supertest(app).post('/admin/users/create')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(500, done);
         });
     });
 });

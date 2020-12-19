@@ -81,7 +81,7 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
             }
         }
 
-        let item = await itemService.createItem(name, type, count);
+        let item = await itemService.createItem(name, type, gender, image, brand, color, count);
         if (item) {
             response.success = 'New item successfully created, id: ' + item.id;
         } else {

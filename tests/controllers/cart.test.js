@@ -29,7 +29,7 @@ describe('Cart Routes - GET pages', () => {
 describe('Cart Routes - checkout', () => {
     before(async () => {
         await dbUtil.preTestSetup();
-        await ItemService.createItem('chicken', '', '', 5);
+        await ItemService.createItem('test_pants', 'pants', 'male', null, null, 'black', 1);
         itemId = (await ItemService.getAllItems())[0].get('id');
     });
     

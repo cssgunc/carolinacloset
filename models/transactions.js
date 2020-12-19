@@ -7,28 +7,23 @@ exports.init_table = function (sequelize) {
             type: Sequelize.UUID,
             primaryKey: true
         },
-
         order_id: {
             type: Sequelize.UUID,
             allowNull: false
         },
-		
         item_id: {
             type: Sequelize.UUID,
             allowNull: false,
         },
-
         item_name: {
             type: Sequelize.STRING,
             allowNull: true,
         },
-		
 		count: {
             type: Sequelize.INTEGER,
             allowNull: false,
             unique: false
         },
-		
 		onyen: {
             type: Sequelize.STRING,
             allowNull: false,
@@ -37,7 +32,6 @@ exports.init_table = function (sequelize) {
                 isAlphanumeric: true
             }
         },
-
 		status: {
             type: Sequelize.STRING,
             allowNull: false,
@@ -45,15 +39,15 @@ exports.init_table = function (sequelize) {
                 isIn: [['pending', 'complete', 'cancelled', 'late']]
             }
         },
-
         return_date: {
             type: Sequelize.DATE,
             allowNull: false,
+            defaultValue: Date.now() + 2.628e+9, // set return date a month from now
         },
-
         is_returned: {
             type: Sequelize.BOOLEAN,
             allowNull: false,
+            defaultValue: false,
         }
     });
 

@@ -94,12 +94,16 @@ let getItemByName = async function (name) {
  * @param {number} count 
  */
 
-exports.createItem = async function (name, type, count) {
+exports.createItem = async function (name, type, gender, image, brand, color, count) {
     try {
         let item = await Item.create({
             id: '',
             name: name,
             type: type,
+            gender: gender,
+            image: image,
+            brand: brand,
+            color: color,
             count: count
         });
         return item;

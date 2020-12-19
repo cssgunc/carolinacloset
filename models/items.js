@@ -12,7 +12,6 @@ exports.init_table = function (sequelize) {
         name: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: "nameDescConstraint",
         },
         type: {
             type: Sequelize.ENUM('suits', 'shirts', 'pants', 'shoes'),
