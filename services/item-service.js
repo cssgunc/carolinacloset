@@ -44,7 +44,6 @@ exports.getAllItems = async function () {
  * @param {enum} type
  * @param {string} name 
  */
-
 exports.getItemByTypeThenName = async function (type, name) {
     try {
         let item = await getItemByType(type);
@@ -60,7 +59,6 @@ exports.getItemByTypeThenName = async function (type, name) {
  * Returns the item found or null if nothing is found
  * @param {enum} type
  */
-
 let getItemByType = async function (type) {
     if (!type) return null;
     try {
@@ -76,7 +74,6 @@ let getItemByType = async function (type) {
  * Returns the item fround or null if nothing is found
  * @param {string} name 
  */
-
 let getItemByName = async function (name) {
     try {
         name = name ? name : '';
@@ -91,9 +88,12 @@ let getItemByName = async function (name) {
  * Creates a new item in the Items table
  * @param {string} name 
  * @param {number} type 
- * @param {number} count 
+ * @param {string} gender
+ * @param {Blob} image
+ * @param {string} brand
+ * @param {string} color
+ * @param {number} count
  */
-
 exports.createItem = async function (name, type, gender, image, brand, color, count) {
     try {
         let item = await Item.create({
@@ -126,20 +126,22 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
  * @param {string} name 
  * @param {enum} type 
  * @param {enum} gender 
+ * @param {Blob} image
  * @param {string} brand 
  * @param {enum} color 
  */
-exports.editItem = async function (id, name, type, gender, brand, color) {
+exports.editItem = async function (id, name, type, gender, image, brand, color) {
     try {
         let item = await Item.update({
             name: name,
             type: type,
             gender: gender,
+            image: image,
             brand: brand,
             color: color,
         }, {
             where: { id, id },
-            fields: ['name', 'type', 'gender', 'brand', 'color'],
+            fields: ['name', 'type', 'gender', 'image', 'brand', 'color'],
             returning: true
         });
         return item;
@@ -161,7 +163,6 @@ exports.editItem = async function (id, name, type, gender, brand, color) {
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
  */
-
 exports.addItems = async function (itemId, quantity, onyen) {
     try {
         await this.createTransaction(itemId, quantity, onyen);
@@ -177,7 +178,6 @@ exports.addItems = async function (itemId, quantity, onyen) {
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
  */
-
 exports.removeItems = async function (itemId, quantity, onyen) {
     try {
         await this.createTransaction(itemId, -quantity, onyen);
@@ -207,7 +207,6 @@ exports.removeItems = async function (itemId, quantity, onyen) {
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
  */
-
 exports.createTransaction = async function (itemId, quantity, onyen) {
     let item = await this.getItem(itemId);
 
@@ -260,12 +259,15 @@ exports.appendCsv = async function (data) {
                         let entry = output[i];
 
                         // Skip row headers
-                        if ((entry.length === 7 && i === 0) ||
-                            (entry.length === 4 
+                        if ((entry.length === 11 && i === 0) ||
+                            (entry.length === 7
                             && entry[0] === 'name'
-                            && entry[1] === 'barcode'
-                            && entry[2] === 'count'
-                            && entry[3] === 'description')) continue;
+                            && entry[1] === 'type'
+                            && entry[2] === 'gender'
+                            && entry[3] === 'image'
+                            && entry[4] === 'brand'
+                            && entry[5] === 'color'
+                            && entry[6] === 'count')) continue;
 
                         let item = "";
 
@@ -276,8 +278,6 @@ exports.appendCsv = async function (data) {
                         // Expects a file with only the necessary data
                         if (entry.length === 4) {
                             if (parseInt(entry[2]) < 1) continue;
-                            // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
-                            let barcode = entry[1] === "" ? "NULL" : "'" + entry[1] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
                             // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
                             item = "('" + uuidv4() + "'," + [entry[0], barcode, entry[2], entry[3], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
