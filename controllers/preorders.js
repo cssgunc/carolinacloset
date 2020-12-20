@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 const express = require("express"),
     router = express.Router(),
     preorderService = require("../services/preorder-service"),
