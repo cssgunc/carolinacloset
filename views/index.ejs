@@ -8,20 +8,9 @@
   <div class="container">
     <%- include("components/alerts") -%>
     <p>Hi <%= onyen %>. Welcome to Carolina Closet!</p>
-    <% if(userType) { %>
     <% if(userType == "admin") { %>
     <h1>Admin</h1>
     <div class="row">
-      <div class="col-sm-12 col-md-4">
-        <div class="card">
-          <a class="card-link" href="/admin/users">
-            <div class="card-body">
-              <p class="card-title">Manage Volunteers</p>
-              <p class="card-text">Add, delete, and edit volunteers and admins</p>
-            </div>
-          </a>
-        </div>
-      </div>
       <div class="col-sm-12 col-md-4">
         <div class="card">
           <a class="card-link" href="/admin/history">
@@ -42,12 +31,6 @@
           </a>
         </div>
       </div>
-    </div>
-    <br>
-    <% } %>
-    <% if(userType == "volunteer" || userType == "admin") { %>
-    <h2>Volunteer</h2>
-    <div class="row">
       <div class="col-sm-12 col-md-4">
         <div class="card">
           <a class="card-link" href="/entry">
@@ -58,6 +41,9 @@
           </a>
         </div>
       </div>
+    </div>
+    <br>    
+    <div class="row">
       <div class="col-sm-12 col-md-4">
         <div class="card">
           <a class="card-link" href="/preorders">
@@ -79,7 +65,6 @@
         </div>
       </div>
     </div>
-    <% } %>
     <% } %>
     <br>
     <h2>Your Account</h2>
