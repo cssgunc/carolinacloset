@@ -24,7 +24,7 @@ describe('Admin Routes - GET pages', () => {
         });
     });
 
-    describe('GET /admin/users - all volunteers and admins', () => {
+    describe('GET /admin/users - admins', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/admin/users')
                 .set(testUtil.commonHeaders)
@@ -363,7 +363,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -372,7 +372,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/users')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -381,7 +381,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/users/create')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -390,7 +390,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/users/edit')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -399,7 +399,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/users/delete')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -408,7 +408,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/history')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -417,7 +417,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/users/import')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -426,7 +426,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/users/import')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -435,7 +435,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/backup')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -444,7 +444,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/backup/items.csv')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -453,7 +453,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/backup/transactions.csv')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -462,7 +462,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/backup/users.csv')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -471,7 +471,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/delete/items/all')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -480,7 +480,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/delete/items/outofstock')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -489,7 +489,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/delete/transactions')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -498,7 +498,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/delete/users')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -507,7 +507,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).get('/admin/database')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });
@@ -516,7 +516,7 @@ describe('Admin Routes - Not Authorized', () => {
         it('expect HTTP 403 status', (done) => {
             supertest(app).post('/admin/database')
                 .set(testUtil.commonHeaders)
-                .set(testUtil.volunteerAuthHeaders)
+                .set(testUtil.userAuthHeaders)
                 .expect(403, done);
         });
     });

@@ -6,9 +6,6 @@ const commonHeaders = {
 const adminAuthHeaders = {
     uid: process.env.DEFAULT_ADMIN
 };
-const volunteerAuthHeaders = {
-    uid: 'volunteerOnyen'
-};
 const userAuthHeaders = {
     uid: "userOnyen"
 };
@@ -20,7 +17,6 @@ let matchResponseText = (res, pattern) => {
 
 exports.commonHeaders = commonHeaders;
 exports.adminAuthHeaders = adminAuthHeaders;
-exports.volunteerAuthHeaders = volunteerAuthHeaders;
 exports.userAuthHeaders = userAuthHeaders;
 exports.matchResponseText = matchResponseText;
 exports.alertDanger = /alert-danger/;

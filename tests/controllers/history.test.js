@@ -22,7 +22,6 @@ describe('History Routes - GET pages', () => {
                 .set(testUtil.userAuthHeaders)
                 .expect(200)
                 .end(async (err, res) => {
-                    // Clear imported volunteers
                     await dbUtil.dropTables(false);
                     await dbUtil.createTables(false);
                     await dbUtil.initAdmin(false);
