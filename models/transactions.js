@@ -24,6 +24,14 @@ exports.init_table = function (sequelize) {
             allowNull: false,
             unique: false
         },
+        admin_id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: false,
+            validate: {
+                isAlphanumeric: true
+            }
+        },
 		onyen: {
             type: Sequelize.STRING,
             allowNull: false,

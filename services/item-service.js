@@ -162,10 +162,11 @@ exports.editItem = async function (id, name, type, gender, image, brand, color) 
  * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
+ * @param {string} adminOnyen - onyen of admin who is helping the visitor
  */
-exports.addItems = async function (itemId, quantity, onyen) {
+exports.addItems = async function (itemId, quantity, onyen, adminOnyen) {
     try {
-        await this.createTransaction(itemId, quantity, onyen);
+        await this.createTransaction(itemId, quantity, onyen, adminOnyen);
     } catch (e) {
         if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
         else throw e;
@@ -177,10 +178,11 @@ exports.addItems = async function (itemId, quantity, onyen) {
  * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
+ * @param {string} adminOnyen - onyen of admin who is helping the visitor
  */
-exports.removeItems = async function (itemId, quantity, onyen) {
+exports.removeItems = async function (itemId, quantity, onyen, adminOnyen) {
     try {
-        await this.createTransaction(itemId, -quantity, onyen);
+        await this.createTransaction(itemId, -quantity, onyen, adminOnyen);
         let user = await userService.getUser(onyen);
 
         // Update first item date
@@ -206,8 +208,9 @@ exports.removeItems = async function (itemId, quantity, onyen) {
  * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
  * @param {string} onyen - onyen of visitor who is taking or donating items
+ * @param {string} adminOnyen - onyen of admin who is helping the visitor
  */
-exports.createTransaction = async function (itemId, quantity, onyen) {
+exports.createTransaction = async function (itemId, quantity, onyen, adminOnyen) {
     let item = await this.getItem(itemId);
 
     if(quantity < 0 && item.count < Math.abs(quantity)) {
@@ -224,6 +227,7 @@ exports.createTransaction = async function (itemId, quantity, onyen) {
             count: quantity,
             onyen: onyen,
             order_id: newOrderId,
+            admin_id: adminOnyen,
             status: "complete"
         });
         await transaction.save();

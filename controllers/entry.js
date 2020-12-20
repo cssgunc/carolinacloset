@@ -68,6 +68,11 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
     try {
         let name = req.body.name;
         let type = req.body.type;
+        let gender = req.body.gender;
+        let image = req.body.image; // TODO Need to change this from a body param to file
+        let brand = req.body.brand;
+        let color = req.body.color;
+        let count = req.body.count;
 
         if (type || name) {
             // try searching by type, then by name
