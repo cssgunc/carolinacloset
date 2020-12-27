@@ -54,6 +54,7 @@ router.post('/users/create', [userIsAdmin], async function (req, res, next) {
             let adminCount = await userService.countAllAdmins();
             if (adminCount == 2) {
                 res.status(500).send("Cannot create an additional admin");
+                return;
             }
         }
 
