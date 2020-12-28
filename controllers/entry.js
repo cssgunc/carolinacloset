@@ -1,3 +1,4 @@
+
 const express = require("express"),
     router = express.Router(),
     url = require('url'),
@@ -65,8 +66,8 @@ router.get("/manual", [userIsAdmin], async function (req, res) {
  */
 router.post('/manual', [userIsAdmin], async function (req, res) {
     let response = {};
+
     try {
-        let name = req.body.name;
         let type = req.body.type;
         let gender = req.body.gender;
         let image = req.body.image; // TODO Need to change this from a body param to file
@@ -74,9 +75,14 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
         let color = req.body.color;
         let count = req.body.count;
 
-        if (type || name) {
-            // try searching by type, then by name
-            let item = await itemService.getItemByTypeThenName(type, name);
+        if (type && gender && color && brand) {
+            // try searching  type gender color brand
+
+
+            let item = await itemService.getItemByTypeGenderColorBrand(type, gender, color, brand);
+
+
+
 
             // if the item is found, we send back a message and the found item
             if (item) {
@@ -86,7 +92,7 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
             }
         }
 
-        let item = await itemService.createItem(name, type, gender, image, brand, color, count);
+        let item = await itemService.createItem((type + " " + brand), type, gender, image, brand, color, count);
         if (item) {
             response.success = 'New item successfully created, id: ' + item.id;
         } else {
@@ -211,7 +217,7 @@ router.post("/remove/update", [userIsAdmin], async function (req, res) {
     let onyen = req.body.onyen;
     let pid = req.body.pid;
     let email = req.body.email;
-    
+
     // Re-renders form if not enough info is given
     if (!pid || !email) {
         response.onyen = onyen;
