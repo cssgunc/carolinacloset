@@ -10,13 +10,13 @@ const CHECKOUT_SUCCESS_MESSAGE = /Your preorder has been successfully placed/;
 const CHECKOUT_ERROR_MESSAGE = /error occurred/;
 const CHECKOUT_TOOMANY_MESSAGE = /more than the quantity in the system/;
 
-var itemId = ''; 
+var itemId = '';
 
 describe('Cart Routes - GET pages', () => {
     before(async () => {
         await dbUtil.preTestSetup();
     });
-    
+
     describe('GET /cart - get cart page', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/cart')
@@ -29,10 +29,10 @@ describe('Cart Routes - GET pages', () => {
 describe('Cart Routes - checkout', () => {
     before(async () => {
         await dbUtil.preTestSetup();
-        await ItemService.createItem('test_pants', 'pants', 'male', null, null, 'black', 1);
+        await ItemService.createItem('test_pants', 'pants', 'male', null, null, 'black', 1, { waistSize: "26", pantsLengt: "30" });
         itemId = (await ItemService.getAllItems())[0].get('id');
     });
-    
+
     describe('POST /cart - checkout valid cart', () => {
         it('expect success HTTP 200 status with success message', (done) => {
             const requestBody = {

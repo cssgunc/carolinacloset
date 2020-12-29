@@ -11,11 +11,11 @@ var itemId = '';
 describe('History Routes - GET pages', () => {
     before(async () => {
         await dbUtil.preTestSetup();
-        await ItemService.createItem('test_pants', 'pants', 'male', null, null, 'black', 1);
+        await ItemService.createItem('test_pants', 'pants', 'male', null, null, 'black', 1, { waistSize: "30", pantsLength: "30" });
         itemId = (await ItemService.getAllItems())[0].get('id');
         await ItemService.removeItems(itemId, 1, 'userOnyen', process.env.DEFAULT_ADMIN);
     });
-    
+
     describe('GET /history - create item and transaction, get user history', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/history')

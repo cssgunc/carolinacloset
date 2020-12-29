@@ -11,7 +11,7 @@ describe('Preorder Routes - Preorder Management Workflow', () => {
     before(async () => {
         await ItemService.deleteAllItems();
         await dbUtil.preTestSetup();
-        const item = await ItemService.createItem('test_pants', 'pants', 'male', null, null, 'black', 5);
+        const item = await ItemService.createItem('test_pants', 'pants', 'male', null, null, 'black', 5, { waistSize: "32", pantsLength: "30" });
         await PreorderService.createPreorder([{ id: item.get('id'), quantity: 1 }], testUtil.userAuthHeaders.uid);
         await PreorderService.createPreorder([{ id: item.get('id'), quantity: 1 }], testUtil.userAuthHeaders.uid);
     });

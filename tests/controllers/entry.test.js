@@ -23,7 +23,7 @@ describe('Entry Routes - GET pages', () => {
     before(async () => {
         await dbUtil.preTestSetup();
     });
-    
+
     describe('GET /entry - entry main page', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/entry')
@@ -88,6 +88,7 @@ describe('Entry Routes - Entry Workflow', () => {
                 brand: null,
                 color: 'white',
                 count: 1,
+                shirtSize: "XS"
             };
             supertest(app).post('/entry/manual')
                 .set(testUtil.adminAuthHeaders)
@@ -113,6 +114,7 @@ describe('Entry Routes - Entry Workflow', () => {
                 brand: null,
                 color: 'white',
                 count: 1,
+                shirtSize: "XS"
             };
             supertest(app).post('/entry/manual')
                 .set(testUtil.adminAuthHeaders)
