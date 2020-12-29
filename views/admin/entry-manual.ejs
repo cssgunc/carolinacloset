@@ -15,7 +15,7 @@
 			<div class="form-group">
 				<label for="type">Clothing Type: </label>
 				
-					<select class="custom-select custom-select-lg" id="type" name="type" form="entryForm" required>
+					<select class="custom-select custom-select-lg" id="type" name="type" form="entryForm" onchange="updateType()" required>
 						<option selected>Choose...</option>
 						<option value="suits">Suits</option>
 						<option value="shirts">Shirts</option>
@@ -24,6 +24,82 @@
 
 					  </select>
 			</div>
+			<div id="sizeWrapper"> </div>
+
+
+			<script>
+			// handles conditional rendering based on the type of item selected
+			function updateType(){
+				let currentType = document.getElementById("type").value
+				let wrapper = document.getElementById("sizeWrapper")
+				wrapper.innerHTML = ""
+
+				switch(currentType){
+					case "suits":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="chestSize">Chest Size: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="chestSize" id="chestSize"
+								min=35 max=55 placeholder=35>
+			</div>
+			<div class="form-group">
+				<label for="sleeveSize">Sleeve Size: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="sleeveSize" id="sleeveSize"
+								min=35 max=55 placeholder=35>
+			</div>`
+					break;
+					case "shirts":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="shirtSize">Shirt Size: </label>
+				
+				<select class="custom-select custom-select-lg" id="shirtSize" name="shirtSize" form="entryForm" required>
+					<option selected>Choose...</option>
+					<option value="XS">XS</option>
+					<option value="S">S</option>
+					<option value="M">M</option>
+					<option value="L">L</option>
+					<option value="XL">XL</option>
+					<option value="XLL">XLL</option>
+
+				</select>
+
+			</div>`
+					break;
+					case "pants":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="waistSize">Waist Size: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="waistSize" id="waistSize"
+							min=26 max=36 step=2 placeholder=30>
+
+			</div><div class="form-group">
+				<label for="pantsLength">Length: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="pantsLength" id="pantsLength"
+								min=26 max=36 step=2 placeholder=30>
+
+			</div>`
+					break;
+					case "shoes":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="shoeSize">Shoe Size: </label>
+				
+				<input class="form-control" form-control-lg" type="number" name="shoeSize" id="shoeSize"
+							min=6.5 max=13 step=0.5 placeholder=6.5></div>`
+
+					break;
+					default:
+						wrapper.innerHTML = ""
+
+
+
+				}
+			}
+			</script>
+
+
+
 			<div class="form-group">
 				<label for="gender">Gender: </label>
 				
@@ -56,7 +132,7 @@
 			<div class="form-group">
 				<label for="brand">Brand:</label>
 				<input id="brand" name="brand" class="form-control form-control-lg" type="text"
-					placeholder="Ex. Gluten-free soup expiring 4/20/19"
+					placeholder="Ex: Hanes"
 					<% if(response.foundItem && response.foundItem.desc) {%>value="<%= response.foundItem.desc %>" <% } %>>
 					
 			</div>
@@ -94,12 +170,50 @@
 					
 						<div class="form-group">
 							<label for="foundType">Clothing Type:</label>
-							<input class="form-control" type="text" name="barcode" id="foundType" readonly
-								value="<%= response.itemFound.type %>">
-							
-
-						
+							<input class="form-control" type="text" name="type" id="foundType" readonly
+								value="<%= response.itemFound.type %>">						
 						</div>
+						<% switch (response.itemFound.type) {
+							case "suits": %>
+							<div class="form-group">
+								<label for="foundChestSize">Chest Size:</label>
+								<input class="form-control" type="text" name="foundChestSize" id="foundChestSize" readonly
+									value="<%= response.sizing.chest %>">						
+							</div>
+							<div class="form-group">
+								<label for="foundSleeveSize">Sleeve Size:</label>
+								<input class="form-control" type="text" name="foundSleeveSize" id="foundSleeveSize" readonly
+									value="<%= response.sizing.sleeve %>">						
+							</div>
+						  <% break;
+							case "shirts": %>
+							<div class="form-group">
+								<label for="foundShirtSize">Size:</label>
+								<input class="form-control" type="text" name="foundShirtSize" id="foundShirtSize" readonly
+									value="<%= response.sizing.size %>">						
+							</div>
+						  <% break;
+							case "pants": %>
+							<div class="form-group">
+								<label for="foundWaistSize">Waist Size:</label>
+								<input class="form-control" type="text" name="foundWaistSize" id="foundWaistSize" readonly
+									value="<%= response.sizing.waist %>">						
+							</div>
+							<div class="form-group">
+								<label for="foundPantsLength">Length:</label>
+								<input class="form-control" type="text" name="foundPantsLength" id="foundPantsLength" readonly
+									value="<%= response.sizing.length %>">						
+							</div>
+						  <% break;
+						  case "shoes": %>
+							<div class="form-group">
+								<label for="foundShoeSize">Size:</label>
+								<input class="form-control" type="text" name="foundShoeSize" id="foundShoeSize" readonly
+									value="<%= response.sizing.size %>">						
+							</div>
+						  <% break;
+							default:
+							break; } %>
 						<div class="form-group">
 							<label for="foundGender">Gender:</label>
 							<input class="form-control" type="text" name="gender" id="foundGender" readonly

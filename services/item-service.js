@@ -1,5 +1,10 @@
 const { v4: uuidv4 } = require("uuid"),
     Item = require("../db/sequelize").items,
+    Suits = require("../db/sequelize").suits,
+    Pants = require("../db/sequelize").pants,
+    Shoes = require("../db/sequelize").shoes,
+    Shirts = require("../db/sequelize").shirts,
+
     Order = require("../db/sequelize").orders,
     Transaction = require("../db/sequelize").transactions,
     Sequelize = require("sequelize"),
@@ -20,11 +25,100 @@ exports.getItem = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
+
+
+
+
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
     }
 }
+
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getSuit = async function (itemId) {
+    try {
+        let item = await Suits.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getShirt = async function (itemId) {
+    try {
+        let item = await Shirts.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getShoes = async function (itemId) {
+    try {
+        let item = await Shoes.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getPants = async function (itemId) {
+    try {
+        let item = await Pants.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+
+
+
+
+
+
+
+
 
 /**
  * Retrieves and returns all items from the Items table
@@ -81,12 +175,73 @@ exports.getItemByTypeGenderColorBrand = async function (type, gender, color, bra
     if (!type || !gender || !color) return null;
     try {
         let item = await Item.findOne({ where: { type: type, color: color, gender: gender, brand: brand } });
-        return item;
+        return item
     } catch (e) {
         throw e;
     }
 }
 
+
+/**
+ * Looks for an item by type, gender, color
+ * Returns the item found or null if nothing is found
+ * @param {enum} type
+ * @param {enum} gender
+ * @param {enum} color
+ * @param {string} brand
+ * @param {object} size
+ *  if object is of type suits: size has chestSize and sleeveSize attributes
+ * if object is of type shirt: size has shirtSize attribute 
+ * if object is of type pants: size has waistSize and pantsLength attributes
+ * if object is of type shoes: size has an shoeSize attribute
+ */
+exports.getItemAndSize = async function (type, gender, color, brand, size) {
+
+    if (!type || !gender || !color || size || brand) return null;
+    try {
+        let item = null
+        switch (type) {
+            case "suits":
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Suits,
+                        where: { chest: size.chestSize, sleeve: size.sleeveSize }
+                    }]
+                });
+                break;
+            case "shirts":
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Shirts,
+                        where: { size: size.shirtSize }
+                    }]
+                });
+
+                break;
+            case "pants":
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Pants,
+                        where: { waist: size.waistSize, length: size.pantsLength }
+                    }]
+                });
+
+                break;
+            case "shoes":
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Shoes,
+                        where: { size: shoeSize }
+                    }]
+                });
+                break;
+        }
+
+        return item
+    } catch (e) {
+        throw e;
+    }
+}
 
 
 
@@ -117,8 +272,16 @@ exports.getItemByName = async function (name) {
  * @param {string} brand
  * @param {string} color
  * @param {number} count
- */
-exports.createItem = async function (name, type, gender, image, brand, color, count) {
+ * @param {object} size
+ * if object is of type suits: size has chestSize and sleeveSize attributes
+ * if object is of type shirt: size has shirtSize attribute 
+ * if object is of type pants: size has waistSize and pantsLength attributes
+ * if object is of type shoes: size has an shoeSize attribute
+ **/
+
+
+
+exports.createItem = async function (name, type, gender, image, brand, color, count, size) {
     try {
         let item = await Item.create({
             id: '',
@@ -130,6 +293,36 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
             color: color,
             count: count
         });
+
+
+        if (item.id != undefined) {
+            //create associated size object in seperate table
+            let associatedSize = null
+            console.log(size, "sizeobj")
+            switch (type) {
+                case "suits":
+                    associatedSize = Suits.create({ id: item.id, chest: size.chestSize, sleeve: size.sleeveSize })
+                    break;
+                case "shirts":
+                    associatedSize = Shirts.create({ id: item.id, size: size.shirtSize })
+                    break;
+                case "pants":
+                    associatedSize = Pants.create({ id: item.id, waist: size.waistSize, length: size.pantsLength })
+                    break;
+                case "shoes":
+                    associatedSize = Shoes.create({ id: item.id, size: size.shoeSize })
+                    break;
+            }
+
+
+        } else {
+            throw new InternalErrorException("A problem occurred when saving the item", e);
+        }
+
+
+
+
+
         return item;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {

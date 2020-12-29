@@ -9,7 +9,8 @@ exports.init_table = function (sequelize) {
             references: {
                 model: 'items',
                 key: 'id'
-            }
+            },
+            primaryKey: true
         },
         size: {
             type: Sequelize.ENUM('XS', 'S', 'M', 'L', 'XL', 'XXL'),
