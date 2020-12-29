@@ -75,7 +75,7 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
         let color = req.body.color;
         let count = req.body.count;
 
-        if (type && gender && color && brand) {
+        if (type && gender && color) {
             // try searching  type gender color brand
 
 
