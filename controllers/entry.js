@@ -95,10 +95,9 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
         if (type && gender && color && brand) {
             // try searching  type gender color brand 
 
-
             let item = await itemService.getItemAndSize(type, gender, color, brand, size);
 
-
+            console.log(item, "this da fuckin item")
 
             // if the item is found, we send back a message and the found item
             if (item) {

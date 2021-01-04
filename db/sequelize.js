@@ -58,6 +58,15 @@ sequelize.shirts = Shirts.init_table(sequelize);
 sequelize.pants = Pants.init_table(sequelize);
 sequelize.shoes = Shoes.init_table(sequelize);
 
+sequelize.items.hasOne(sequelize.suits, { foreignKey: 'id' })
+sequelize.items.hasOne(sequelize.shirts, { foreignKey: 'id' })
+sequelize.items.hasOne(sequelize.pants, { foreignKey: 'id' })
+sequelize.items.hasOne(sequelize.shoes, { foreignKey: 'id' })
+
+
+
+
+
 //define relationships
 sequelize.transactions.belongsTo(sequelize.users, { foreignKey: 'onyen' });
 sequelize.transactions.belongsTo(sequelize.items, { foreignKey: 'item_id' });

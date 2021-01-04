@@ -197,7 +197,7 @@ exports.getItemByTypeGenderColorBrand = async function (type, gender, color, bra
  */
 exports.getItemAndSize = async function (type, gender, color, brand, size) {
 
-    if (!type || !gender || !color || size || brand) return null;
+    if (!type || !gender || !color || !size || !brand) return null;
     try {
         let item = null
         switch (type) {
@@ -228,15 +228,16 @@ exports.getItemAndSize = async function (type, gender, color, brand, size) {
 
                 break;
             case "shoes":
+                console.log(size)
                 item = await Item.findOne({
                     where: { type: type, color: color, gender: gender, brand: brand }, include: [{
                         model: Shoes,
-                        where: { size: shoeSize }
+                        where: { size: size.shoeSize }
                     }]
                 });
                 break;
         }
-
+        console.log(item, "here yo")
         return item
     } catch (e) {
         throw e;

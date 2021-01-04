@@ -1,6 +1,6 @@
-const sequelize         = require("./sequelize");
-const userService      = require("../services/user-service");
-const testUtil          = require("../tests/util/test-util");
+const sequelize = require("./sequelize");
+const userService = require("../services/user-service");
+const testUtil = require("../tests/util/test-util");
 
 // exit param is passed to determine whether or not to exit after running the function
 // for scripts, exit should be true
@@ -12,7 +12,7 @@ const testUtil          = require("../tests/util/test-util");
  */
 async function dropTables(exit) {
     try {
-        await sequelize.drop();
+        await sequelize.drop({ force: true, cascade: true });
         if (exit) process.exit(0);
     } catch (e) {
         console.error(e);
@@ -40,7 +40,7 @@ async function createTables(exit) {
  */
 async function initAdmin(exit) {
     await userService.createUser("PREORDER", "admin", 0, "preorder@admin.com");
-    if(process.env.DEFAULT_ADMIN) {
+    if (process.env.DEFAULT_ADMIN) {
         await userService.createUser(process.env.DEFAULT_ADMIN, "admin", 1, "admin@admin.com");
     }
     if (exit) process.exit(0);
