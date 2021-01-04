@@ -9,7 +9,8 @@ exports.init_table = function (sequelize) {
             references: {
                 model: 'items',
                 key: 'id'
-            }
+            },
+            primaryKey: true
         },
         chest: {
             type: Sequelize.ENUM('35', '36', '37', '38', '39', '40', '41',

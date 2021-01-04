@@ -1,14 +1,19 @@
-const   { v4: uuidv4 } = require("uuid"),
-        Item = require("../db/sequelize").items,
-        Order = require("../db/sequelize").orders,
-        Transaction = require("../db/sequelize").transactions,
-        Sequelize = require("sequelize"),
-        sequelize = require("../db/sequelize"),
-        userService = require("./user-service"),
-        BadRequestException = require("../exceptions/bad-request-exception"),
-        InternalErrorException = require("../exceptions/internal-error-exception"),
-        exceptionHandler = require("../exceptions/exception-handler"),
-        csvParser = require("csv-parse");
+const { v4: uuidv4 } = require("uuid"),
+    Item = require("../db/sequelize").items,
+    Suits = require("../db/sequelize").suits,
+    Pants = require("../db/sequelize").pants,
+    Shoes = require("../db/sequelize").shoes,
+    Shirts = require("../db/sequelize").shirts,
+
+    Order = require("../db/sequelize").orders,
+    Transaction = require("../db/sequelize").transactions,
+    Sequelize = require("sequelize"),
+    sequelize = require("../db/sequelize"),
+    userService = require("./user-service"),
+    BadRequestException = require("../exceptions/bad-request-exception"),
+    InternalErrorException = require("../exceptions/internal-error-exception"),
+    exceptionHandler = require("../exceptions/exception-handler"),
+    csvParser = require("csv-parse");
 
 /**
  * Retrieves and returns an item by id
@@ -20,11 +25,100 @@ exports.getItem = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
+
+
+
+
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
     }
 }
+
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getSuit = async function (itemId) {
+    try {
+        let item = await Suits.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getShirt = async function (itemId) {
+    try {
+        let item = await Shirts.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getShoes = async function (itemId) {
+    try {
+        let item = await Shoes.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+/**
+ * Retrieves and returns an item by id
+ * @param {uuid} itemId 
+ */
+exports.getPants = async function (itemId) {
+    try {
+        let item = await Pants.findOne({ where: { id: itemId } });
+        if (!item) {
+            throw new BadRequestException("The item could not be retrieved.");
+        }
+
+
+
+
+        return item;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving the item", e);
+    }
+}
+
+
+
+
+
+
+
+
 
 /**
  * Retrieves and returns all items from the Items table
@@ -47,7 +141,7 @@ exports.getAllItems = async function () {
 exports.getItemByTypeThenName = async function (type, name) {
     try {
         let item = await getItemByType(type);
-        if(!item) item = await getItemByName(name);
+        if (!item) item = await getItemByName(name);
         return item;
     } catch (e) {
         throw e;
@@ -62,7 +156,7 @@ exports.getItemByTypeThenName = async function (type, name) {
 let getItemByType = async function (type) {
     if (!type) return null;
     try {
-        let item = await Item.findOne({ where: { type: type }});
+        let item = await Item.findOne({ where: { type: type } });
         return item;
     } catch (e) {
         throw e;
@@ -70,14 +164,100 @@ let getItemByType = async function (type) {
 }
 
 /**
+ * Looks for an item by type, gender, color
+ * Returns the item found or null if nothing is found
+ * @param {enum} type
+ * @param {enum} gender
+ * @param {enum} color
+ * @param {string} brand
+ */
+exports.getItemByTypeGenderColorBrand = async function (type, gender, color, brand) {
+    if (!type || !gender || !color) return null;
+    try {
+        let item = await Item.findOne({ where: { type: type, color: color, gender: gender, brand: brand } });
+        return item
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+/**
+ * Looks for an item by type, gender, color
+ * Returns the item found or null if nothing is found
+ * @param {enum} type
+ * @param {enum} gender
+ * @param {enum} color
+ * @param {string} brand
+ * @param {object} size
+ *  if object is of type suits: size has chestSize and sleeveSize attributes
+ * if object is of type shirt: size has shirtSize attribute 
+ * if object is of type pants: size has waistSize and pantsLength attributes
+ * if object is of type shoes: size has an shoeSize attribute
+ */
+exports.getItemAndSize = async function (type, gender, color, brand, size) {
+
+    if (!type || !gender || !color || !size || !brand) return null;
+    try {
+        let item = null
+        switch (type) {
+            case "suits":
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Suits,
+                        where: { chest: size.chestSize, sleeve: size.sleeveSize }
+                    }]
+                });
+                break;
+            case "shirts":
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Shirts,
+                        where: { size: size.shirtSize }
+                    }]
+                });
+
+                break;
+            case "pants":
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Pants,
+                        where: { waist: size.waistSize, length: size.pantsLength }
+                    }]
+                });
+
+                break;
+            case "shoes":
+                console.log(size)
+                item = await Item.findOne({
+                    where: { type: type, color: color, gender: gender, brand: brand }, include: [{
+                        model: Shoes,
+                        where: { size: size.shoeSize }
+                    }]
+                });
+                break;
+        }
+        console.log(item, "here yo")
+        return item
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+
+
+
+
+/**
  * Looks for an item by name and description
  * Returns the item fround or null if nothing is found
  * @param {string} name 
  */
-let getItemByName = async function (name) {
+exports.getItemByName = async function (name) {
     try {
         name = name ? name : '';
-        let item = await Item.findOne({ where: { name: name }});
+        let item = await Item.findOne({ where: { name: name } });
         return item;
     } catch (e) {
         throw e;
@@ -93,8 +273,16 @@ let getItemByName = async function (name) {
  * @param {string} brand
  * @param {string} color
  * @param {number} count
- */
-exports.createItem = async function (name, type, gender, image, brand, color, count) {
+ * @param {object} size
+ * if object is of type suits: size has chestSize and sleeveSize attributes
+ * if object is of type shirt: size has shirtSize attribute 
+ * if object is of type pants: size has waistSize and pantsLength attributes
+ * if object is of type shoes: size has an shoeSize attribute
+ **/
+
+
+
+exports.createItem = async function (name, type, gender, image, brand, color, count, size) {
     try {
         let item = await Item.create({
             id: '',
@@ -106,6 +294,36 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
             color: color,
             count: count
         });
+
+
+        if (item.id != undefined) {
+            //create associated size object in seperate table
+            let associatedSize = null
+            console.log(size, "sizeobj")
+            switch (type) {
+                case "suits":
+                    associatedSize = Suits.create({ id: item.id, chest: size.chestSize, sleeve: size.sleeveSize })
+                    break;
+                case "shirts":
+                    associatedSize = Shirts.create({ id: item.id, size: size.shirtSize })
+                    break;
+                case "pants":
+                    associatedSize = Pants.create({ id: item.id, waist: size.waistSize, length: size.pantsLength })
+                    break;
+                case "shoes":
+                    associatedSize = Shoes.create({ id: item.id, size: size.shoeSize })
+                    break;
+            }
+
+
+        } else {
+            throw new InternalErrorException("A problem occurred when saving the item", e);
+        }
+
+
+
+
+
         return item;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {
@@ -213,7 +431,7 @@ exports.removeItems = async function (itemId, quantity, onyen, adminOnyen) {
 exports.createTransaction = async function (itemId, quantity, onyen, adminOnyen) {
     let item = await this.getItem(itemId);
 
-    if(quantity < 0 && item.count < Math.abs(quantity)) {
+    if (quantity < 0 && item.count < Math.abs(quantity)) {
         throw new BadRequestException("The amount requested is larger than the quantity in the system");
     }
 
@@ -231,7 +449,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, adminOnyen)
             status: "complete"
         });
         await transaction.save();
-        item.increment('count', {by: quantity});
+        item.increment('count', { by: quantity });
     } catch (e) {
         throw new InternalErrorException("A problem occurred when adding the transaction", e);
     }
@@ -247,31 +465,31 @@ exports.appendCsv = async function (data) {
     // this will allow the caller to tell when the Item table creation fails
     return new Promise((resolve, reject) => {
         try {
-            csvParser(data.data, 
+            csvParser(data.data,
                 {
-                    delimiter: ',', 
-                    endLine: '\n', 
-                    escapeChar: '"', 
+                    delimiter: ',',
+                    endLine: '\n',
+                    escapeChar: '"',
                     enclosedChar: '"'
-                }, 
-                function(err, output) {
+                },
+                function (err, output) {
                     if (err) {
                         throw new InternalErrorException("A problem occurred when parsing CSV data");
                     }
 
-                    for(let i = 0; i < output.length; i++) {
+                    for (let i = 0; i < output.length; i++) {
                         let entry = output[i];
 
                         // Skip row headers
                         if ((entry.length === 11 && i === 0) ||
                             (entry.length === 7
-                            && entry[0] === 'name'
-                            && entry[1] === 'type'
-                            && entry[2] === 'gender'
-                            && entry[3] === 'image'
-                            && entry[4] === 'brand'
-                            && entry[5] === 'color'
-                            && entry[6] === 'count')) continue;
+                                && entry[0] === 'name'
+                                && entry[1] === 'type'
+                                && entry[2] === 'gender'
+                                && entry[3] === 'image'
+                                && entry[4] === 'brand'
+                                && entry[5] === 'color'
+                                && entry[6] === 'count')) continue;
 
                         let item = "";
 
@@ -284,7 +502,7 @@ exports.appendCsv = async function (data) {
                             if (parseInt(entry[2]) < 1) continue;
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
                             // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
-                            item = "('" + uuidv4() + "'," + [entry[0], barcode, entry[2], entry[3], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
+                            item = "('" + uuidv4() + "'," + [entry[0], barcode, entry[2], entry[3], date, date].map((s, i) => { return i === 1 ? s : "'" + s.replace(/'/g, "''") + "'" }).join(",") + ")";
                         }
                         // Expects a file with the same format as an exported file
                         else if (entry.length === 7) {
@@ -293,10 +511,10 @@ exports.appendCsv = async function (data) {
                             let barcode = entry[2] === "" ? "NULL" : "'" + entry[2] + "'";
                             // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
                             // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
-                            item = "('" + uuidv4() + "'," + [entry[1], barcode, entry[3], entry[4], date, date].map((s,i) => { return i === 1 ? s : "'"+s.replace(/'/g, "''")+"'" }).join(",") + ")";
+                            item = "('" + uuidv4() + "'," + [entry[1], barcode, entry[3], entry[4], date, date].map((s, i) => { return i === 1 ? s : "'" + s.replace(/'/g, "''") + "'" }).join(",") + ")";
                         }
                         else {
-                            let error = "File not in the expected format, see line " + (i+1);
+                            let error = "File not in the expected format, see line " + (i + 1);
                             console.error(error);
                             reject(error);
                         }
@@ -309,16 +527,16 @@ exports.appendCsv = async function (data) {
                             ON CONFLICT (name, description)
                             DO UPDATE
                             SET count = items.count + EXCLUDED.count`
-                        ).then(function(result) {
+                        ).then(function (result) {
                             resolve(result);
-                        }).catch(function(e) {
+                        }).catch(function (e) {
                             console.error(e);
                             reject(e);
                         });
                     }
                 }
             );
-        } catch(e) {
+        } catch (e) {
             console.error(e);
             reject(e);
         }
@@ -328,17 +546,17 @@ exports.appendCsv = async function (data) {
 /**
  * Deletes all items in the Items table
  */
-exports.deleteAllItems = async function() {
+exports.deleteAllItems = async function () {
     try {
         await Item.destroy({
             where: {},
             truncate: false
         });
-    } catch(e) {
+    } catch (e) {
         if (e.name === "SequelizeForeignKeyConstraintError") {
             throw e;
         }
-        
+
         throw new InternalErrorException("A problem occurred when deleting the items", e);
     }
 }
@@ -346,15 +564,15 @@ exports.deleteAllItems = async function() {
 /**
  * Deletes all out of stock items in the Items table
  */
-exports.deleteOutOfStock = async function() {   
+exports.deleteOutOfStock = async function () {
     try {
         await Item.destroy({
             where: {
-                count: {[Sequelize.Op.lte]: 0}
+                count: { [Sequelize.Op.lte]: 0 }
             },
             truncate: false
         });
-    } catch(e) {
+    } catch (e) {
         throw new InternalErrorException("A problem occurred when deleting the out of stock items", e);
     }
 }

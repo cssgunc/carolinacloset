@@ -1,3 +1,5 @@
+const { suits } = require("../db/sequelize");
+
 const express = require("express"),
     router = express.Router(),
     url = require('url'),
@@ -65,29 +67,74 @@ router.get("/manual", [userIsAdmin], async function (req, res) {
  */
 router.post('/manual', [userIsAdmin], async function (req, res) {
     let response = {};
+
     try {
-        let name = req.body.name;
         let type = req.body.type;
         let gender = req.body.gender;
         let image = req.body.image; // TODO Need to change this from a body param to file
         let brand = req.body.brand;
         let color = req.body.color;
         let count = req.body.count;
+        //used for suits
+        let chestSize = req.body.chestSize
+        let sleeveSize = req.body.sleeveSize
+        //used for shirts
+        let shirtSize = req.body.shirtSize
+        //used for pants
+        let waistSize = req.body.waistSize
+        let pantsLength = req.body.pantsLength
+        //used for shoes
+        let shoeSize = req.body.shoeSize
+        let size = { shoeSize: shoeSize, chestSize: chestSize, sleeveSize: sleeveSize, shirtSize: shirtSize, waistSize: waistSize, pantsLength: pantsLength }
 
-        if (type || name) {
-            // try searching by type, then by name
-            let item = await itemService.getItemByTypeThenName(type, name);
+        // if no brand provided use "Generic"
+        if (!brand) {
+            brand = "Generic"
+        }
+
+        if (type && gender && color && brand) {
+            // try searching  type gender color brand 
+
+            let item = await itemService.getItemAndSize(type, gender, color, brand, size);
+
+            console.log(item, "this da fuckin item")
 
             // if the item is found, we send back a message and the found item
             if (item) {
                 response.itemFound = item;
+                response.sizing = {}
+                let current = null
+                //grab the corresponding sizing infromation if it exists
+                switch (item.type) {
+                    case "suits":
+                        response.sizing = await itemService.getSuit(item.id)
+                        break;
+                    case "shirts":
+                        response.sizing = await itemService.getShirt(item.id)
+
+                        break;
+                    case "pants":
+                        response.sizing = await itemService.getPants(item.id)
+
+                        break;
+                    case "shoes":
+                        response.sizing = await itemService.getShoes(item.id)
+
+                        break;
+
+                }
+                console.log(response.sizing, "here")
+
+
+
                 res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
                 return;
             }
         }
 
-        let item = await itemService.createItem(name, type, gender, image, brand, color, count);
+        let item = await itemService.createItem((gender + " " + brand + " " + type), type, gender, image, brand, color, count, size);
         if (item) {
+
             response.success = 'New item successfully created, id: ' + item.id;
         } else {
             response.error = 'Failed to create new item. Please try again later.'
@@ -211,7 +258,7 @@ router.post("/remove/update", [userIsAdmin], async function (req, res) {
     let onyen = req.body.onyen;
     let pid = req.body.pid;
     let email = req.body.email;
-    
+
     // Re-renders form if not enough info is given
     if (!pid || !email) {
         response.onyen = onyen;
@@ -252,7 +299,6 @@ router.post("/edit", [userIsAdmin], async function (req, res) {
     let color = req.body.color;
     try {
         let item = await itemService.editItem(id, name, type, gender, image, brand, color);
-        console.log(item);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }

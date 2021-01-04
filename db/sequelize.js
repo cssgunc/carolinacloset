@@ -1,8 +1,12 @@
-let Sequelize       = require("sequelize"),
-    Items           = require("../models/items"),
-    Orders          = require("../models/orders"),
-    Transactions    = require("../models/transactions"),
-    Users           = require("../models/users");
+let Sequelize = require("sequelize"),
+    Items = require("../models/items"),
+    Orders = require("../models/orders"),
+    Transactions = require("../models/transactions"),
+    Users = require("../models/users"),
+    Suits = require("../models/suits"),
+    Shirts = require("../models/shirts"),
+    Shoes = require("../models/shoes"),
+    Pants = require("../models/pants");
 
 if (!process.env.DATABASE_NAME) {
     require("dotenv").config()
@@ -35,7 +39,7 @@ if (process.env.POSTGRESQL_SERVICE_PORT) {
 
 let sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
-;(async () => {
+; (async () => {
     try {
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
@@ -49,10 +53,23 @@ sequelize.items = Items.init_table(sequelize);
 sequelize.orders = Orders.init_table(sequelize);
 sequelize.transactions = Transactions.init_table(sequelize);
 sequelize.users = Users.init_table(sequelize);
+sequelize.suits = Suits.init_table(sequelize);
+sequelize.shirts = Shirts.init_table(sequelize);
+sequelize.pants = Pants.init_table(sequelize);
+sequelize.shoes = Shoes.init_table(sequelize);
+
+sequelize.items.hasOne(sequelize.suits, { foreignKey: 'id' })
+sequelize.items.hasOne(sequelize.shirts, { foreignKey: 'id' })
+sequelize.items.hasOne(sequelize.pants, { foreignKey: 'id' })
+sequelize.items.hasOne(sequelize.shoes, { foreignKey: 'id' })
+
+
+
+
 
 //define relationships
-sequelize.transactions.belongsTo(sequelize.users, {foreignKey: 'onyen'});
-sequelize.transactions.belongsTo(sequelize.items, {foreignKey: 'item_id'});
-sequelize.transactions.belongsTo(sequelize.orders, {foreignKey: 'order_id'});
+sequelize.transactions.belongsTo(sequelize.users, { foreignKey: 'onyen' });
+sequelize.transactions.belongsTo(sequelize.items, { foreignKey: 'item_id' });
+sequelize.transactions.belongsTo(sequelize.orders, { foreignKey: 'order_id' });
 
 module.exports = sequelize;

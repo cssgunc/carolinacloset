@@ -10,29 +10,131 @@
 	<div class="container">
 		<%- include("../components/alerts") -%>
 		<h1>Enter an Item Manually</h1>
-		<form action="/entry/manual" method="post">
+		<form action="/entry/manual" method="post" id="entryForm">
+			
 			<div class="form-group">
-				<label for="name">Item Name: </label>
-				<input id="name" name="name" class="form-control form-control-lg" type="text"
-					placeholder="Ex. Campbell's Chicken Noodle Soup" required
-					<% if(response.foundItem && response.foundItem.brand_name && response.foundItem.name) {%>value="<%- foundItem.brand_name %><%- foundItem.name %>"
-					<% } %>>
+				<label for="type">Clothing Type: </label>
+				
+					<select class="custom-select custom-select-lg" id="type" name="type" form="entryForm" onchange="updateType()" required>
+						<option selected>Choose...</option>
+						<option value="suits">Suits</option>
+						<option value="shirts">Shirts</option>
+						<option value="pants">Pants</option>
+						<option value="shoes">Shoes</option>
+
+					  </select>
+			</div>
+			<div id="sizeWrapper"> </div>
+
+
+			<script>
+			// handles conditional rendering based on the type of item selected
+			function updateType(){
+				let currentType = document.getElementById("type").value
+				let wrapper = document.getElementById("sizeWrapper")
+				wrapper.innerHTML = ""
+
+				switch(currentType){
+					case "suits":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="chestSize">Chest Size: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="chestSize" id="chestSize"
+								min=35 max=55 placeholder=35>
 			</div>
 			<div class="form-group">
-				<label for="barcode">Barcode: </label>
-				<input id="barcode" name="barcode" class="form-control form-control-lg" type="text"
-					placeholder="Ex. 123456789098"
-					<% if(response.foundItem && response.foundItem.barcode) {%>value="<%= response.foundItem.barcode %>" <% } %>>
+				<label for="sleeveSize">Sleeve Size: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="sleeveSize" id="sleeveSize"
+								min=35 max=55 placeholder=35>
+			</div>`
+					break;
+					case "shirts":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="shirtSize">Shirt Size: </label>
+				
+				<select class="custom-select custom-select-lg" id="shirtSize" name="shirtSize" form="entryForm" required>
+					<option selected>Choose...</option>
+					<option value="XS">XS</option>
+					<option value="S">S</option>
+					<option value="M">M</option>
+					<option value="L">L</option>
+					<option value="XL">XL</option>
+					<option value="XLL">XLL</option>
+
+				</select>
+
+			</div>`
+					break;
+					case "pants":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="waistSize">Waist Size: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="waistSize" id="waistSize"
+							min=26 max=36 step=2 placeholder=30>
+
+			</div><div class="form-group">
+				<label for="pantsLength">Length: </label>
+				
+				<input class="form-control form-control-lg" type="number" name="pantsLength" id="pantsLength"
+								min=26 max=36 step=2 placeholder=30>
+
+			</div>`
+					break;
+					case "shoes":
+						wrapper.innerHTML = `<div class="form-group">
+				<label for="shoeSize">Shoe Size: </label>
+				
+				<input class="form-control" form-control-lg" type="number" name="shoeSize" id="shoeSize"
+							min=6.5 max=13 step=0.5 placeholder=6.5></div>`
+
+					break;
+					default:
+						wrapper.innerHTML = ""
+
+
+
+				}
+			}
+			</script>
+
+
+
+			<div class="form-group">
+				<label for="gender">Gender: </label>
+				
+					<select class="custom-select custom-select-lg" id="gender"  name="gender" form="entryForm" required>
+						<option selected>Choose...</option>
+						<option value="male">Male</option>
+						<option value="female">Female</option>
+					  </select>
 			</div>
 			<div class="form-group">
 				<label for="count">Count: </label>
 				<input id="count" name="count" class="form-control form-control-lg" type="number" placeholder="Ex. 20" required>
 			</div>
 			<div class="form-group">
-				<label for="description">Short Description:</label>
-				<input id="description" name="description" class="form-control form-control-lg" type="text"
-					placeholder="Ex. Gluten-free soup expiring 4/20/19"
+				<label for="color">Color:</label>
+			
+				<select class="custom-select custom-select-lg" id="color" name="color" form="entryForm" required>
+					<option selected>Choose...</option>
+					<option value="white">White</option>
+					<option value="black">Black</option>
+					<option value="navy">Navy</option>
+					<option value="blue">Blue</option>
+					<option value="multicolored">Multicolored</option>
+
+
+				</select>
+
+					
+			</div>
+			<div class="form-group">
+				<label for="brand">Brand:</label>
+				<input id="brand" name="brand" class="form-control form-control-lg" type="text"
+					placeholder="Ex: Hanes"
 					<% if(response.foundItem && response.foundItem.desc) {%>value="<%= response.foundItem.desc %>" <% } %>>
+					
 			</div>
 			<div class="form-group">
 				<button class="form-control btn-success btn-md float-middle" style="margin:px" type="action"
@@ -63,27 +165,78 @@
 						<div class="form-group">
 							<input class="form-control" type="text" name="id" id="foundModalId" readonly hidden aria-label="item id"
 								value="<%- response.itemFound.id %>">
+							
+						</div>
+					
+						<div class="form-group">
+							<label for="foundType">Clothing Type:</label>
+							<input class="form-control" type="text" name="type" id="foundType" readonly
+								value="<%= response.itemFound.type %>">						
+						</div>
+						<% switch (response.itemFound.type) {
+							case "suits": %>
+							<div class="form-group">
+								<label for="foundChestSize">Chest Size:</label>
+								<input class="form-control" type="text" name="foundChestSize" id="foundChestSize" readonly
+									value="<%= response.sizing.chest %>">						
+							</div>
+							<div class="form-group">
+								<label for="foundSleeveSize">Sleeve Size:</label>
+								<input class="form-control" type="text" name="foundSleeveSize" id="foundSleeveSize" readonly
+									value="<%= response.sizing.sleeve %>">						
+							</div>
+						  <% break;
+							case "shirts": %>
+							<div class="form-group">
+								<label for="foundShirtSize">Size:</label>
+								<input class="form-control" type="text" name="foundShirtSize" id="foundShirtSize" readonly
+									value="<%= response.sizing.size %>">						
+							</div>
+						  <% break;
+							case "pants": %>
+							<div class="form-group">
+								<label for="foundWaistSize">Waist Size:</label>
+								<input class="form-control" type="text" name="foundWaistSize" id="foundWaistSize" readonly
+									value="<%= response.sizing.waist %>">						
+							</div>
+							<div class="form-group">
+								<label for="foundPantsLength">Length:</label>
+								<input class="form-control" type="text" name="foundPantsLength" id="foundPantsLength" readonly
+									value="<%= response.sizing.length %>">						
+							</div>
+						  <% break;
+						  case "shoes": %>
+							<div class="form-group">
+								<label for="foundShoeSize">Size:</label>
+								<input class="form-control" type="text" name="foundShoeSize" id="foundShoeSize" readonly
+									value="<%= response.sizing.size %>">						
+							</div>
+						  <% break;
+							default:
+							break; } %>
+						<div class="form-group">
+							<label for="foundGender">Gender:</label>
+							<input class="form-control" type="text" name="gender" id="foundGender" readonly
+								value="<%= response.itemFound.gender %>">
 						</div>
 						<div class="form-group">
-							<label for="foundModalName">Item Name</label>
-							<input class="form-control" type="text" name="name" id="foundModalName" readonly
-								value="<%- response.itemFound.name %>">
+							<label for="foundColor">Color:</label>
+							<input class="form-control" type="text" name="color" id="foundColor" readonly
+								value="<%= response.itemFound.color %>">
 						</div>
 						<div class="form-group">
-							<label for="foundModalBarcode">Barcode</label>
-							<input class="form-control" type="text" name="barcode" id="foundModalBarcode" readonly
-								value="<%= response.itemFound.barcode %>">
+							<label for="foundBrand">Brand:</label>
+							<input class="form-control" type="text" name="brand" id="foundBrand" readonly
+								value="<%= response.itemFound.brand %>">
 						</div>
+						
 						<div class="form-group">
-							<label for="foundModalDescription">Description</label>
-							<input class="form-control" type="text" name="description" id="foundModalDescription" readonly
-								value="<%= response.itemFound.description %>">
-						</div>
-						<div class="form-group">
+							<h5>Current Total:<%= response.itemFound.count? response.itemFound.count: 0 %> </h5>
 							<label for="foundModalCount">Add or Remove</label>
 							<input class="form-control" type="number" name="quantity" id="foundModalCount"
 								min="<%= -1*response.itemFound.count %>" value=0>
 						</div>
+						
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						<button type="submit" class="btn btn-primary" id="submitFound">Update</button>
 					</form>
