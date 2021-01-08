@@ -29,6 +29,7 @@
             <th scope="col">Barcode</th>
             <th scope="col">Count</th>
             <th scope="col">Desc.</th>
+            <th scope="col">Image</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -40,6 +41,7 @@
             <td><%= item.barcode%></td>
             <td><%= item.count%></td>
             <td><%= item.description%></td>
+            <td><img src="data:image/jpeg;base64,<%= item.image %>"/></td>
             <td class="text-right pr-1">
               <div class="btn-group" role="group">
                 <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
