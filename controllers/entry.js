@@ -97,8 +97,6 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
 
             let item = await itemService.getItemAndSize(type, gender, color, brand, size);
 
-            console.log(item, "this da fuckin item")
-
             // if the item is found, we send back a message and the found item
             if (item) {
                 response.itemFound = item;
