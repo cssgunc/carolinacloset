@@ -120,8 +120,7 @@ router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
             return;
         }
 
-        // Checks to make sure there are at least two admins in the system
-        // PREORDER and one other admin
+        // Checks to make sure there are at least two admins in the system (PREORDER and one other admin)
         let delType = await authService.getUserType(delOnyen);
         if (delType === "admin") {
             let adminCount = await userService.countAllAdmins();
