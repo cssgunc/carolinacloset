@@ -5,6 +5,7 @@ const express = require("express"),
     url = require('url'),
     itemService = require("../services/item-service"),
     userService = require("../services/user-service"),
+    imageService = require("../services/image-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
     userIsAdmin = require("./util/auth.js").userIsAdmin;
 
@@ -27,6 +28,7 @@ router.get("/search", [userIsAdmin], async function (req, res) {
     if (req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
     try {
         response.items = await itemService.getAllItems();
+        imageService.convertItemImagesToString(response.items);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
@@ -71,7 +73,6 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
     try {
         let type = req.body.type;
         let gender = req.body.gender;
-        let image = req.body.image; // TODO Need to change this from a body param to file
         let brand = req.body.brand;
         let color = req.body.color;
         let count = req.body.count;
@@ -90,6 +91,12 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
         // if no brand provided use "Generic"
         if (!brand) {
             brand = "Generic"
+        }
+
+        let image = null;
+        if (req.files != null) {
+            image = req.files.image;
+            image = await imageService.resizeImage(image.data);
         }
 
         if (type && gender && color && brand) {
