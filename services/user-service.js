@@ -54,7 +54,7 @@ exports.countAllAdmins = async function () {
  */
 exports.createUser = async function (onyen, type, pid, email) {
     try {
-        // If user already exists, do nothing
+        // if user already exists, do nothing
         if (await User.count({ where: { onyen: onyen } }) > 0) {
             return;
         }

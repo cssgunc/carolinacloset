@@ -42,7 +42,7 @@ describe('Admin Routes - GET pages', () => {
         });
     });
 
-    describe('GET /admin/users/import - volunteers import page', () => {
+    describe('GET /admin/users/import - admin import page', () => {
         it('expect success HTTP 200 status', (done) => {
             supertest(app).get('/admin/users/import')
                 .set(testUtil.commonHeaders)
@@ -143,6 +143,22 @@ describe('Admin Routes - Sanity Checks', () => {
         });
     });
 
+    describe('POST /admin/users/create - create a second admin', () => {
+        it('expect HTTP 500 status', (done) => {
+            let requestBody = {
+                onyen: 'admin',
+                type: 'admin',
+                pid: '10',
+                email: "test@test.com"
+            };
+            supertest(app).post('/admin/users/edit')
+                .set(testUtil.commonHeaders)
+                .set(testUtil.adminAuthHeaders)
+                .send(requestBody)
+                .expect(500, done);
+        });
+    });
+
     describe('POST /admin/users/delete - delete last remaining admin', () => {
         it('expect HTTP 500 status', (done) => {
             let requestBody = {
@@ -153,57 +169,6 @@ describe('Admin Routes - Sanity Checks', () => {
                 .set(testUtil.adminAuthHeaders)
                 .send(requestBody)
                 .expect(500, done);
-        });
-    });
-});
-
-describe('Admin Routes - Volunteer Management Workflow', () => {
-    before(async () => {
-        await dbUtil.preTestSetup();
-    });
-
-    describe('POST /admin/users/create - create new admin', () => {
-        it('expect success HTTP 302 status', (done) => {
-            let requestBody = {
-                onyen: 'admin',
-                type: 'admin',
-                pid: '10',
-                email: "test@test.com"
-            }
-            supertest(app).post('/admin/users/create')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(302, done);
-        });
-    });
-
-    describe('POST /admin/users/edit - change newly created admin to user', () => {
-        it('expect success HTTP 302 status', (done) => {
-            let requestBody = {
-                onyen: 'admin',
-                type: 'user',
-                pid: '20',
-                email: "vol@test.com"
-            };
-            supertest(app).post('/admin/users/edit')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(302, done);
-        });
-    });
-
-    describe('POST /admin/users/delete - delete newly created admin', () => {
-        it('expect success HTTP 302 status', (done) => {
-            let requestBody = {
-                onyen: 'admin'
-            };
-            supertest(app).post('/admin/users/delete')
-                .set(testUtil.commonHeaders)
-                .set(testUtil.adminAuthHeaders)
-                .send(requestBody)
-                .expect(302, done);
         });
     });
 });
