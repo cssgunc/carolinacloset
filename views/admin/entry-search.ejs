@@ -21,8 +21,8 @@
       </div>
 
     </div>
-    <div class="table-responsive">
-      <table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- <table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
         <thead>
           <tr>
             <th scope="col">Item</th>
@@ -32,10 +32,36 @@
             <th scope="col">Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody> -->
           <% if (response && response.items) {%>
           <% response.items.forEach((item) => {%>
-          <tr>
+            <div class="col">
+              <div class="card" style="width: 18rem;">
+                <img src="https://images.unsplash.com/photo-1491336477066-31156b5e4f35?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title"><%= item.name%></h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
+                      data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                      data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
+                      data-description="<%= item.description %>"><i class="fas fa-plus"></i></button>
+                    <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
+                      data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                      data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
+                      data-description="<%= item.description %>"><i class="fas fa-minus"></i></button> -->
+                    <!-- edit button -->
+                    <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
+                      data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                      data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
+                      data-description="<%= item.description %>"><i class="fas fa-pencil-alt"></i></button>
+                    </div>
+                  </div>
+                  </div>
+              </div>
+            </div>
+
+          <!-- <tr>
             <th scope="row"><%= item.name%></th>
             <td><%= item.barcode%></td>
             <td><%= item.count%></td>
@@ -49,19 +75,19 @@
                 <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
                   data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
                   data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
-                  data-description="<%= item.description %>"><i class="fas fa-minus"></i></button>
+                  data-description="<%= item.description %>"><i class="fas fa-minus"></i></button> -->
                 <!-- edit button -->
-                <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
+                <!-- <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
                   data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
                   data-barcode="<%= item.barcode %>" data-count="<%= item.count %>"
                   data-description="<%= item.description %>"><i class="fas fa-pencil-alt"></i></button>
               </div>
             </td>
-          </tr>
+          </tr> -->
           <% }); %>
           <% } %>
-        </tbody>
-      </table>
+        <!-- </tbody>
+      </table> -->
     </div>
     <% if (response && response.error) {%>
     <div class="alert alert-danger">

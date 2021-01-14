@@ -37,6 +37,7 @@ if (process.env.POSTGRESQL_SERVICE_PORT) {
     options.port = process.env.DATABASE_PORT;
 }
 
+
 let sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
 ; (async () => {
@@ -58,10 +59,10 @@ sequelize.shirts = Shirts.init_table(sequelize);
 sequelize.pants = Pants.init_table(sequelize);
 sequelize.shoes = Shoes.init_table(sequelize);
 
-sequelize.items.hasOne(sequelize.suits, { foreignKey: 'id' })
-sequelize.items.hasOne(sequelize.shirts, { foreignKey: 'id' })
-sequelize.items.hasOne(sequelize.pants, { foreignKey: 'id' })
-sequelize.items.hasOne(sequelize.shoes, { foreignKey: 'id' })
+sequelize.items.hasOne(sequelize.suits, { foreignKey: 'id', as: "suits" })
+sequelize.items.hasOne(sequelize.shirts, { foreignKey: 'id', as: "shirts" })
+sequelize.items.hasOne(sequelize.pants, { foreignKey: 'id', as: "pants" })
+sequelize.items.hasOne(sequelize.shoes, { foreignKey: 'id', as: "shoes" })
 
 
 
