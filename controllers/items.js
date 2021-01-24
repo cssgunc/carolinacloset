@@ -16,7 +16,7 @@ router.get('/', [userIsBasicUser], async function (req, res, next) {
         response.error = exceptionHandler.retrieveException(e);
     }
 
-    res.render("user/view-items.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType, title: `All Inventory` });
+    res.render("user/view-items.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType, title: `All Inventory`, type: "all" });
 });
 // are all values in an size object undefined
 function hasNoSize(size) {
