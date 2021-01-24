@@ -4,7 +4,6 @@ const { v4: uuidv4 } = require("uuid"),
     Pants = require("../db/sequelize").pants,
     Shoes = require("../db/sequelize").shoes,
     Shirts = require("../db/sequelize").shirts,
-
     Order = require("../db/sequelize").orders,
     Transaction = require("../db/sequelize").transactions,
     Sequelize = require("sequelize"),
@@ -16,8 +15,6 @@ const { v4: uuidv4 } = require("uuid"),
     csvParser = require("csv-parse");
 const { suits } = require("../db/sequelize");
 var Op = Sequelize.Op;
-
-
 /**
  * Retrieves and returns an item by id
  * @param {uuid} itemId 
@@ -28,16 +25,11 @@ exports.getItem = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
     }
 }
-
 /**
  * Retrieves and returns an item by id
  * @param {uuid} itemId 
@@ -48,10 +40,6 @@ exports.getSuit = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
@@ -67,10 +55,6 @@ exports.getShirt = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
@@ -86,10 +70,6 @@ exports.getShoes = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
@@ -105,24 +85,11 @@ exports.getPants = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
     }
 }
-
-
-
-
-
-
-
-
-
 /**
  * Retrieves and returns all items from the Items table
  */
@@ -141,21 +108,17 @@ exports.getAllItems = async function () {
                 model: Suits, as: "suits"
             }]
         });
-        console.log(items)
         return items;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving items", e);
     }
 }
-
-
 /**
  * Retrieves and returns all items from the Items table of a specific type and gender
  * @param {string} gender 
  * @param {enum} type
  * 
  */
-
 exports.getItemsByCategory = async function (gender, type) {
     try {
         let items = null
@@ -168,7 +131,6 @@ exports.getItemsByCategory = async function (gender, type) {
                     }]
                 });
                 break;
-
             case "suits":
                 items = await Item.findAll({
                     where: { gender: gender, type: type },
@@ -177,7 +139,6 @@ exports.getItemsByCategory = async function (gender, type) {
                     }]
                 });
                 break;
-
             case "pants":
                 items = await Item.findAll({
                     where: { gender: gender, type: type },
@@ -186,8 +147,6 @@ exports.getItemsByCategory = async function (gender, type) {
                     }]
                 });
                 break;
-
-
             case "shirts":
                 items = await Item.findAll({
                     where: { gender: gender, type: type },
@@ -202,8 +161,6 @@ exports.getItemsByCategory = async function (gender, type) {
         throw new InternalErrorException("A problem occurred when retrieving items", e);
     }
 }
-
-
 /**
  * Retrieves and returns all items from the Items table of a specific type and gender
  * @param {string} gender 
@@ -211,10 +168,7 @@ exports.getItemsByCategory = async function (gender, type) {
  * @param {Array} color
  * 
  */
-
 exports.getItemsByCategoryAndColor = async function (gender, type, colors) {
-
-    console.log(colors)
     try {
         let items = null
         switch (type) {
@@ -276,8 +230,6 @@ exports.getItemsByCategoryAndColor = async function (gender, type, colors) {
         throw new InternalErrorException("A problem occurred when retrieving items", e);
     }
 }
-
-
 /**
  * Looks for an item, first by type, then by name
  * Returns the item found or null if nothing is found
@@ -293,7 +245,6 @@ exports.getItemByTypeThenName = async function (type, name) {
         throw e;
     }
 }
-
 /**
  * Looks for an item by type
  * Returns the item found or null if nothing is found
@@ -308,7 +259,6 @@ let getItemByType = async function (type) {
         throw e;
     }
 }
-
 /**
  * Looks for an item by type, gender, color
  * Returns the item found or null if nothing is found
@@ -326,8 +276,6 @@ exports.getItemByTypeGenderColorBrand = async function (type, gender, color, bra
         throw e;
     }
 }
-
-
 /**
  * Looks for an item by type, gender, color, brand, size
  * Returns the item found or null if nothing is found
@@ -377,7 +325,6 @@ exports.getItemAndSize = async function (type, gender, color, brand, size) {
 
                 break;
             case "shoes":
-                console.log(size)
                 item = await Item.findOne({
                     where: { type: type, color: color, gender: gender, brand: brand }, include: [{
                         model: Shoes,
@@ -387,14 +334,11 @@ exports.getItemAndSize = async function (type, gender, color, brand, size) {
                 });
                 break;
         }
-        console.log(item, "here yo")
         return item
     } catch (e) {
         throw e;
     }
 }
-
-
 /**
  * Looks for an item by type, gender, size
  * Returns the item found or null if nothing is found
@@ -411,7 +355,6 @@ exports.getItemCategorySize = async function (type, gender, size) {
     if (!type || !gender || !size) return null;
     try {
         let item = null
-        console.log(size)
         switch (type) {
             case "suits":
                 item = await Item.findAll({
@@ -443,7 +386,6 @@ exports.getItemCategorySize = async function (type, gender, size) {
 
                 break;
             case "shoes":
-                console.log(size)
                 item = await Item.findAll({
                     where: { type: type, gender: gender }, include: [{
                         model: Shoes,
@@ -459,9 +401,6 @@ exports.getItemCategorySize = async function (type, gender, size) {
         throw e;
     }
 }
-
-
-
 /**
  * Looks for an item by type, gender, size
  * Returns the item found or null if nothing is found
@@ -478,7 +417,6 @@ exports.getItemCategorySize = async function (type, gender, size) {
     if (!type || !gender || !size) return null;
     try {
         let item = null
-        console.log(size)
         switch (type) {
             case "suits":
                 item = await Item.findAll({
@@ -497,7 +435,6 @@ exports.getItemCategorySize = async function (type, gender, size) {
                         as: "shirts"
                     }]
                 });
-
                 break;
             case "pants":
                 item = await Item.findAll({
@@ -507,10 +444,8 @@ exports.getItemCategorySize = async function (type, gender, size) {
                         as: "pants"
                     }]
                 });
-
                 break;
             case "shoes":
-                console.log(size)
                 item = await Item.findAll({
                     where: { type: type, gender: gender }, include: [{
                         model: Shoes,
@@ -520,15 +455,11 @@ exports.getItemCategorySize = async function (type, gender, size) {
                 });
                 break;
         }
-
         return item
     } catch (e) {
         throw e;
     }
 }
-
-
-
 /**
  * Looks for an item by type, gender, size, color
  * Returns the item found or null if nothing is found
@@ -542,11 +473,9 @@ exports.getItemCategorySize = async function (type, gender, size) {
  * if object is of type shoes: size has an shoeSize attribute
  */
 exports.getItemCategorySizeColor = async function (type, gender, size, colors) {
-
     if (!type || !gender || !size || colors.length == 0) return null;
     try {
         let item = null
-        console.log(size)
         switch (type) {
             case "suits":
                 item = await Item.findAll({
@@ -590,7 +519,6 @@ exports.getItemCategorySizeColor = async function (type, gender, size, colors) {
 
                 break;
             case "shoes":
-                console.log(size)
                 item = await Item.findAll({
                     where: {
                         type: type, gender: gender, color: {
@@ -610,14 +538,6 @@ exports.getItemCategorySizeColor = async function (type, gender, size, colors) {
         throw e;
     }
 }
-
-
-
-
-
-
-
-
 /**
  * Looks for an item by name and description
  * Returns the item fround or null if nothing is found
@@ -648,9 +568,6 @@ exports.getItemByName = async function (name) {
  * if object is of type pants: size has waistSize and pantsLength attributes
  * if object is of type shoes: size has an shoeSize attribute
  **/
-
-
-
 exports.createItem = async function (name, type, gender, image, brand, color, count, size) {
     try {
         let item = await Item.create({
@@ -663,12 +580,9 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
             color: color,
             count: count
         });
-
-
         if (item.id != undefined) {
             //create associated size object in seperate table
             let associatedSize = null
-            console.log(size, "sizeobj")
             switch (type) {
                 case "suits":
                     associatedSize = Suits.create({ id: item.id, chest: size.chestSize, sleeve: size.sleeveSize })
@@ -683,16 +597,9 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
                     associatedSize = Shoes.create({ id: item.id, size: size.shoeSize })
                     break;
             }
-
-
         } else {
             throw new InternalErrorException("A problem occurred when saving the item", e);
         }
-
-
-
-
-
         return item;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {
