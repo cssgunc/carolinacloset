@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 const express = require("express"),
     router = express.Router(),
     userService = require("../services/user-service"),
@@ -7,7 +5,6 @@ const express = require("express"),
     tranService = require("../services/transaction-service"),
     itemService = require("../services/item-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
-    userIsAuthenticated = require("./util/auth.js").userIsAuthenticated,
     userIsAdmin = require("./util/auth.js").userIsAdmin,
     dbUtil = require("../db/db-util"),
     copyTo = require('pg-copy-streams').to,
@@ -52,6 +49,15 @@ router.post('/users/create', [userIsAdmin], async function (req, res, next) {
             return;
         }
 
+        // if user is an admin, do nothing
+        if (type === 'admin') {
+            let adminCount = await userService.countAllAdmins();
+            if (adminCount == 2) {
+                res.status(500).send("Cannot create an additional admin");
+                return;
+            }
+        }
+
         await userService.createUser(newOnyen, type, pid, email);
     } catch (e) {
         res.status(500).send("Internal server error");
@@ -78,18 +84,21 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
         let pid = req.body.pid;
         let email = req.body.email;
 
-        // Checks to make sure there are at least two admins in the system
-        // PREORDER and one other admin
+        // Checks to make sure there are exactly two admins in the system (PREORDER and one other admin)
         let currType = await authService.getUserType(editOnyen);
+        let adminCount = await userService.countAllAdmins();
         if (currType === "admin" && req.body.type !== "admin") {
-            let adminCount = await userService.countAllAdmins();
             if (adminCount <= 2) {
                 res.status(500).send('Cannot remove the last admin');
                 return;
             }
+        } else if (currType !== "admin" && req.body.type === "admin") {
+            if (adminCount == 2) {
+                res.status(500).send('Cannot create more than one admin');
+                return;
+            }
         }
         await userService.editUser(editOnyen, type, pid, email);
-
     } catch (e) {
         res.status(500).send(exceptionHandler.retrieveException(e));
         return;
@@ -122,7 +131,6 @@ router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
             }
         }
         await userService.deleteUser(delOnyen);
-
     } catch (e) {
         res.status(500).send("Internal server error");
         return;
