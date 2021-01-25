@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en"
 <head>
 	<%- include("../components/baselinks") -%>
 </head>
@@ -13,41 +12,184 @@
 			<div id="toast-pos" class="toast-pos">
 			</div>
 		</div>
-		<h1>Search for items to add to your cart</h1>
-		<div class="table-responsive">
-			<table id="itemsTable" class="table table-striped table-bordered" cellspacing="0" width="99%">
-				<thead>
-					<tr>
-						<th scope="col">Item</th>
-						<th scope="col">In Stock</th>
-						<th scope="col">Desc.</th>
-						<th scope="col">Add</th>
-					</tr>
-				</thead>
-				<tbody>
-					<% if (response && response.items) {%>
-					<% response.items.forEach((item) => {%>
-						<% if (item.count > 0) {%>
-						<tr>
-							<th scope="row"><%= item.name%></th>
-							<td><%= item.count%></td>
-							<td><%= item.description%></td>
-							<td class="text-right pr-1">
-								<div>
-									<input class="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max="<%= item.count %>" value=1>
-									<div class="btn-group" role="group">
-										<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
-											data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>">Add to Cart</button>
+		<div class="row w-100">
+			<% if(type != "all") { %>
+
+
+
+				<div class="col-2">
+					<h3>Search By Attribute</h3>
+					<form method="GET" action="<%= sublink%>">
+						
+						
+						<div class="form-group">
+							<h5>Color</h5>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="color-white" name="color[white]">
+								<label class="form-check-label" for="color-white">
+								White
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="color-black" name="color[black]">
+								<label class="form-check-label" for="color-black">
+								Black
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="color-beige" name=color[beige]>
+								<label class="form-check-label" for="color-beige">
+									Beige
+								</label>
+								</div>
+								<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="color-navy" name=color[navy]>
+								<label class="form-check-label" for="color-navy">
+									Navy
+								</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" value="" id="color-blue" name=color[blue]>
+									<label class="form-check-label" for="color-blue">
+									Blue
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" value="" id="color-multicolored" name=color[multicolored]>
+									<label class="form-check-label" for="color-multicolored">
+									Multicolored
+									</label>
+								</div>
+						</div>
+						<div id="sizeWrapper"> </div>
+						<!-- hacky way to access an ejs variable in a js function  -->
+							<div class="d-none" id="type"><%= type%></div>
+							
+						<script>
+							// handles conditional rendering based on the type of item selected
+							function updateType(currentType){
+								let wrapper = document.getElementById("sizeWrapper")
+								wrapper.innerHTML = ""
+								switch(currentType){
+									case "suits":
+										wrapper.innerHTML = `
+										<div class="form-group">
+											<label for="chestSize">Chest Size: </label>
+											
+											<input class="form-control form-control-lg" type="number" name="chestSize" id="chestSize"
+															min=35 max=55 placeholder=35>
+										</div>
+										<div class="form-group">
+											<label for="sleeveSize">Sleeve Size: </label>
+											
+											<input class="form-control form-control-lg" type="number" name="sleeveSize" id="sleeveSize"
+															min=35 max=55 placeholder=35>
+										</div>`
+									break;
+									case "shirts":
+										wrapper.innerHTML = `
+										<div class="form-group">
+											<label for="shirtSize">Shirt Size: </label>
+											<select class="custom-select custom-select-lg" id="shirtSize" name="shirtSize" form="entryForm" required>
+												<option selected>Choose...</option>
+												<option value="XS">XS</option>
+												<option value="S">S</option>
+												<option value="M">M</option>
+												<option value="L">L</option>
+												<option value="XL">XL</option>
+												<option value="XLL">XLL</option>
+											</select>
+										</div>`
+									break;
+									case "pants":
+										wrapper.innerHTML = `
+										<div class="form-group">
+											<label for="waistSize">Waist Size: </label>	
+											<input class="form-control form-control-lg" type="number" name="waistSize" id="waistSize"
+														min=26 max=36 step=2 placeholder=30>
+										</div>
+										<div class="form-group">
+											<label for="pantsLength">Length: </label>
+											<input class="form-control form-control-lg" type="number" name="pantsLength" id="pantsLength"
+															min=26 max=36 step=2 placeholder=30>
+										</div>`
+									break;
+									case "shoes":
+										wrapper.innerHTML = `
+										<div class="form-group">
+											<label for="shoeSize">Shoe Size: </label>
+											<input class="form-control" form-control-lg" type="number" name="shoeSize" id="shoeSize"
+														min=6.5 max=13 step=0.5 placeholder=6.5>
+										</div>`
+									break;
+									default:
+										wrapper.innerHTML = ""
+								}
+							}
+							updateType(document.getElementById("type").innerHTML)
+							</script>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+				</div>
+			<% } %>
+
+			<div class="col-10 w-100">
+				<h1 style = "text-transform:capitalize;"><%= title? title: "Current Inventory"%></h1>
+				<div class="row row-cols-1 row-cols-md-3 g-4">
+					
+							<% if (response && response.items) {%>
+							<% response.items.forEach((item) => {%>
+								<% if (item.count > 0) {%>
+									<div class="col">
+									<div class="card mb-3" style="width: 16rem;" >
+										<img src="https://images.unsplash.com/photo-1491336477066-31156b5e4f35?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="card-img-top" alt="...">
+										<div class="card-body">
+										<h5 class="card-title"><%= item.name%></h5>
+		
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">Color: <%= item.color%></li>
+											
+											<% if (item.shoes) {%>
+												<li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
+		
+											<% } %>
+											<% if (item.pants) {%>
+												<li class="list-group-item">Waist Size: <%= item.pants.dataValues.waist%></li>
+												<li class="list-group-item">Length: <%= item.pants.dataValues.length%></li>
+											<% } %>
+											<% if (item.shirts) {%>
+												<li class="list-group-item">Size: <%= item.shirts.dataValues.size%></li>
+											<% } %>
+											<% if (item.suits) {%>
+												<li class="list-group-item">Chest Size: <%= item.suits.dataValues.chest%></li>
+												<li class="list-group-item">Sleeve Length: <%= item.suits.dataValues.sleeve%></li>
+		
+											<% } %>
+
+												<li class="list-group-item">In Stock: <%= item.count%></li>
+
+
+
+												<li class="list-group-item"><div class="btn-group">
+													<input class="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max="<%= item.count %>" value=1>
+													<div class="btn-group" role="group">
+														<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
+															data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>">Add to Cart</button>
+													</div>
+												</div></li>
+		
+											</ul>
+										
+									</div>
 									</div>
 								</div>
-							</td>
-						</tr>
-						<% } %>
-					<% }); %>
-					<% } %>
-				</tbody>
-			</table>
+								<% } %>
+							<% }); %>
+							<% } %>
+				</div>
+			</div>
 		</div>
+		
 		<% if (response && response.error) {%>
 		<div class="alert alert-danger">
 			<%= response.error%>

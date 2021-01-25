@@ -1,5 +1,5 @@
-const   { v4: uuidv4 } = require("uuid"),
-        Sequelize = require("sequelize");
+const { v4: uuidv4 } = require("uuid"),
+    Sequelize = require("sequelize");
 
 exports.init_table = function (sequelize) {
     let Item = sequelize.define('items', {
@@ -33,7 +33,7 @@ exports.init_table = function (sequelize) {
             type: Sequelize.ENUM('white', 'black', 'beige', 'navy', 'blue', 'multicolored'),
             allowNull: false,
         },
-		count: {
+        count: {
             type: Sequelize.INTEGER,
             allowNull: false,
             unique: false,
@@ -43,10 +43,8 @@ exports.init_table = function (sequelize) {
             }
         },
     });
-
     Item.beforeCreate((item) => {
         return item.id = uuidv4();
     });
-
     return Item;
 }

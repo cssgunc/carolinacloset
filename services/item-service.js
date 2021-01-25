@@ -4,7 +4,6 @@ const { v4: uuidv4 } = require("uuid"),
     Pants = require("../db/sequelize").pants,
     Shoes = require("../db/sequelize").shoes,
     Shirts = require("../db/sequelize").shirts,
-
     Order = require("../db/sequelize").orders,
     Transaction = require("../db/sequelize").transactions,
     Sequelize = require("sequelize"),
@@ -14,7 +13,8 @@ const { v4: uuidv4 } = require("uuid"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
     exceptionHandler = require("../exceptions/exception-handler"),
     csvParser = require("csv-parse");
-
+const { suits } = require("../db/sequelize");
+var Op = Sequelize.Op;
 /**
  * Retrieves and returns an item by id
  * @param {uuid} itemId 
@@ -25,16 +25,11 @@ exports.getItem = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
     }
 }
-
 /**
  * Retrieves and returns an item by id
  * @param {uuid} itemId 
@@ -45,10 +40,6 @@ exports.getSuit = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
@@ -64,10 +55,6 @@ exports.getShirt = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
@@ -83,10 +70,6 @@ exports.getShoes = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
@@ -102,36 +85,151 @@ exports.getPants = async function (itemId) {
         if (!item) {
             throw new BadRequestException("The item could not be retrieved.");
         }
-
-
-
-
         return item;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the item", e);
     }
 }
-
-
-
-
-
-
-
-
-
 /**
  * Retrieves and returns all items from the Items table
  */
 exports.getAllItems = async function () {
     try {
-        let items = await Item.findAll();
+        let items = await Item.findAll({
+            include: [{
+                model: Shirts, as: "shirts"
+            }, {
+                model: Shoes, as: "shoes"
+            },
+            {
+                model: Pants, as: "pants"
+            },
+            {
+                model: Suits, as: "suits"
+            }]
+        });
         return items;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving items", e);
     }
 }
+/**
+ * Retrieves and returns all items from the Items table of a specific type and gender
+ * @param {string} gender 
+ * @param {enum} type
+ * 
+ */
+exports.getItemsByCategory = async function (gender, type) {
+    try {
+        let items = null
+        switch (type) {
+            case "shoes":
+                items = await Item.findAll({
+                    where: { gender: gender, type: type },
+                    include: [{
+                        model: Shoes, as: "shoes"
+                    }]
+                });
+                break;
+            case "suits":
+                items = await Item.findAll({
+                    where: { gender: gender, type: type },
+                    include: [{
+                        model: Suits, as: "suits"
+                    }]
+                });
+                break;
+            case "pants":
+                items = await Item.findAll({
+                    where: { gender: gender, type: type },
+                    include: [{
+                        model: Pants, as: "pants"
+                    }]
+                });
+                break;
+            case "shirts":
+                items = await Item.findAll({
+                    where: { gender: gender, type: type },
+                    include: [{
+                        model: Shirts, as: "shirts"
+                    }]
+                });
+                break
+        }
+        return items;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving items", e);
+    }
+}
+/**
+ * Retrieves and returns all items from the Items table of a specific type and gender
+ * @param {string} gender 
+ * @param {enum} type
+ * @param {Array} color
+ * 
+ */
+exports.getItemsByCategoryAndColor = async function (gender, type, colors) {
+    try {
+        let items = null
+        switch (type) {
+            case "shoes":
+                items = await Item.findAll({
+                    where: {
+                        gender: gender, type: type, color: {
+                            [Op.in]: colors
+                        }
+                    },
+                    include: [{
+                        model: Shoes, as: "shoes"
+                    }]
+                });
+                break;
 
+            case "suits":
+                items = await Item.findAll({
+                    where: {
+                        gender: gender, type: type, color: {
+                            [Op.in]: colors
+                        }
+                    },
+                    include: [{
+                        model: Suits, as: "suits"
+                    }]
+                });
+                break;
+
+            case "pants":
+                items = await Item.findAll({
+                    where: {
+                        gender: gender, type: type, color: {
+                            [Op.in]: colors
+                        }
+                    },
+                    include: [{
+                        model: Pants, as: "pants"
+                    }]
+                });
+                break;
+
+
+            case "shirts":
+                items = await Item.findAll({
+                    where: {
+                        gender: gender, type: type, color: {
+                            [Op.in]: colors
+                        }
+                    },
+                    include: [{
+                        model: Shirts, as: "shirts"
+                    }]
+                });
+                break
+        }
+        return items;
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when retrieving items", e);
+    }
+}
 /**
  * Looks for an item, first by type, then by name
  * Returns the item found or null if nothing is found
@@ -147,7 +245,6 @@ exports.getItemByTypeThenName = async function (type, name) {
         throw e;
     }
 }
-
 /**
  * Looks for an item by type
  * Returns the item found or null if nothing is found
@@ -162,7 +259,6 @@ let getItemByType = async function (type) {
         throw e;
     }
 }
-
 /**
  * Looks for an item by type, gender, color
  * Returns the item found or null if nothing is found
@@ -180,10 +276,8 @@ exports.getItemByTypeGenderColorBrand = async function (type, gender, color, bra
         throw e;
     }
 }
-
-
 /**
- * Looks for an item by type, gender, color
+ * Looks for an item by type, gender, color, brand, size
  * Returns the item found or null if nothing is found
  * @param {enum} type
  * @param {enum} gender
@@ -205,7 +299,8 @@ exports.getItemAndSize = async function (type, gender, color, brand, size) {
                 item = await Item.findOne({
                     where: { type: type, color: color, gender: gender, brand: brand }, include: [{
                         model: Suits,
-                        where: { chest: size.chestSize, sleeve: size.sleeveSize }
+                        where: { chest: size.chestSize, sleeve: size.sleeveSize },
+                        as: "suits"
                     }]
                 });
                 break;
@@ -213,7 +308,8 @@ exports.getItemAndSize = async function (type, gender, color, brand, size) {
                 item = await Item.findOne({
                     where: { type: type, color: color, gender: gender, brand: brand }, include: [{
                         model: Shirts,
-                        where: { size: size.shirtSize }
+                        where: { size: size.shirtSize },
+                        as: "shirts"
                     }]
                 });
 
@@ -222,33 +318,226 @@ exports.getItemAndSize = async function (type, gender, color, brand, size) {
                 item = await Item.findOne({
                     where: { type: type, color: color, gender: gender, brand: brand }, include: [{
                         model: Pants,
-                        where: { waist: size.waistSize, length: size.pantsLength }
+                        where: { waist: size.waistSize, length: size.pantsLength },
+                        as: "pants"
                     }]
                 });
 
                 break;
             case "shoes":
-                console.log(size)
                 item = await Item.findOne({
                     where: { type: type, color: color, gender: gender, brand: brand }, include: [{
                         model: Shoes,
-                        where: { size: size.shoeSize }
+                        where: { size: size.shoeSize },
+                        as: "shoes"
                     }]
                 });
                 break;
         }
-        console.log(item, "here yo")
         return item
     } catch (e) {
         throw e;
     }
 }
+/**
+ * Looks for an item by type, gender, size
+ * Returns the item found or null if nothing is found
+ * @param {enum} type
+ * @param {enum} gender
+ * @param {object} size
+ *  if object is of type suits: size has chestSize and sleeveSize attributes
+ * if object is of type shirt: size has shirtSize attribute 
+ * if object is of type pants: size has waistSize and pantsLength attributes
+ * if object is of type shoes: size has an shoeSize attribute
+ */
+exports.getItemCategorySize = async function (type, gender, size) {
 
+    if (!type || !gender || !size) return null;
+    try {
+        let item = null
+        switch (type) {
+            case "suits":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Suits,
+                        where: { chest: size.chestSize, sleeve: size.sleeveSize },
+                        as: "suits"
+                    }]
+                });
+                break;
+            case "shirts":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Shirts,
+                        where: { size: size.shirtSize },
+                        as: "shirts"
+                    }]
+                });
 
+                break;
+            case "pants":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Pants,
+                        where: { waist: size.waistSize, length: size.pantsLength },
+                        as: "pants"
+                    }]
+                });
 
+                break;
+            case "shoes":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Shoes,
+                        where: { size: size.shoeSize },
+                        as: "shoes"
+                    }]
+                });
+                break;
+        }
 
+        return item
+    } catch (e) {
+        throw e;
+    }
+}
+/**
+ * Looks for an item by type, gender, size
+ * Returns the item found or null if nothing is found
+ * @param {enum} type
+ * @param {enum} gender
+ * @param {object} size
+ *  if object is of type suits: size has chestSize and sleeveSize attributes
+ * if object is of type shirt: size has shirtSize attribute 
+ * if object is of type pants: size has waistSize and pantsLength attributes
+ * if object is of type shoes: size has an shoeSize attribute
+ */
+exports.getItemCategorySize = async function (type, gender, size) {
 
+    if (!type || !gender || !size) return null;
+    try {
+        let item = null
+        switch (type) {
+            case "suits":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Suits,
+                        where: { chest: size.chestSize, sleeve: size.sleeveSize },
+                        as: "suits"
+                    }]
+                });
+                break;
+            case "shirts":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Shirts,
+                        where: { size: size.shirtSize },
+                        as: "shirts"
+                    }]
+                });
+                break;
+            case "pants":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Pants,
+                        where: { waist: size.waistSize, length: size.pantsLength },
+                        as: "pants"
+                    }]
+                });
+                break;
+            case "shoes":
+                item = await Item.findAll({
+                    where: { type: type, gender: gender }, include: [{
+                        model: Shoes,
+                        where: { size: size.shoeSize },
+                        as: "shoes"
+                    }]
+                });
+                break;
+        }
+        return item
+    } catch (e) {
+        throw e;
+    }
+}
+/**
+ * Looks for an item by type, gender, size, color
+ * Returns the item found or null if nothing is found
+ * @param {enum} type
+ * @param {enum} gender
+ * @param {object} size
+ * @param {Array} colors
+ *  if object is of type suits: size has chestSize and sleeveSize attributes
+ * if object is of type shirt: size has shirtSize attribute 
+ * if object is of type pants: size has waistSize and pantsLength attributes
+ * if object is of type shoes: size has an shoeSize attribute
+ */
+exports.getItemCategorySizeColor = async function (type, gender, size, colors) {
+    if (!type || !gender || !size || colors.length == 0) return null;
+    try {
+        let item = null
+        switch (type) {
+            case "suits":
+                item = await Item.findAll({
+                    where: {
+                        type: type, gender: gender, color: {
+                            [Op.in]: colors
+                        }
+                    }, include: [{
+                        model: Suits,
+                        where: { chest: size.chestSize, sleeve: size.sleeveSize },
+                        as: "suits"
+                    }]
+                });
+                break;
+            case "shirts":
+                item = await Item.findAll({
+                    where: {
+                        type: type, gender: gender, color: {
+                            [Op.in]: colors
+                        }
+                    }, include: [{
+                        model: Shirts,
+                        where: { size: size.shirtSize },
+                        as: "shirts"
+                    }]
+                });
 
+                break;
+            case "pants":
+                item = await Item.findAll({
+                    where: {
+                        type: type, gender: gender, color: {
+                            [Op.in]: colors
+                        }
+                    }, include: [{
+                        model: Pants,
+                        where: { waist: size.waistSize, length: size.pantsLength },
+                        as: "pants"
+                    }]
+                });
+
+                break;
+            case "shoes":
+                item = await Item.findAll({
+                    where: {
+                        type: type, gender: gender, color: {
+                            [Op.in]: colors
+                        }
+                    }, include: [{
+                        model: Shoes,
+                        where: { size: size.shoeSize },
+                        as: "shoes"
+                    }]
+                });
+                break;
+        }
+
+        return item
+    } catch (e) {
+        throw e;
+    }
+}
 /**
  * Looks for an item by name and description
  * Returns the item fround or null if nothing is found
@@ -279,9 +568,6 @@ exports.getItemByName = async function (name) {
  * if object is of type pants: size has waistSize and pantsLength attributes
  * if object is of type shoes: size has an shoeSize attribute
  **/
-
-
-
 exports.createItem = async function (name, type, gender, image, brand, color, count, size) {
     try {
         let item = await Item.create({
@@ -294,12 +580,9 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
             color: color,
             count: count
         });
-
-
         if (item.id != undefined) {
             //create associated size object in seperate table
             let associatedSize = null
-            console.log(size, "sizeobj")
             switch (type) {
                 case "suits":
                     associatedSize = Suits.create({ id: item.id, chest: size.chestSize, sleeve: size.sleeveSize })
@@ -314,16 +597,9 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
                     associatedSize = Shoes.create({ id: item.id, size: size.shoeSize })
                     break;
             }
-
-
         } else {
             throw new InternalErrorException("A problem occurred when saving the item", e);
         }
-
-
-
-
-
         return item;
     } catch (e) {
         if (e instanceof Sequelize.ValidationError) {
