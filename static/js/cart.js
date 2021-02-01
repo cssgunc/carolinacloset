@@ -1,4 +1,4 @@
-const NUM_COLUMNS = 5;
+const NUM_COLUMNS = 4;
 
 const clearCart = () => {
     localStorage.removeItem('cart');
@@ -60,11 +60,6 @@ $(document).ready(function () {
             });
             quantityCell.appendChild(quantityInput);
             row.appendChild(quantityCell);
-
-            // Description cell contains description text
-            let descCell = document.createElement('td');
-            descCell.appendChild(document.createTextNode(item.description ? item.description : ''));
-            row.appendChild(descCell);
 
             // Action cell contains delete button
             let actionCell = document.createElement('td');

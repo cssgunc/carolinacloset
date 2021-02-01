@@ -13,9 +13,7 @@ $(document).ready(function () {
             // Pulls data values attached to button
             const id = button.data('id');
             const name = button.data('name');
-            const barcode = button.data('barcode');
             const count = button.data('count');
-            const description = button.data('description');
             let parent = button.parent().parent();
             const addToCartQuantity = parent.children('.cartQuantity').val();
             console.log(addToCartQuantity);
@@ -59,9 +57,7 @@ $(document).ready(function () {
                 const newItem = {
                     id: id,
                     name: name,
-                    barcode: barcode,
                     quantity: addToCartQuantity,
-                    description: description
                 }
 
                 let cart = localStorage.getItem('cart');
