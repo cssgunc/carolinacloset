@@ -1,25 +1,25 @@
 const express = require("express"),
     router = express.Router(),
-    preorderService = require("../services/preorder-service"),
+    orderService = require("../services/order-service"),
     exceptionHandler = require("../exceptions/exception-handler"),
     userIsAdmin = require("./util/auth.js").userIsAdmin;
 
 /**
- * Route serving admin preorder management view
+ * Route serving admin order management view
  */
 router.get('/', [userIsAdmin], async function (req, res, next) {
     let response = {};
-    response.preorders = await preorderService.getAllPreorders();
-    // Negates negative counts because it's implied in the preorder management view
-    for (const t of response.preorders) {
+    response.orders = await orderService.getAllOrders();
+    // Negates negative counts because it's implied in the order management view
+    for (const t of response.orders) {
         t['count'] = -t['count'];
     }
 
-    res.render('admin/preorders.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('admin/orders.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 /**
- * Route receiving form to confirm a preorder
+ * Route receiving form to confirm an order
  * Expects a transaction id in request body
  */
 router.post('/complete', [userIsAdmin], async function (req, res, next) {
@@ -27,17 +27,17 @@ router.post('/complete', [userIsAdmin], async function (req, res, next) {
     let id = req.body.id;
 
     try {
-        await preorderService.completePreorder(id, res.locals.onyen);
-        response.success = "Success! Preorder successfully resolved.";
+        await orderService.completeOrder(id, res.locals.onyen);
+        response.success = "Success! Order successfully resolved.";
     } catch (e) {
         response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
     }
 
-    res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('admin/orders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 /**
- * Route receiving form to cancel a preorder
+ * Route receiving form to cancel an order
  * Expects a transaction id in request body
  */
 router.post('/cancel', [userIsAdmin], async function (req, res, next) {
@@ -45,13 +45,13 @@ router.post('/cancel', [userIsAdmin], async function (req, res, next) {
     let id = req.body.id;
 
     try {
-        await preorderService.cancelPreorder(id, res.locals.onyen);
-        response.success = "Success! Preorder successfully resolved.";
+        await orderService.cancelOrder(id, res.locals.onyen);
+        response.success = "Success! Order successfully resolved.";
     } catch (e) {
         response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
     }
 
-    res.render('admin/preorders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+    res.render('admin/orders-result.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
 module.exports = router;

@@ -35,11 +35,11 @@ async function createTables(exit) {
 }
 
 /**
- * Creates the PREORDER and default admin users in the Users table
+ * Creates the ORDER and default admin users in the Users table
  * @param {boolean} exit - If true, exit the process after finishing
  */
 async function initAdmin(exit) {
-    await userService.createUser("PREORDER", "admin", 0, "preorder@admin.com");
+    await userService.createUser("ORDER", "admin", 0, "order@admin.com");
     if (process.env.DEFAULT_ADMIN) {
         await userService.createUser(process.env.DEFAULT_ADMIN, "admin", 1, "admin@admin.com");
     }

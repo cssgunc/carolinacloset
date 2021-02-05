@@ -74,9 +74,9 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
     try {
         let editOnyen = req.body.onyen;
 
-        // Prevents the PREORDER admin from being edited
-        if (editOnyen === "PREORDER") {
-            res.status(403).send("Cannot edit PREORDER admin");
+        // Prevents the ORDER admin from being edited
+        if (editOnyen === "ORDER") {
+            res.status(403).send("Cannot edit ORDER admin");
             return;
         }
         
@@ -84,7 +84,7 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
         let pid = req.body.pid;
         let email = req.body.email;
 
-        // Checks to make sure there are exactly two admins in the system (PREORDER and one other admin)
+        // Checks to make sure there are exactly two admins in the system (ORDER and one other admin)
         let currType = await authService.getUserType(editOnyen);
         let adminCount = await userService.countAllAdmins();
         if (currType === "admin" && req.body.type !== "admin") {
@@ -114,13 +114,13 @@ router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
     try {
         let delOnyen = req.body.onyen;
 
-        // Prevents the PREORDER admin from being edited
-        if (delOnyen === "PREORDER") {
-            res.status(403).send("Cannot delete PREORDER admin");
+        // Prevents the ORDER admin from being edited
+        if (delOnyen === "ORDER") {
+            res.status(403).send("Cannot delete ORDER admin");
             return;
         }
 
-        // Checks to make sure there are at least two admins in the system (PREORDER and one other admin)
+        // Checks to make sure there are at least two admins in the system (ORDER and one other admin)
         let delType = await authService.getUserType(delOnyen);
         if (delType === "admin") {
             let adminCount = await userService.countAllAdmins();

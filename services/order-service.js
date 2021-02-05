@@ -6,40 +6,40 @@ const { v4: uuidv4 } = require("uuid"),
     InternalErrorException = require("../exceptions/internal-error-exception");
 
 /**
- * Retrieves and returns a preorder by id
+ * Retrieves and returns an order by id
  * @param {number} id 
  */
-exports.getPreorder = async function (id) {
+exports.getOrder = async function (id) {
     try {
-        let preorder = await Transaction.findOne({ where: { id: id } });
-        if (!preorder || preorder.admin_id !== 'PREORDER') {
+        let order = await Transaction.findOne({ where: { id: id } });
+        if (!order || order.admin_id !== 'ORDER') {
             throw new BadRequestException("The transaction could not be retrieved.");
         }
-        return preorder;
+        return order;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving a preorder", e);
+        throw new InternalErrorException("A problem occurred when retrieving an order", e);
     }
 }
 
 /**
- * Retrieves and returns all preorders
+ * Retrieves and returns all orders
  */
-exports.getAllPreorders = async function () {
+exports.getAllOrders = async function () {
     try {
-        let preorders = await Transaction.findAll({
+        let orders = await Transaction.findAll({
             where: {
-                admin_id: "PREORDER",
+                admin_id: "ORDER",
                 status: "pending"
             }
         });
-        return preorders;
+        return orders;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving all preorders", e);
+        throw new InternalErrorException("A problem occurred when retrieving all orders", e);
     }
 }
 
 /**
- * Creates a new preorder
+ * Creates a new order
  * Takes a cart, an array of objects that contain item id and quantity
  * Creates a new Order object and creates a new transaction under that order for each cart item
  * If any single transaction fails, the order is rolled back
@@ -47,7 +47,7 @@ exports.getAllPreorders = async function () {
  * @param {array} cart 
  * @param {string} onyen 
  */
-exports.createPreorder = async function (cart, onyen) {
+exports.createOrder = async function (cart, onyen) {
     let processQueue = {};
     let completedTransactions = [];
 
@@ -87,7 +87,7 @@ exports.createPreorder = async function (cart, onyen) {
                 item_name: item.name,
                 count: -quantity,
                 onyen: onyen,
-                admin_id: "PREORDER",
+                admin_id: "ORDER",
                 status: 'pending'
             });
 
@@ -97,7 +97,7 @@ exports.createPreorder = async function (cart, onyen) {
             try {
                 await item.increment('count', { by: -quantity });
             } catch (e) {
-                await this.deletePreorder(transaction.id, 'PREORDER');
+                await this.deleteOrder(transaction.id, 'ORDER');
                 throw e;
             }
 
@@ -110,7 +110,7 @@ exports.createPreorder = async function (cart, onyen) {
         console.error(e);
         // If one transaction fails, we delete each of them and revert the counts
         completedTransactions.forEach(async (transaction) => {
-            this.deletePreorder(transaction.id);
+            this.deleteOrder(transaction.id);
             let item = await Item.findOne({ where: { id: transaction.item_id } });
             await item.increment('count', { by: -(transaction.count) });
         });
@@ -122,57 +122,57 @@ exports.createPreorder = async function (cart, onyen) {
 }
 
 /**
- * Marks a preorder as confirmed/completed
- * @param {number} preorderId 
+ * Marks an order as confirmed/completed
+ * @param {number} orderId 
  * @param {onyen} adminId 
  */
-exports.completePreorder = async function (preorderId, adminId) {
+exports.completeOrder = async function (orderId, adminId) {
     try {
-        let preorder = await this.getPreorder(preorderId);
-        preorder.admin_id = adminId;
-        preorder.status = "complete";
-        preorder.save();
+        let order = await this.getOrder(orderId);
+        order.admin_id = adminId;
+        order.status = "complete";
+        order.save();
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when completing preorder", e);
+        throw new InternalErrorException("A problem occurred when completing order", e);
     }
 }
 
 /**
- * Marks a preorder as cancelled
- * @param {number} preorderId 
+ * Marks an order as cancelled
+ * @param {number} orderId 
  * @param {onyen} adminId 
  */
-exports.cancelPreorder = async function (preorderId, adminId) {
+exports.cancelOrder = async function (orderId, adminId) {
     try {
-        let preorder = await this.getPreorder(preorderId);
-        preorder.admin_id = adminId;
-        preorder.status = "cancelled";
-        preorder.save();
-        let itemId = preorder.item_id;
-        await this.putbackCancelledItems(itemId, -preorder.count);
+        let order = await this.getOrder(orderId);
+        order.admin_id = adminId;
+        order.status = "cancelled";
+        order.save();
+        let itemId = order.item_id;
+        await this.putbackCancelledItems(itemId, -order.count);
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when cancelling preorder", e);
+        throw new InternalErrorException("A problem occurred when cancelling order", e);
     }
 }
 
 /**
- * Deletes a preorder by id
- * @param {number} preorderId 
+ * Deletes an order by id
+ * @param {number} orderId 
  */
-exports.deletePreorder = async function (preorderId) {
+exports.deleteOrder = async function (orderId) {
     try {
         await Transaction.destroy({
             where: {
-                id: preorderId
+                id: orderId
             }
         });
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when deleting preorder", e);
+        throw new InternalErrorException("A problem occurred when deleting order", e);
     }
 }
 
 /**
- * Re-adds quantity of an item that was reserved by a preorder
+ * Re-adds quantity of an item that was reserved by an order
  * @param {number} itemId 
  * @param {number} count 
  */

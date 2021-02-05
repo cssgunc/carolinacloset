@@ -6,7 +6,7 @@ const supertest = require('supertest'),
 
 require('dotenv').config();
 
-describe('Items Routes - Item Preorder Workflow', () => {
+describe('Items Routes - Item Order Workflow', () => {
     before(async () => {
         await dbUtil.preTestSetup();
     });
