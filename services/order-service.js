@@ -1,13 +1,16 @@
 const { v4: uuidv4 } = require("uuid"),
     Order = require("../db/sequelize").orders,
     Transaction = require("../db/sequelize").transactions,
+    Sequelize = require("sequelize"),
     Item = require("../db/sequelize").items,
     BadRequestException = require("../exceptions/bad-request-exception"),
     InternalErrorException = require("../exceptions/internal-error-exception");
 
+var Op = Sequelize.Op;
+
 /**
  * Retrieves and returns an order by id
- * @param {number} id 
+ * @param {number} id
  */
 exports.getOrder = async function (id) {
     try {
@@ -29,12 +32,12 @@ exports.getAllOrders = async function () {
         let orders = await Transaction.findAll({
             where: {
                 admin_id: "ORDER",
-                status: "pending"
+                status: { [Op.or]: ["pending", "inUse"] }
             }
         });
         return orders;
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when retrieving all orders", e);
+        throw e;
     }
 }
 
@@ -44,8 +47,8 @@ exports.getAllOrders = async function () {
  * Creates a new Order object and creates a new transaction under that order for each cart item
  * If any single transaction fails, the order is rolled back
  * Returns true if successful, false if not
- * @param {array} cart 
- * @param {string} onyen 
+ * @param {array} cart
+ * @param {string} onyen
  */
 exports.createOrder = async function (cart, onyen) {
     let processQueue = {};
@@ -126,11 +129,9 @@ exports.createOrder = async function (cart, onyen) {
  * @param {number} orderId 
  * @param {onyen} adminId 
  */
-exports.executeOrder = async function (orderId, adminId) {
+exports.executeOrder = async function (orderId) {
     try {
-        console.log('orderID: ' + orderId);
         let order = await this.getOrder(orderId);
-        order.admin_id = adminId;
         order.status = 'inUse';
         order.save();
     } catch (e) {
