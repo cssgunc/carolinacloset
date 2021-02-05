@@ -44,7 +44,7 @@ exports.init_table = function (sequelize) {
             type: Sequelize.STRING,
             allowNull: false,
             validate: {
-                isIn: [['pending', 'complete', 'cancelled', 'late']]
+                isIn: [['pending', 'in-use', 'complete', 'cancelled', 'late']]
             }
         },
         return_date: {

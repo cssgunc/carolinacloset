@@ -122,6 +122,22 @@ exports.createOrder = async function (cart, onyen) {
 }
 
 /**
+ * Marks an order as in-use
+ * @param {number} orderId 
+ * @param {onyen} adminId 
+ */
+exports.executeOrder = async function (orderId, adminId) {
+    try {
+        let order = await this.getOrder(orderId);
+        order.admin_id = adminId;
+        order.status = 'in-use';
+        order.save();
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when completing order", e);
+    }
+}
+
+/**
  * Marks an order as confirmed/completed
  * @param {number} orderId 
  * @param {onyen} adminId 
@@ -130,7 +146,7 @@ exports.completeOrder = async function (orderId, adminId) {
     try {
         let order = await this.getOrder(orderId);
         order.admin_id = adminId;
-        order.status = "complete";
+        order.status = 'complete';
         order.save();
     } catch (e) {
         throw new InternalErrorException("A problem occurred when completing order", e);
@@ -146,7 +162,7 @@ exports.cancelOrder = async function (orderId, adminId) {
     try {
         let order = await this.getOrder(orderId);
         order.admin_id = adminId;
-        order.status = "cancelled";
+        order.status = 'cancelled';
         order.save();
         let itemId = order.item_id;
         await this.putbackCancelledItems(itemId, -order.count);
