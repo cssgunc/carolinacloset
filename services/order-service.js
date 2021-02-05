@@ -122,18 +122,19 @@ exports.createOrder = async function (cart, onyen) {
 }
 
 /**
- * Marks an order as in-use
+ * Marks an order as in use
  * @param {number} orderId 
  * @param {onyen} adminId 
  */
 exports.executeOrder = async function (orderId, adminId) {
     try {
+        console.log('orderID: ' + orderId);
         let order = await this.getOrder(orderId);
         order.admin_id = adminId;
-        order.status = 'in-use';
+        order.status = 'inUse';
         order.save();
     } catch (e) {
-        throw new InternalErrorException("A problem occurred when completing order", e);
+        throw new InternalErrorException("A problem occurred when executing order", e);
     }
 }
 
