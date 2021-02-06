@@ -17,7 +17,7 @@ router.get('/', [userIsBasicUser], function(req, res, next) {
  * Route receiving form to check out the user's cart
  * Receives an array of items with quantities, creates a new transaction group, creates transactions for each item
  */
-router.post('/', [userIsBasicUser], async function(req, res, next) {
+router.post('/', [userIsBasicUser], async function(req, res) {
     let response = {};
     let cart = JSON.parse(req.body.cart);
     

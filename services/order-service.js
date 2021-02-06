@@ -32,7 +32,7 @@ exports.getAllOrders = async function () {
         let orders = await Transaction.findAll({
             where: {
                 admin_id: "ORDER",
-                status: { [Op.or]: ["pending", "inUse"] }
+                status: { [Op.or]: ["pending", "inUse", "late"] }
             }
         });
         return orders;
@@ -69,18 +69,30 @@ exports.createOrder = async function (cart, onyen) {
 
             // Skips if quantity is zero or less
             if (quantity <= 0) return;
-            console.log(id);
-            let item = await Item.findOne({ where: { id: id } });
 
+            let item = await Item.findOne({ where: { id: id } });
             if (!item) {
                 throw new BadRequestException("The item doesn't exist in our inventory");
             }
 
-            console.log(item);
-
             // Throws an error if there aren't enough in stock
             if (quantity > 0 && item.count < quantity) {
                 throw new BadRequestException("The amount requested for " + item.name + " is " + (quantity - item.count) + " more than the quantity in the system");
+            }
+
+            // Throws an error if this user has an unreturned order
+            let existingTransaction = await Transaction.findOne({
+                where: {
+                    admin_id: "ORDER",
+                    onyen: onyen,
+                    status: { [Op.or]: ["inUse", "late"] }
+                }
+            })
+
+            console.log('TRANS: ' + existingTransaction);
+
+            if (existingTransaction) {
+                throw new BadRequestException("Please return your outstanding items before placing a new order");
             }
 
             let transaction = await Transaction.build({
@@ -126,8 +138,7 @@ exports.createOrder = async function (cart, onyen) {
 
 /**
  * Marks an order as in use
- * @param {number} orderId 
- * @param {onyen} adminId 
+ * @param {number} orderId
  */
 exports.executeOrder = async function (orderId) {
     try {

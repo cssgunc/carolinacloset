@@ -308,7 +308,6 @@ CREATE TABLE public.transactions (
     oynen character(255) NOT NULL,
     status character(255) NOT NULL,
     return_date date NOT NULL,
-    is_returned boolean NOT NULL,
     CONSTRAINT "Transaction_oynen_check" CHECK ((oynen ~ '^[a-zA-Z0-9]*'::text)),
     CONSTRAINT "Transaction_status_check" CHECK (((status = 'pending'::bpchar) OR (status = 'complete'::bpchar) OR (status = 'cancelled'::bpchar) OR (status = 'late'::bpchar)))
 );
@@ -386,7 +385,7 @@ COPY public.suits (id, chest, sleeve) FROM stdin;
 -- Data for Name: transactions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.transactions (id, order_id, item_id, item_name, count, oynen, status, return_date, is_returned) FROM stdin;
+COPY public.transactions (id, order_id, item_id, item_name, count, oynen, status, return_date) FROM stdin;
 \.
 
 
