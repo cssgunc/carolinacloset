@@ -1,4 +1,4 @@
-const NUM_COLUMNS = 5;
+const NUM_COLUMNS = 4;
 
 const clearCart = () => {
     localStorage.removeItem('cart');
@@ -32,39 +32,6 @@ $(document).ready(function () {
             let nameCell = document.createElement('td');
             nameCell.appendChild(document.createTextNode(item.name));
             row.appendChild(nameCell);
-
-            // Quantity cell contains number input that allows users to change the quantity in their cart
-            let quantityCell = document.createElement('td');
-            // Create input element and set attributes
-            let quantityInput = document.createElement('input');
-            quantityInput.className = 'form-control';
-            quantityInput.setAttribute('type', 'number');
-            quantityInput.setAttribute('min', '1');
-            quantityInput.setAttribute('max', item.quantity);
-            quantityInput.setAttribute('value', item.quantity);
-            quantityInput.setAttribute('style', 'width: 80px');
-            // On change, we update the cart's state in localstorage
-            quantityInput.addEventListener('change', (event) => {
-                if (event.target.value > 0 && event.target.value < event.target.max) {
-                    let currCart = JSON.parse(localStorage.getItem('cart'));
-                    // Search for an item with the same item id, and update the quantity
-                    for(let i = 0; i < currCart.length; i++) {
-                        if (currCart[i].id === item.id) {
-                            currCart[i].quantity = event.target.value;
-                            break;
-                        }
-                    }
-                    // Stringify and save updated cart
-                    localStorage.setItem('cart', JSON.stringify(currCart));
-                }
-            });
-            quantityCell.appendChild(quantityInput);
-            row.appendChild(quantityCell);
-
-            // Description cell contains description text
-            let descCell = document.createElement('td');
-            descCell.appendChild(document.createTextNode(item.description ? item.description : ''));
-            row.appendChild(descCell);
 
             // Action cell contains delete button
             let actionCell = document.createElement('td');

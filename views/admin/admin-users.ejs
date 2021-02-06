@@ -39,7 +39,7 @@
                 <% } %></td>
               <td><%= user.numItemsReceived %></td>
               <td class="text-right pr-1">
-                <% if (user.onyen !== "PREORDER") {%>
+                <% if (user.onyen !== "ORDER") {%>
                 <div class="btn-group" role="group">
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal"
                     data-onyen="<%= user.onyen %>" data-type="<%= user.type %>" data-pid="<%= user.pid %>"

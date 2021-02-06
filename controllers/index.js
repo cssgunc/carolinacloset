@@ -6,7 +6,7 @@ let express     = require("express"),
     entry       = require("./entry"),
     history     = require("./history"),
     item        = require("./items"),
-    preorders   = require("./preorders");
+    orders   = require("./orders");
 
 router.use("/account", account);
 router.use("/admin", admin);
@@ -14,6 +14,6 @@ router.use("/cart", cart);
 router.use("/entry", entry);
 router.use("/history", history);
 router.use("/items", item);
-router.use("/preorders", preorders);
+router.use("/orders", orders);
 
 module.exports = router;
