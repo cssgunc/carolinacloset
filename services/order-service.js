@@ -32,9 +32,17 @@ exports.getAllOrders = async function () {
         let orders = await Transaction.findAll({
             where: {
                 admin_id: "ORDER",
-                status: { [Op.or]: ["pending", "inUse"] }
+                status: { [Op.or]: ["pending", "inUse", "late"] }
             }
         });
+
+        // update status on any late orders
+        orders.forEach((trans) => {
+            if (trans.status === "inUse" && trans.return_date < Date.now()) {
+                this.markOrderLate(trans.id);
+            }
+        })
+
         return orders;
     } catch (e) {
         throw e;
@@ -125,17 +133,31 @@ exports.createOrder = async function (cart, onyen) {
 }
 
 /**
- * Marks an order as in use
- * @param {number} orderId 
- * @param {onyen} adminId 
+ * Marks an order as in use and creates a return date
+ * @param {number} orderId
  */
 exports.executeOrder = async function (orderId) {
     try {
         let order = await this.getOrder(orderId);
         order.status = 'inUse';
+        order.return_date = Date.now() + 2.628e+9, // set return date a month from now
         order.save();
     } catch (e) {
         throw new InternalErrorException("A problem occurred when executing order", e);
+    }
+}
+
+/**
+ * Marks an order as late
+ * @param {number} orderId 
+ */
+exports.markOrderLate = async function (orderId) {
+    try {
+        let order = await this.getOrder(orderId);
+        order.status = 'late';
+        order.save();
+    } catch (e) {
+        throw new InternalErrorException("A problem occurred when completing order", e);
     }
 }
 
