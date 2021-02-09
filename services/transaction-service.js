@@ -8,6 +8,14 @@ const   Transaction = require("../db/sequelize").transactions,
 exports.getAllTransactions = async function () {
     try {
         let trans = await Transaction.findAll();
+
+        // update status on any late orders
+        trans.forEach((t) => {
+            if (t.status === "inUse" && t.return_date < Date.now()) {
+                this.markOrderLate(t.id);
+            }
+        })
+
         return trans;
     } catch (e) {
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
@@ -26,6 +34,14 @@ exports.getUserPurchaseHistory = async function(onyen) {
                 count: {[Sequelize.Op.lt]: 0}
             }
         });
+
+        // update status on any late orders
+        trans.forEach((t) => {
+            if (t.status === "inUse" && t.return_date < Date.now()) {
+                this.markOrderLate(t.id);
+            }
+        })
+
         return trans;
     } catch(e) {   
         throw new InternalErrorException("A problem occurred when retrieving the transaction", e);
