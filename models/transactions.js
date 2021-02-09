@@ -51,11 +51,6 @@ exports.init_table = function (sequelize) {
             type: Sequelize.DATE,
             allowNull: false,
             defaultValue: Date.now() + 2.628e+9, // set return date a month from now
-        },
-        is_returned: {
-            type: Sequelize.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
         }
     });
 
