@@ -47,14 +47,9 @@ exports.init_table = function (sequelize) {
                 isIn: [['pending', 'inUse', 'complete', 'cancelled', 'late']]
             }
         },
-        return_date: {
+    return_date: {
             type: Sequelize.DATE,
             allowNull: true,
-        },
-        is_returned: {
-            type: Sequelize.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
         }
     });
 
