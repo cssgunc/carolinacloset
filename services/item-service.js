@@ -539,7 +539,7 @@ exports.getItemCategorySizeColor = async function (type, gender, size, colors) {
     }
 }
 /**
- * Looks for an item by name and description
+ * Looks for an item by name
  * Returns the item fround or null if nothing is found
  * @param {string} name 
  */
