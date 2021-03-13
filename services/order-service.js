@@ -96,9 +96,7 @@ exports.createOrder = async function (cart, onyen) {
                     status: { [Op.or]: ["inUse", "late"] }
                 }
             })
-
-            console.log('TRANS: ' + existingTransaction);
-
+            
             if (existingTransaction) {
                 throw new BadRequestException("Please return your outstanding items before placing a new order");
             }

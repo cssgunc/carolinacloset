@@ -98,8 +98,7 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
         }
 
         if (type && gender && color && brand) {
-            // try searching  type gender color brand 
-
+            // try searching type gender color brand 
             let item = await itemService.getItemAndSize(type, gender, color, brand, size);
 
             // if the item is found, we send back a message and the found item
@@ -126,10 +125,6 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
                         break;
 
                 }
-                console.log(response.sizing, "here")
-
-
-
                 res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
                 return;
             }
@@ -160,10 +155,8 @@ router.post("/manual/update", [userIsAdmin], async function (req, res) {
 
     try {
         if (quantity > 0) {
-            console.log("Add");
             await itemService.addItems(id, quantity, res.locals.onyen, res.locals.onyen);
         } else if (quantity < 0) {
-            console.log("Remove");
             await itemService.removeItems(id, -quantity, res.locals.onyen, res.locals.onyen);
         }
         else {

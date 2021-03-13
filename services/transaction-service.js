@@ -1,4 +1,5 @@
 const   Transaction = require("../db/sequelize").transactions,
+        orderService = require("../services/order-service"),
         Sequelize = require("sequelize"),
         InternalErrorException = require("../exceptions/internal-error-exception");
 
@@ -12,7 +13,7 @@ exports.getAllTransactions = async function () {
         // update status on any late orders
         trans.forEach((t) => {
             if (t.status === "inUse" && t.return_date < Date.now()) {
-                this.markOrderLate(t.id);
+                orderService.markOrderLate(t.id);
             }
         })
 
@@ -38,7 +39,7 @@ exports.getUserPurchaseHistory = async function(onyen) {
         // update status on any late orders
         trans.forEach((t) => {
             if (t.status === "inUse" && t.return_date < Date.now()) {
-                this.markOrderLate(t.id);
+                orderService.markOrderLate(t.id);
             }
         })
 
