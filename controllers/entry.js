@@ -105,23 +105,19 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
             if (item) {
                 response.itemFound = item;
                 response.sizing = {}
-                let current = null
-                //grab the corresponding sizing infromation if it exists
+                // grab the corresponding sizing infromation if it exists
                 switch (item.type) {
                     case "suits":
                         response.sizing = await itemService.getSuit(item.id)
                         break;
                     case "shirts":
                         response.sizing = await itemService.getShirt(item.id)
-
                         break;
                     case "pants":
                         response.sizing = await itemService.getPants(item.id)
-
                         break;
                     case "shoes":
                         response.sizing = await itemService.getShoes(item.id)
-
                         break;
 
                 }
@@ -132,7 +128,6 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
 
         let item = await itemService.createItem((gender + " " + brand + " " + type), type, gender, image, brand, color, count, size);
         if (item) {
-
             response.success = 'New item successfully created, id: ' + item.id;
         } else {
             response.error = 'Failed to create new item. Please try again later.'
