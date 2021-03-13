@@ -323,13 +323,11 @@ router.post('/delete/items/all', [userIsAdmin], async function (req, res, next) 
     let response = { 'table': 'items' };
     try {
         await itemService.deleteAllItems();
-        response.success = true;
+        response.success = "Success! All items have been deleted.";
     } catch (e) {
         if (e.name === "SequelizeForeignKeyConstraintError") {
-            response.success = false;
             response.error = "You tried to delete an item that exists in a transaction! You must backup and delete the transactions first.";
         } else {
-            response.success = false;
             response.error = "Unknown Error!";
         }
     }
@@ -383,7 +381,6 @@ router.post('/delete/users', [userIsAdmin], async function (req, res, next) {
             response.error = "Error deleting table. " + exceptionHandler.retrieveException(e);
         }
     }
-    response.success = true;
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 

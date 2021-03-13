@@ -46,7 +46,7 @@ router.post('/complete', [userIsAdmin], async function (req, res) {
 
     try {
         await orderService.completeOrder(id, res.locals.onyen);
-        response.success = "Success! Order successfully resolved.";
+        response.success = "Success! Order successfully completed.";
     } catch (e) {
         response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
     }
@@ -64,7 +64,7 @@ router.post('/cancel', [userIsAdmin], async function (req, res, next) {
 
     try {
         await orderService.cancelOrder(id, res.locals.onyen);
-        response.success = "Success! Order successfully resolved.";
+        response.success = "Success! Order successfully canceled.";
     } catch (e) {
         response.error = "Sorry, there was an error with your request. Please try again later. " + exceptionHandler.retrieveException(e);
     }
