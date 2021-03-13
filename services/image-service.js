@@ -16,7 +16,9 @@ exports.resizeImage = async function (image) {
 exports.convertItemImagesToString = function (items) {
     for (let i = 0; i < items.length; i++) {
         item = items[i];
-        item.image = item.image.toString('base64');
+        if (item.image) {
+            item.image = item.image.toString('base64');
+        }
     }
 
     return items;

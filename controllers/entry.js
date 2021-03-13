@@ -1,5 +1,3 @@
-const { suits } = require("../db/sequelize");
-
 const express = require("express"),
     router = express.Router(),
     url = require('url'),
