@@ -8,12 +8,13 @@ const express = require("express"),
     userIsAdmin = require("./util/auth.js").userIsAdmin,
     dbUtil = require("../db/db-util"),
     copyTo = require('pg-copy-streams').to,
+    pgp = require('pg-promise'),
     { Client } = require('pg'),
     fs = require('fs');
 
 /**
  * Route serving the admin home page
- */ 
+ */
 router.get('/', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render("admin/admin.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
@@ -64,7 +65,7 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
             res.status(403).send("Cannot edit ORDER admin");
             return;
         }
-        
+
         let type = req.body.type;
         let pid = req.body.pid;
         let email = req.body.email;
@@ -158,7 +159,7 @@ router.post('/users/import', [userIsAdmin], async function (req, res, next) {
                 let result = await userService.appendCsvUsers(file);
                 if (result) response.success = "CSV file successfully imported!";
                 else response.error = "An unknown error occurred.";
-    
+
             } catch (e) {
                 response.error = exceptionHandler.retrieveException(e);
             }
@@ -181,6 +182,8 @@ router.get('/backup', [userIsAdmin], async function (req, res, next) {
  * Route serving a CSV copy of the Items table
  */
 router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
+    let itemType = req.query.type;
+
     let data = '';
 
     let client = new Client({
@@ -201,7 +204,12 @@ router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
             console.log(pgErr);
             res.sendStatus(500);
         }
-        var stream = client.query(copyTo(`COPY (SELECT * FROM items) TO STDOUT With CSV HEADER`));
+
+        const query = pgp.as.format(`COPY 
+                        (SELECT * FROM items INNER JOIN $1:name ON items.id = $1:name.id)
+                        TO STDOUT With CSV HEADER`, [itemType]);
+
+        var stream = client.query(copyTo(query));
         stream.on('data', chunk => {
             data += chunk;
         })
