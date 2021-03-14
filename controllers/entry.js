@@ -289,7 +289,7 @@ router.post("/edit", [userIsAdmin], async function (req, res) {
     let brand = req.body.brand;
     let color = req.body.color;
     try {
-        let item = await itemService.editItem(id, name, type, gender, image, brand, color);
+        await itemService.editItem(id, name, type, gender, image, brand, color);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }

@@ -40,25 +40,10 @@ router.get('/users', [userIsAdmin], async function (req, res, next) {
 router.post('/users/create', [userIsAdmin], async function (req, res, next) {
     try {
         let newOnyen = req.body.onyen;
-        let type = req.body.type;
         let pid = req.body.pid;
         let email = req.body.email;
 
-        if (type === "disabled") {
-            res.status(400).send("Can't create a new user that's disabled");
-            return;
-        }
-
-        // if user is an admin, do nothing
-        if (type === 'admin') {
-            let adminCount = await userService.countAllAdmins();
-            if (adminCount == 2) {
-                res.status(500).send("Cannot create an additional admin");
-                return;
-            }
-        }
-
-        await userService.createUser(newOnyen, type, pid, email);
+        await userService.createUser(newOnyen, "user", pid, email);
     } catch (e) {
         res.status(500).send("Internal server error");
         return;
