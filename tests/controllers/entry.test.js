@@ -185,7 +185,7 @@ describe('Entry Routes - Entry Workflow', () => {
             let requestBody = {
                 id: itemId,
                 name: 'new_shirt',
-                type: 'shirt',
+                type: 'shirts',
                 gender: 'male',
                 image: null,
                 brand: null,

@@ -60,9 +60,36 @@ describe('Admin Routes - GET pages', () => {
         });
     });
 
-    describe('GET /admin/backup/items.csv - backup items table', () => {
+    describe('GET /admin/backup/items.csv?type=shirts - backup items table (shirts)', () => {
         it('expect success HTTP 200 status', (done) => {
-            supertest(app).get('/admin/backup/items.csv')
+            supertest(app).get('/admin/backup/items.csv?type=shirts')
+                .set(testUtil.commonHeaders)
+                .set(testUtil.adminAuthHeaders)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET /admin/backup/items.csv?type=pants - backup items table (pants)', () => {
+        it('expect success HTTP 200 status', (done) => {
+            supertest(app).get('/admin/backup/items.csv?type=pants')
+                .set(testUtil.commonHeaders)
+                .set(testUtil.adminAuthHeaders)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET /admin/backup/items.csv?type=shoes - backup items table (shoes)', () => {
+        it('expect success HTTP 200 status', (done) => {
+            supertest(app).get('/admin/backup/items.csv?type=shoes')
+                .set(testUtil.commonHeaders)
+                .set(testUtil.adminAuthHeaders)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET /admin/backup/items.csv?type=suits - backup items table (suits)', () => {
+        it('expect success HTTP 200 status', (done) => {
+            supertest(app).get('/admin/backup/items.csv?type=suits')
                 .set(testUtil.commonHeaders)
                 .set(testUtil.adminAuthHeaders)
                 .expect(200, done);
