@@ -88,17 +88,18 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
         let shoeSize = req.body.shoeSize
         let size = { shoeSize: shoeSize, chestSize: chestSize, sleeveSize: sleeveSize, shirtSize: shirtSize, waistSize: waistSize, pantsLength: pantsLength }
 
+
+
+
         // if no brand provided use "Generic"
         if (!brand) {
             brand = "Generic"
         }
 
-        let image = null;
-        if (req.files != null) {
-            image = req.files.image;
-            image = await imageService.resizeImage(image.data);
+        let image = null
+        if (req.body.takenImage != null && req.body.takenImage != "") {
+            image = await imageService.resizeImageString(req.body.takenImage)
         }
-
         if (type && gender && color && brand) {
             // try searching  type gender color brand 
 
@@ -128,7 +129,6 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
                         break;
 
                 }
-                console.log(response.sizing, "here")
 
 
 
@@ -136,7 +136,6 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
                 return;
             }
         }
-
         let item = await itemService.createItem((gender + " " + brand + " " + type), type, gender, image, brand, color, count, size);
         if (item) {
 
