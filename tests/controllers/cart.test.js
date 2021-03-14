@@ -6,7 +6,7 @@ const supertest = require('supertest'),
 
 require('dotenv').config();
 
-const CHECKOUT_SUCCESS_MESSAGE = /Your preorder has been successfully placed/;
+const CHECKOUT_SUCCESS_MESSAGE = /Your order has been successfully placed/;
 const CHECKOUT_ERROR_MESSAGE = /error occurred/;
 const CHECKOUT_TOOMANY_MESSAGE = /more than the quantity in the system/;
 

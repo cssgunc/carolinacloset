@@ -247,7 +247,7 @@ exports.appendCsvUsers = async function (data) {
  * @param {string} onyen 
  */
 exports.deleteUser = async function (onyen) {
-    if (onyen !== "PREORDER") {
+    if (onyen !== "ORDER") {
         try {
             User.destroy(
                 { where: { onyen: onyen } }
@@ -268,7 +268,7 @@ exports.deleteAllUsers = async function () {
             truncate: false
         });
 
-        await this.createUser("PREORDER", "admin", 0, "preorder@admin.com");
+        await this.createUser("ORDER", "admin", 0, "order@admin.com");
         if(process.env.DEFAULT_ADMIN) {
             await this.createUser(process.env.DEFAULT_ADMIN, "admin", 1, "admin@admin.com");
         }

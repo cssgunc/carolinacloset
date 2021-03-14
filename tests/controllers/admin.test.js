@@ -102,10 +102,10 @@ describe('Admin Routes - Sanity Checks', () => {
         await dbUtil.preTestSetup();
     });
 
-    describe('POST /admin/users/edit - change PREORDER admin to user', () => {
+    describe('POST /admin/users/edit - change ORDER admin to user', () => {
         it('expect HTTP 403 status', (done) => {
             let requestBody = {
-                onyen: 'PREORDER',
+                onyen: 'ORDER',
                 type: 'user'
             };
             supertest(app).post('/admin/users/edit')
@@ -116,10 +116,10 @@ describe('Admin Routes - Sanity Checks', () => {
         });
     });
 
-    describe('POST /admin/users/delete - delete PREORDER admin', () => {
+    describe('POST /admin/users/delete - delete ORDER admin', () => {
         it('expect HTTP 403 status', (done) => {
             let requestBody = {
-                onyen: 'PREORDER',
+                onyen: 'ORDER',
             };
             supertest(app).post('/admin/users/delete')
                 .set(testUtil.commonHeaders)

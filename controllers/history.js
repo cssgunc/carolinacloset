@@ -1,7 +1,6 @@
 const express = require("express"),
     router = express.Router(),
     tranService = require("../services/transaction-service"),
-    exceptionHandler = require("../exceptions/exception-handler"),
     userIsBasicUser = require('./util/auth').userIsBasicUser;
 
 /**

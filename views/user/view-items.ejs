@@ -1,27 +1,20 @@
 <!DOCTYPE html>
-<html lang="en"
-<head>
-	<%- include("../components/baselinks") -%>
-</head>
-
-<body>
-	<%- include("../components/header") -%>
-	<div class="container">
-		<%- include("../components/alerts") -%>
-		<div id="toast-div">
-			<div id="toast-pos" class="toast-pos">
+<html lang="en">
+	<head>
+		<%- include("../components/baselinks") -%>
+	</head>
+	<body>
+		<%- include("../components/header") -%>
+		<div class="container">
+			<%- include("../components/alerts") -%>
+			<div id="toast-div">
+				<div id="toast-pos" class="toast-pos"></div>
 			</div>
-		</div>
-		<div class="row w-100">
+			<div class="row w-100">
 			<% if(type != "all") { %>
-
-
-
 				<div class="col-2">
 					<h3>Search By Attribute</h3>
-					<form method="GET" action="<%= sublink%>">
-						
-						
+					<form method="GET" action="<%= sublink%>">			
 						<div class="form-group">
 							<h5>Color</h5>
 							<div class="form-check">
@@ -64,7 +57,6 @@
 						<div id="sizeWrapper"> </div>
 						<!-- hacky way to access an ejs variable in a js function  -->
 							<div class="d-none" id="type"><%= type%></div>
-							
 						<script>
 							// handles conditional rendering based on the type of item selected
 							function updateType(currentType){
@@ -136,7 +128,6 @@
 			<div class="col-10 w-100">
 				<h1 style = "text-transform:capitalize;"><%= title? title: "Current Inventory"%></h1>
 				<div class="row row-cols-1 row-cols-md-3 g-4">
-					
 							<% if (response && response.items) {%>
 							<% response.items.forEach((item) => {%>
 								<% if (item.count > 0) {%>
@@ -145,13 +136,10 @@
 										<img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
 										<div class="card-body">
 										<h5 class="card-title"><%= item.name%></h5>
-		
 										<ul class="list-group list-group-flush">
-											<li class="list-group-item">Color: <%= item.color%></li>
-											
+											<li class="list-group-item">Color: <%= item.color%></li>	
 											<% if (item.shoes) {%>
 												<li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
-		
 											<% } %>
 											<% if (item.pants) {%>
 												<li class="list-group-item">Waist Size: <%= item.pants.dataValues.waist%></li>
@@ -163,23 +151,14 @@
 											<% if (item.suits) {%>
 												<li class="list-group-item">Chest Size: <%= item.suits.dataValues.chest%></li>
 												<li class="list-group-item">Sleeve Length: <%= item.suits.dataValues.sleeve%></li>
-		
 											<% } %>
-
 												<li class="list-group-item">In Stock: <%= item.count%></li>
-
-
-
 												<li class="list-group-item"><div class="btn-group">
-													<input class="cartQuantity" aria-label="Add to cart quantity" type="number" min="1" max="<%= item.count %>" value=1>
 													<div class="btn-group" role="group">
-														<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>" 
-															data-barcode="<%= item.barcode %>" data-count="<%= item.count %>" data-description="<%= item.description %>">Add to Cart</button>
+														<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>">Add to Cart</button>
 													</div>
 												</div></li>
-		
 											</ul>
-										
 									</div>
 									</div>
 								</div>
@@ -189,7 +168,6 @@
 				</div>
 			</div>
 		</div>
-		
 		<% if (response && response.error) {%>
 		<div class="alert alert-danger">
 			<%= response.error%>
@@ -198,6 +176,5 @@
 	</div>
 	<%- include("../components/scripts") -%>
 	<script src="/static/js/view-items.js"></script>
-</body>
-
+	</body>
 </html>
