@@ -184,46 +184,50 @@ router.get('/backup', [userIsAdmin], async function (req, res, next) {
 router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
     let itemType = req.query.type;
 
-    let data = '';
+    if (!(['shirts', 'pants', 'shoes', 'suits'].includes(itemType))) {
+        res.sendStatus(400);
+    } else {
+        let data = '';
 
-    let client = new Client({
-        database: process.env.DATABASE_NAME,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        host: process.env.DATABASE_HOST,
-        port: process.env.DATABASE_PORT
-    });
+        let client = new Client({
+            database: process.env.DATABASE_NAME,
+            user: process.env.DATABASE_USER,
+            password: process.env.DATABASE_PASSWORD,
+            host: process.env.DATABASE_HOST,
+            port: process.env.DATABASE_PORT
+        });
 
-    if (process.env.NODE_ENV === 'prod') {
-        client.host = process.env.POSTGRESQL_SERVICE_HOST;
-        client.port = process.env.POSTGRESQL_SERVICE_PORT;
-    }
-
-    client.connect(function (pgErr, client, done) {
-        if (pgErr) {
-            console.log(pgErr);
-            res.sendStatus(500);
+        if (process.env.NODE_ENV === 'prod') {
+            client.host = process.env.POSTGRESQL_SERVICE_HOST;
+            client.port = process.env.POSTGRESQL_SERVICE_PORT;
         }
 
-        const query = pgp.as.format(`COPY 
-                        (SELECT * FROM items INNER JOIN $1:name ON items.id = $1:name.id)
-                        TO STDOUT With CSV HEADER`, [itemType]);
+        client.connect(function (pgErr, client, done) {
+            if (pgErr) {
+                console.log(pgErr);
+                res.sendStatus(500);
+            }
 
-        var stream = client.query(copyTo(query));
-        stream.on('data', chunk => {
-            data += chunk;
-        })
-        stream.on('end', response => {
-            done;
-            res.set('Content-Type', 'text/csv');
-            res.send(data);
+            const query = pgp.as.format(`COPY 
+                            (SELECT * FROM items INNER JOIN $1:name ON items.id = $1:name.id)
+                            TO STDOUT With CSV HEADER`, [itemType]);
+
+            var stream = client.query(copyTo(query));
+            stream.on('data', chunk => {
+                data += chunk;
+            })
+            stream.on('end', response => {
+                done;
+                res.set('Content-Type', 'text/csv');
+                res.send(data);
+            });
+            stream.on('error', err => {
+                done;
+                console.log(err);
+                res.sendStatus(500);
+            })
         });
-        stream.on('error', err => {
-            done;
-            console.log(err);
-            res.sendStatus(500);
-        })
-    });
+    }
 });
 
 /**
