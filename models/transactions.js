@@ -44,18 +44,12 @@ exports.init_table = function (sequelize) {
             type: Sequelize.STRING,
             allowNull: false,
             validate: {
-                isIn: [['pending', 'complete', 'cancelled', 'late']]
+                isIn: [['pending', 'inUse', 'complete', 'cancelled', 'late']]
             }
         },
-        return_date: {
+    return_date: {
             type: Sequelize.DATE,
-            allowNull: false,
-            defaultValue: Date.now() + 2.628e+9, // set return date a month from now
-        },
-        is_returned: {
-            type: Sequelize.BOOLEAN,
-            allowNull: false,
-            defaultValue: false,
+            allowNull: true,
         }
     });
 

@@ -13,12 +13,6 @@ $(document).ready(function () {
             // Pulls data values attached to button
             const id = button.data('id');
             const name = button.data('name');
-            const barcode = button.data('barcode');
-            const count = button.data('count');
-            const description = button.data('description');
-            let parent = button.parent().parent();
-            const addToCartQuantity = parent.children('.cartQuantity').val();
-            console.log(addToCartQuantity);
 
             // Create toast alert
             let toast = document.createElement('div');
@@ -55,51 +49,38 @@ $(document).ready(function () {
             toast.appendChild(toastBody);
             document.getElementById('toast-pos').appendChild(toast);
 
-            if (addToCartQuantity <= count) {
-                const newItem = {
-                    id: id,
-                    name: name,
-                    barcode: barcode,
-                    quantity: addToCartQuantity,
-                    description: description
+            const newItem = {
+                id: id,
+                name: name,
+                quantity: 1,
+            }
+
+            let cart = localStorage.getItem('cart');
+
+            if (cart) {
+                cart = JSON.parse(cart);
+                let found = false;
+                // checks if item is already in cart
+                for (let i = 0; i < cart.length; i++) {
+                    if (cart[i].id === id) {
+                        // cannot add this item if it is already in the cart
+                        toastHeaderText.appendChild(document.createTextNode('Error'));
+                        toastBody.appendChild(document.createTextNode(name + ' is already in your cart'));
+                        found = true;
+                        break;
+                    }
                 }
-
-                let cart = localStorage.getItem('cart');
-
-                if (cart) {
-                    cart = JSON.parse(cart);
-                    let found = false;
-                    // Adds to existing amount if item is already in cart
-                    for (let i = 0; i < cart.length; i++) {
-                        if (cart[i].id === id) {
-                            // Cannot add more than currently exist in inventory
-                            if (count === parseInt(cart[i].quantity)) {
-                                toastHeaderText.appendChild(document.createTextNode('Error'));
-                                toastBody.appendChild(document.createTextNode('There is not enough ' + name + ' in stock'));
-                            } else {
-                                cart[i].quantity = Math.min(count, parseInt(cart[i].quantity) + parseInt(addToCartQuantity));
-                                toastHeaderText.appendChild(document.createTextNode('Success'));
-                                toastBody.appendChild(document.createTextNode(name + ' added to cart, qty: ' + addToCartQuantity));
-                            }
-                            found = true;
-                            break;
-                        }
-                    }
-                    // If not yet in cart, push a new item
-                    if (!found) {
-                        cart.push(newItem);
-                        toastHeaderText.appendChild(document.createTextNode('Success'));
-                        toastBody.appendChild(document.createTextNode(name + ' added to cart, qty: ' + addToCartQuantity));
-                    }
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                } else {
-                    localStorage.setItem('cart', JSON.stringify([newItem]));
+                // if not yet in cart, push a new item
+                if (!found) {
+                    cart.push(newItem);
                     toastHeaderText.appendChild(document.createTextNode('Success'));
-                    toastBody.appendChild(document.createTextNode(name + ' added to cart, qty: ' + addToCartQuantity));
+                    toastBody.appendChild(document.createTextNode(name + ' added to cart'));
                 }
+                localStorage.setItem('cart', JSON.stringify(cart));
             } else {
-                toastHeaderText.appendChild(document.createTextNode('Error'));
-                toastBody.appendChild(document.createTextNode('There is not enough ' + name + ' in stock'));
+                localStorage.setItem('cart', JSON.stringify([newItem]));
+                toastHeaderText.appendChild(document.createTextNode('Success'));
+                toastBody.appendChild(document.createTextNode(name + ' added to cart'));
             }
 
             $('.toast').toast('show');

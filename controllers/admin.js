@@ -40,25 +40,10 @@ router.get('/users', [userIsAdmin], async function (req, res, next) {
 router.post('/users/create', [userIsAdmin], async function (req, res, next) {
     try {
         let newOnyen = req.body.onyen;
-        let type = req.body.type;
         let pid = req.body.pid;
         let email = req.body.email;
 
-        if (type === "disabled") {
-            res.status(400).send("Can't create a new user that's disabled");
-            return;
-        }
-
-        // if user is an admin, do nothing
-        if (type === 'admin') {
-            let adminCount = await userService.countAllAdmins();
-            if (adminCount == 2) {
-                res.status(500).send("Cannot create an additional admin");
-                return;
-            }
-        }
-
-        await userService.createUser(newOnyen, type, pid, email);
+        await userService.createUser(newOnyen, "user", pid, email);
     } catch (e) {
         res.status(500).send("Internal server error");
         return;
@@ -74,9 +59,9 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
     try {
         let editOnyen = req.body.onyen;
 
-        // Prevents the PREORDER admin from being edited
-        if (editOnyen === "PREORDER") {
-            res.status(403).send("Cannot edit PREORDER admin");
+        // Prevents the ORDER admin from being edited
+        if (editOnyen === "ORDER") {
+            res.status(403).send("Cannot edit ORDER admin");
             return;
         }
         
@@ -84,7 +69,7 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
         let pid = req.body.pid;
         let email = req.body.email;
 
-        // Checks to make sure there are exactly two admins in the system (PREORDER and one other admin)
+        // Checks to make sure there are exactly two admins in the system (ORDER and one other admin)
         let currType = await authService.getUserType(editOnyen);
         let adminCount = await userService.countAllAdmins();
         if (currType === "admin" && req.body.type !== "admin") {
@@ -114,14 +99,13 @@ router.post('/users/delete', [userIsAdmin], async function (req, res, next) {
     try {
         let delOnyen = req.body.onyen;
 
-        // Prevents the PREORDER admin from being edited
-        if (delOnyen === "PREORDER") {
-            res.status(403).send("Cannot delete PREORDER admin");
+        // Prevents the ORDER admin from being edited
+        if (delOnyen === "ORDER") {
+            res.status(403).send("Cannot delete ORDER admin");
             return;
         }
 
-        // Checks to make sure there are at least two admins in the system
-        // PREORDER and one other admin
+        // Checks to make sure there are at least two admins in the system (ORDER and one other admin)
         let delType = await authService.getUserType(delOnyen);
         if (delType === "admin") {
             let adminCount = await userService.countAllAdmins();
@@ -324,13 +308,11 @@ router.post('/delete/items/all', [userIsAdmin], async function (req, res, next) 
     let response = { 'table': 'items' };
     try {
         await itemService.deleteAllItems();
-        response.success = true;
+        response.success = "Success! All items have been deleted.";
     } catch (e) {
         if (e.name === "SequelizeForeignKeyConstraintError") {
-            response.success = false;
             response.error = "You tried to delete an item that exists in a transaction! You must backup and delete the transactions first.";
         } else {
-            response.success = false;
             response.error = "Unknown Error!";
         }
     }
@@ -384,7 +366,6 @@ router.post('/delete/users', [userIsAdmin], async function (req, res, next) {
             response.error = "Error deleting table. " + exceptionHandler.retrieveException(e);
         }
     }
-    response.success = true;
     res.render('admin/admin-delete-confirm.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 

@@ -13,8 +13,8 @@ const { v4: uuidv4 } = require("uuid"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
     exceptionHandler = require("../exceptions/exception-handler"),
     csvParser = require("csv-parse");
-const { suits } = require("../db/sequelize");
-var Op = Sequelize.Op;
+
+    var Op = Sequelize.Op;
 /**
  * Retrieves and returns an item by id
  * @param {uuid} itemId 
@@ -539,7 +539,7 @@ exports.getItemCategorySizeColor = async function (type, gender, size, colors) {
     }
 }
 /**
- * Looks for an item by name and description
+ * Looks for an item by name
  * Returns the item fround or null if nothing is found
  * @param {string} name 
  */

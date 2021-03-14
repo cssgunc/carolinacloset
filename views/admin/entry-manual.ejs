@@ -10,23 +10,20 @@
 	<div class="container">
 		<%- include("../components/alerts") -%>
 		<h1>Enter an Item Manually</h1>
-		<form action="/entry/manual" method="post" id="entryForm" onsubmit="return setBase64(event)" >
+    <form action="/entry/manual" method="post" id="entryForm" onsubmit="return setBase64(event)" >
 			
+
 			<div class="form-group">
 				<label for="type">Clothing Type: </label>
-				
-					<select class="custom-select custom-select-lg" id="type" name="type" form="entryForm" onchange="updateType()" required>
-						<option selected>Choose...</option>
-						<option value="suits">Suits</option>
-						<option value="shirts">Shirts</option>
-						<option value="pants">Pants</option>
-						<option value="shoes">Shoes</option>
-
-					  </select>
+				<select class="custom-select custom-select-lg" id="type" name="type" form="entryForm" onchange="updateType()" required>
+					<option selected>Choose...</option>
+					<option value="suits">Suit</option>
+					<option value="shirts">Shirt</option>
+					<option value="pants">Pants</option>
+					<option value="shoes">Shoes</option>
+				</select>
 			</div>
-			<div id="sizeWrapper"> </div>
-
-
+			<div id="sizeWrapper"></div>
 			<script>
 			// handles conditional rendering based on the type of item selected
 			function updateType(){
@@ -39,13 +36,11 @@
 						wrapper.innerHTML = `
 						<div class="form-group">
 							<label for="chestSize">Chest Size: </label>
-						
 							<input class="form-control form-control-lg" type="number" name="chestSize" id="chestSize"
 										min=35 max=55 placeholder=35>
 						</div>
 						<div class="form-group">
 							<label for="sleeveSize">Sleeve Size: </label>
-						
 							<input class="form-control form-control-lg" type="number" name="sleeveSize" id="sleeveSize"
 										min=35 max=55 placeholder=35>
 						</div>`
@@ -69,10 +64,8 @@
 						wrapper.innerHTML = `
 						<div class="form-group">
 							<label for="waistSize">Waist Size: </label>
-							
 							<input class="form-control form-control-lg" type="number" name="waistSize" id="waistSize"
 										min=26 max=36 step=2 placeholder=30>
-
 						</div>
 						<div class="form-group">
 						<label for="pantsLength">Length: </label>
@@ -87,24 +80,19 @@
 							<input class="form-control" form-control-lg" type="number" name="shoeSize" id="shoeSize"
 									min=6.5 max=13 step=0.5 placeholder=6.5>
 						</div>`
-
 					break;
 					default:
 						wrapper.innerHTML = ""
 				}
 			}
 			</script>
-
-
-
 			<div class="form-group">
 				<label for="gender">Gender: </label>
-				
-					<select class="custom-select custom-select-lg" id="gender"  name="gender" form="entryForm" required>
-						<option selected>Choose...</option>
-						<option value="male">Male</option>
-						<option value="female">Female</option>
-					  </select>
+				<select class="custom-select custom-select-lg" id="gender"  name="gender" form="entryForm" required>
+					<option selected>Choose...</option>
+					<option value="male">Male</option>
+					<option value="female">Female</option>
+				</select>
 			</div>
 			<div class="form-group">
 				<label for="count">Count: </label>
@@ -112,7 +100,6 @@
 			</div>
 			<div class="form-group">
 				<label for="color">Color:</label>
-			
 				<select class="custom-select custom-select-lg" id="color" name="color" form="entryForm" required>
 					<option selected>Choose...</option>
 					<option value="white">White</option>
@@ -120,18 +107,11 @@
 					<option value="navy">Navy</option>
 					<option value="blue">Blue</option>
 					<option value="multicolored">Multicolored</option>
-
-
 				</select>
-
-					
 			</div>
 			<div class="form-group">
 				<label for="brand">Brand:</label>
-				<input id="brand" name="brand" class="form-control form-control-lg" type="text"
-					placeholder="Ex: Hanes"
-					<% if(response.foundItem && response.foundItem.desc) {%>value="<%= response.foundItem.desc %>" <% } %>>
-					
+				<input id="brand" name="brand" class="form-control form-control-lg" type="text" placeholder="Ex: Hanes">
 			</div>
 			<div class="form-group ">
 				<label for="brand">Upload an image</label>
@@ -254,20 +234,13 @@
 			</script>
 
 		</form>
-		<% if (response && response.error) {%>
-		<div class="alert alert-danger">
-			<%= response.error%>
-		</div>
-		<% } %>
 	</div>
 	<% if(response.itemFound) { %>
-	<div class="modal fade" id="foundModal" tabindex="-1" role="dialog" aria-labelledby="foundModalLabel"
-		aria-hidden="true">
+	<div class="modal fade" id="foundModal" tabindex="-1" role="dialog" aria-labelledby="foundModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<p class="modal-title" id="foundModalLabel">Item already found in database, do you want to update this entry?
-					</p>
+					<p class="modal-title" id="foundModalLabel">Item already found in database, do you want to update this entry?</p>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -276,10 +249,8 @@
 					<form name="foundForm" id="foundForm" action="/entry/manual/update" method="POST">
 						<div class="form-group">
 							<input class="form-control" type="text" name="id" id="foundModalId" readonly hidden aria-label="item id"
-								value="<%- response.itemFound.id %>">
-							
+								value="<%- response.itemFound.id %>">		
 						</div>
-					
 						<div class="form-group">
 							<label for="foundType">Clothing Type:</label>
 							<input class="form-control" type="text" name="type" id="foundType" readonly
@@ -364,5 +335,4 @@
 		});
 	</script>
 </body>
-
 </html>
