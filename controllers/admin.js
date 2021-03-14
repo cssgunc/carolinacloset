@@ -178,10 +178,7 @@ router.get('/backup', [userIsAdmin], async function (req, res, next) {
     res.render('admin/admin-backup.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
-/**
- * Route serving a CSV copy of the Items table
- */
-router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
+let downloadItemCSV = async function (req, res, next) {
     let itemType = req.query.type;
 
     if (!(['shirts', 'pants', 'shoes', 'suits'].includes(itemType))) {
@@ -228,7 +225,27 @@ router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
             })
         });
     }
-});
+}
+
+/**
+ * Route serving a CSV copy of the Shirts table
+ */
+router.get('/backup/shirts.csv', [userIsAdmin], downloadItemCSV);
+
+/**
+ * Route serving a CSV copy of the Pants table
+ */
+ router.get('/backup/pants.csv', [userIsAdmin], downloadItemCSV);
+
+ /**
+ * Route serving a CSV copy of the Shoes table
+ */
+router.get('/backup/shoes.csv', [userIsAdmin], downloadItemCSV);
+
+/**
+ * Route serving a CSV copy of the Suits table
+ */
+ router.get('/backup/suits.csv', [userIsAdmin], downloadItemCSV);
 
 /**
  * Route serving a CSV copy of the Transactions table
