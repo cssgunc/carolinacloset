@@ -235,6 +235,7 @@
 					
 					file = document.getElementById("imageUpload").files[0]
 					if(file == null){
+						e.target.submit()
 						return
 					}
 					var reader = new FileReader(event);
