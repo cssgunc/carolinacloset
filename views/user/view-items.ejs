@@ -124,16 +124,15 @@
 					</form>
 				</div>
 			<% } %>
-
 			<div class="col-10 w-100">
-				<h1 style = "text-transform:capitalize;"><%= title? title: "Current Inventory"%></h1>
+				<h1 style = "text-transform:capitalize;"><%= title ? title : "Current Inventory"%></h1>
 				<div class="row row-cols-1 row-cols-md-3 g-4">
 							<% if (response && response.items) {%>
 							<% response.items.forEach((item) => {%>
 								<% if (item.count > 0) {%>
 									<div class="col">
 									<div class="card mb-3" style="width: 16rem;" >
-										<img src="https://images.unsplash.com/photo-1491336477066-31156b5e4f35?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="card-img-top" alt="...">
+										<img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
 										<div class="card-body">
 										<h5 class="card-title"><%= item.name%></h5>
 										<ul class="list-group list-group-flush">

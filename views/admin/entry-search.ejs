@@ -18,31 +18,32 @@
         <input id="customerOnyen" type="text" class="form-control" name="customerOnyen" aria-label="Customer ONYEN"
           <% if (response && response.prevOnyen) {%> value=<%= response.prevOnyen %> <% } %>>
       </div>
-
     </div>
     <div class="row row-cols-1 row-cols-md-3 g-4">
           <% if (response && response.items) {%>
           <% response.items.forEach((item) => {%>
-            <div class="col">
-              <div class="card" style="width: 18rem;">
-                <img src="https://images.unsplash.com/photo-1491336477066-31156b5e4f35?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title"><%= item.name %></h5>
-                  <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
-                      data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                      data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
-                    <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
-                      data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                      data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
-                    <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
-                      data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                      data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
+            <% if (item.count > 0) {%>
+              <div class="col">
+                <div class="card mb-3" style="width: 16rem;">
+                  <img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title"><%= item.name %></h5>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
+                        data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                        data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
+                      <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
+                        data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                        data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
+                      <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
+                        data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                        data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
+                      </div>
                     </div>
-                  </div>
-                  </div>
+                    </div>
+                </div>
               </div>
-            </div>
+            <% } %>
           <% }); %>
           <% } %>
     </div>

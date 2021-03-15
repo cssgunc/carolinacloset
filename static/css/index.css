@@ -26,3 +26,7 @@
 .row {
   margin-bottom: 15px;
 }
+
+.photoButton {
+  width: 600px;
+}

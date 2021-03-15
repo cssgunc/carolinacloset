@@ -7,7 +7,6 @@ const express = require("express"),
 /**
  * Route serving visitor item table view
  */
-
 router.get('/', [userIsBasicUser], async function (req, res, next) {
     let response = {};
     try {

@@ -1,11 +1,11 @@
 body {
   width: 100vw;
   margin: 0;
-  font-family: "Open Sans";
+  font-family: Lato,Helvetica Neue,Arial,Helvetica,sans-serif;
 }
 
 .btn-primary {
-  background-color: #1C4AA2;
+  background-color: #4b9cd3;
 }
 
 .btn-success {
@@ -13,19 +13,20 @@ body {
   color: black;
 }
 
-.navbar img {
-  width: 100px;
-}
-
 .navbar {
-  background: #1C4AA2;
+  background: #4b9cd3;
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
   min-width: 100vw;
   min-height: 50px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 30%), inset 0 0 40px rgb(0 0 0 / 10%);
   margin-bottom: 10px;
 }
 
 .navbar .container-fluid {
   height: 100%;
+  padding-left: 0px;
 }
 
 .navbar .nav-link {
@@ -50,7 +51,7 @@ body {
 }
 
 .dropdown-menu .nav-link {
-  color: #5488c0;
+  color: #4b9cd3;
 }
 
 .dropdown-menu .nav-link {
@@ -118,4 +119,11 @@ td {
     top: 80px;
     right: 50px;
   }
+}
+
+.headerImg {
+  padding: 5px;
+  background-color: white;
+  height: 75px;
+  width: auto;
 }

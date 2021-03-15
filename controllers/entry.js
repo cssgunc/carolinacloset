@@ -26,7 +26,6 @@ router.get("/search", [userIsAdmin], async function (req, res) {
     if (req.query.prevOnyen) response.prevOnyen = req.query.prevOnyen;
     try {
         response.items = await itemService.getAllItems();
-        imageService.convertItemImagesToString(response.items);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
@@ -65,7 +64,7 @@ router.get("/manual", [userIsAdmin], async function (req, res) {
  * If the item exists, we pass the existing item back to the view
  * Else we create a new item
  */
-router.post('/manual', [userIsAdmin], async function (req, res) {
+router.post("/manual", [userIsAdmin], async function (req, res) {
     let response = {};
 
     try {
@@ -92,11 +91,9 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
         }
 
         let image = null;
-        if (req.files != null) {
-            image = req.files.image;
-            image = await imageService.resizeImage(image.data);
+        if (req.body.takenImage != null && req.body.takenImage != "") {
+            image = await imageService.resizeImageString(req.body.takenImage);
         }
-
         if (type && gender && color && brand) {
             // try searching type gender color brand 
             let item = await itemService.getItemAndSize(type, gender, color, brand, size);
@@ -119,13 +116,12 @@ router.post('/manual', [userIsAdmin], async function (req, res) {
                     case "shoes":
                         response.sizing = await itemService.getShoes(item.id)
                         break;
-
                 }
+
                 res.render("admin/entry-manual.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
                 return;
             }
         }
-
         let item = await itemService.createItem((gender + " " + brand + " " + type), type, gender, image, brand, color, count, size);
         if (item) {
             response.success = 'New item successfully created, id: ' + item.id;
