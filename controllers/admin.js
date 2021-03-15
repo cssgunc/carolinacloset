@@ -178,6 +178,71 @@ router.get('/backup', [userIsAdmin], async function (req, res, next) {
     res.render('admin/admin-backup.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
 });
 
+/**
+ * Creates the query string for downloading items CSVs depending on the item type
+ * @param {string} itemType from shirts, pants, shoes, suits denotes the type of item to download
+ * @returns a copy query string for the given item type
+ */
+let createDownloadItemQuery = function(itemType) {
+    if (itemType === 'shirts' || itemType === 'shoes') {
+        return pgp.as.format(
+            `COPY 
+            (SELECT
+                items.id,
+                name, 
+                type, 
+                gender, 
+                image, 
+                brand, 
+                color, 
+                count, 
+                $1:name.size
+            FROM items INNER JOIN $1:name USING(id))
+            TO STDOUT With CSV HEADER`, 
+            [itemType]);
+    } else if (itemType === 'pants') {
+        return `COPY 
+            (SELECT
+                items.id,
+                name, 
+                type, 
+                gender, 
+                image, 
+                brand, 
+                color, 
+                count, 
+                waist,
+                length
+            FROM items INNER JOIN pants USING(id))
+            TO STDOUT With CSV HEADER`
+    } else if (itemType === 'suits') {
+        return `COPY 
+            (SELECT
+                items.id,
+                name, 
+                type, 
+                gender, 
+                image, 
+                brand, 
+                color, 
+                count, 
+                chest,
+                sleeve
+            FROM items INNER JOIN suits USING(id))
+            TO STDOUT With CSV HEADER`
+    } else {
+        console.error("Invalid itemType passed, failed to create query");
+        return null;
+    }
+}
+
+/**
+ * Route function for streaming and returning CSV data of the requested item type
+ * Expects a type query parameter specifying the item type to be downloaded
+ * @param {request} req 
+ * @param {response} res 
+ * @param {function} next 
+ */
 let downloadItemCSV = async function (req, res, next) {
     let itemType = req.query.type;
 
@@ -205,35 +270,25 @@ let downloadItemCSV = async function (req, res, next) {
                 res.sendStatus(500);
             }
 
-            const query = pgp.as.format(
-                            `COPY 
-                            (SELECT
-                                name, 
-                                type, 
-                                gender, 
-                                image, 
-                                brand, 
-                                color, 
-                                count, 
-                                $1:name.* 
-                            FROM items INNER JOIN $1:name USING(id))
-                            TO STDOUT With CSV HEADER`, 
-                            [itemType]);
-
-            var stream = client.query(copyTo(query));
-            stream.on('data', chunk => {
-                data += chunk;
-            })
-            stream.on('end', response => {
-                done;
-                res.set('Content-Type', 'text/csv');
-                res.send(data);
-            });
-            stream.on('error', err => {
-                done;
-                console.log(err);
+            const query = createDownloadItemQuery(itemType);
+            if (query === null) {
                 res.sendStatus(500);
-            })
+            } else {
+                var stream = client.query(copyTo(query));
+                stream.on('data', chunk => {
+                    data += chunk;
+                })
+                stream.on('end', response => {
+                    done;
+                    res.set('Content-Type', 'text/csv');
+                    res.send(data);
+                });
+                stream.on('error', err => {
+                    done;
+                    console.log(err);
+                    res.sendStatus(500);
+                });
+            }
         });
     }
 }
