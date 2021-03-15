@@ -755,16 +755,8 @@ exports.importCsv = async function (data, fromExport, withHeaders) {
 
                     let newItems = [];
 
-                    // If ID field exists, add 1 to row length
-                    ROW_LENGTH = fromExport ? 9 : 8;
-
                     // Skip row headers
                     let i = fromExport || withHeaders ? 1 : 0;
-                    
-                    let type = fromExport ? output[i][2] : output[i][1];
-                    
-                    // Pants and suits have one extra field
-                    if (type === 'pants' || type === 'suits') ROW_LENGTH += 1;
 
                     for (; i < output.length; i++) {
                         let entry = output[i];
@@ -793,6 +785,8 @@ exports.importCsv = async function (data, fromExport, withHeaders) {
 
                         let newItem = await Item.create(item);
                         size['id'] = newItem.get('id');
+
+                        let type = item['type'];
 
                         // Add size field depending on the item
                         if (type === 'shirts') {
