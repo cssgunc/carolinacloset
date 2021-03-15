@@ -206,7 +206,7 @@ let downloadItemCSV = async function (req, res, next) {
             }
 
             const query = pgp.as.format(`COPY 
-                            (SELECT * FROM items INNER JOIN $1:name ON items.id = $1:name.id)
+                            (SELECT * FROM items INNER JOIN $1:name USING(id))
                             TO STDOUT With CSV HEADER`, [itemType]);
 
             var stream = client.query(copyTo(query));
