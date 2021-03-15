@@ -124,9 +124,8 @@
 					</form>
 				</div>
 			<% } %>
-
 			<div class="col-10 w-100">
-				<h1 style = "text-transform:capitalize;"><%= title? title: "Current Inventory"%></h1>
+				<h1 style = "text-transform:capitalize;"><%= title ? title : "Current Inventory"%></h1>
 				<div class="row row-cols-1 row-cols-md-3 g-4">
 							<% if (response && response.items) {%>
 							<% response.items.forEach((item) => {%>

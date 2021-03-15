@@ -13,8 +13,6 @@ body {
   color: black;
 }
 
-
-
 .navbar {
   background: #4b9cd3;
   padding-left: 0px;
@@ -123,7 +121,7 @@ td {
   }
 }
 
-.headerImg{
+.headerImg {
   padding: 5px;
   background-color: white;
   height: 75px;

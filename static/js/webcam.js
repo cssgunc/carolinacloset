@@ -12,8 +12,6 @@ export function takepicture() {
     }
 }
 
-
-
 export function clearphoto() {
     var context = canvas.getContext('2d');
     context.fillStyle = "#AAA";

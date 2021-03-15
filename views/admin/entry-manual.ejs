@@ -11,8 +11,6 @@
 		<%- include("../components/alerts") -%>
 		<h1>Enter an Item Manually</h1>
 		<form action="/entry/manual" method="post" id="entryForm" onsubmit="return setBase64(event)" >
-			
-
 			<div class="form-group">
 				<label for="type">Clothing Type: </label>
 				<select class="custom-select custom-select-lg" id="type" name="type" form="entryForm" onchange="updateType()" required>
@@ -116,18 +114,13 @@
 			<div class="form-group ">
 				<label for="brand">Upload an image</label>
 				<input type="file" name="image" id="imageUpload" >
-
 				<div class="camera d-flex justify-content-center mb-3 flex-wrap">
 					<video id="video">Video stream not available.</video>
-					<button   id="startbutton" class="photoButton form-control  btn-md float-middle" style="margin:px">Take photo</button>
-
+					<button id="startbutton" class="photoButton form-control  btn-md float-middle" style="margin:px">Take photo</button>
 				  </div>
 				<div class="d-flex justify-content-center">
-					<canvas id="canvas" >
-					</canvas>
+					<canvas id="canvas"></canvas>
 				</div>
-				
-			
 				<input type="hidden" name="takenImage" id="takenImage">
 				<!-- script to start the webcam -->
 				<script type="module">
@@ -141,8 +134,8 @@
 							let data = canvas.toDataURL('image/png');
 							inputForm.value = data
 						} else {
-        					clearphoto();
-    					}
+        			clearphoto();
+    				}
 					}
 					function clearphoto() {
 						var context = canvas.getContext('2d');
@@ -188,17 +181,12 @@
 						startbutton.addEventListener('click', function (ev) {
 							ev.preventDefault();
 							takepicture();
-							
-
 						}, false);
 						clearphoto();
 					}
 					startup()
-					
 				</script>
 				<!-- changes uploaded files into base64 string format -->
-				
-					
 			</div>
 			<div class="form-group">
 				<button class="form-control btn-success btn-md float-middle" id="submitButton"style="margin:px" type="action"
@@ -206,7 +194,7 @@
 				</button>
 			</div>
 			<script>
-				function submitForm(event){
+				function submitForm(event) {
 					event.target.submit()
 				}
 				async function setBase64(e) {
@@ -230,9 +218,7 @@
 						console.log('Error: ', error);
 					};
 				}
-				
 			</script>
-
 		</form>
 	</div>
 	<% if(response.itemFound) { %>
