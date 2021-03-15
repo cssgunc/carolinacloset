@@ -315,7 +315,7 @@ router.post('/import', [userIsAdmin], async function (req, res, next) {
             response.error = "Please upload a valid CSV file";
         } else {
             try {
-                let result = await itemService.appendCsv(file);
+                let result = await itemService.importCsv(file);
                 if (result) response.success = "CSV file successfully imported!";
                 else response.error = "An unknown error occurred.";
             } catch (e) {

@@ -736,7 +736,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, adminOnyen)
  * On duplicate, adds the existing count and the new count together
  * @param {file} data 
  */
-exports.appendCsv = async function (data, fromExport, withHeaders) {
+exports.importCsv = async function (data, fromExport, withHeaders) {
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
     // this will allow the caller to tell when the Item table creation fails
     return new Promise((resolve, reject) => {
