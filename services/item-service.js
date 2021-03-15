@@ -736,7 +736,7 @@ exports.createTransaction = async function (itemId, quantity, onyen, adminOnyen)
  * On duplicate, adds the existing count and the new count together
  * @param {file} data 
  */
-exports.appendCsv = async function (data) {
+exports.appendCsv = async function (data, fromExport, withHeaders) {
     // wrapping everything in a Promise, so we can return exceptions from the csvParser callback
     // this will allow the caller to tell when the Item table creation fails
     return new Promise((resolve, reject) => {
@@ -748,68 +748,77 @@ exports.appendCsv = async function (data) {
                     escapeChar: '"',
                     enclosedChar: '"'
                 },
-                function (err, output) {
+                async function (err, output) {
                     if (err) {
                         throw new InternalErrorException("A problem occurred when parsing CSV data");
                     }
 
-                    for (let i = 0; i < output.length; i++) {
+                    let newItems = [];
+
+                    // If ID field exists, add 1 to row length
+                    ROW_LENGTH = fromExport ? 9 : 8;
+
+                    // Skip row headers
+                    let i = fromExport || withHeaders ? 1 : 0;
+                    
+                    let type = fromExport ? output[i][2] : output[i][1];
+                    
+                    // Pants and suits have one extra field
+                    if (type === 'pants' || type === 'suits') ROW_LENGTH += 1;
+
+                    for (; i < output.length; i++) {
                         let entry = output[i];
+                        
+                        let item = {};
+                        let size = {};
 
-                        // Skip row headers
-                        if ((entry.length === 11 && i === 0) ||
-                            (entry.length === 7
-                                && entry[0] === 'name'
-                                && entry[1] === 'type'
-                                && entry[2] === 'gender'
-                                && entry[3] === 'image'
-                                && entry[4] === 'brand'
-                                && entry[5] === 'color'
-                                && entry[6] === 'count')) continue;
-
-                        let item = "";
-
-                        // Generate date for createdAt and updatedAt fields and strip timezone for Postgres
-                        let date = new Date();
-                        date = date.toLocaleDateString() + " " + date.toLocaleTimeString();
-
-                        // Expects a file with only the necessary data
-                        if (entry.length === 4) {
-                            if (parseInt(entry[2]) < 1) continue;
-                            // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
-                            // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
-                            item = "('" + uuidv4() + "'," + [entry[0], barcode, entry[2], entry[3], date, date].map((s, i) => { return i === 1 ? s : "'" + s.replace(/'/g, "''") + "'" }).join(",") + ")";
-                        }
-                        // Expects a file with the same format as an exported file
-                        else if (entry.length === 7) {
-                            if (parseInt(entry[3]) < 1) continue;
-                            // Empty barcode maps to NULL for our Postgres model, pre-wrap with single quotes
-                            let barcode = entry[2] === "" ? "NULL" : "'" + entry[2] + "'";
-                            // Prep values for query by enclosing in paren, wrapping in single quotes (except barcode), and joining by comma
-                            // Postgres uses double single quotes to escape single quotes in strings, so we do a replace
-                            item = "('" + uuidv4() + "'," + [entry[1], barcode, entry[3], entry[4], date, date].map((s, i) => { return i === 1 ? s : "'" + s.replace(/'/g, "''") + "'" }).join(",") + ")";
-                        }
-                        else {
-                            let error = "File not in the expected format, see line " + (i + 1);
-                            console.error(error);
-                            reject(error);
+                        let j = 0;
+                        
+                        // Add id if exists
+                        if (fromExport) {
+                            item['id'] = entry[0]
+                            j = 1;
+                        } else {
+                            item['id'] = uuidv4();
                         }
 
-                        // Execute query, on conflict with name/desc composite primary key, add existing and new counts
-                        sequelize.query(
-                            `INSERT INTO items 
-                            (id, name, barcode, count, description, "createdAt", "updatedAt") 
-                            VALUES ${item}
-                            ON CONFLICT (name, description)
-                            DO UPDATE
-                            SET count = items.count + EXCLUDED.count`
-                        ).then(function (result) {
-                            resolve(result);
-                        }).catch(function (e) {
-                            console.error(e);
-                            reject(e);
-                        });
+                        // Add standard fields
+                        item['name'] = entry[j++];
+                        item['type'] = entry[j++];
+                        item['gender'] = entry[j++];
+                        item['image'] = entry[j++];
+                        item['brand'] = entry[j++];
+                        item['color'] = entry[j++];
+                        item['count'] = entry[j++];
+
+                        let newItem = await Item.create(item);
+                        size['id'] = newItem.get('id');
+
+                        // Add size field depending on the item
+                        if (type === 'shirts') {
+                            size['size'] = entry[j];
+                            await Shirts.create(size);
+                        } else if (type === 'shoes') {
+                            size['size'] = entry[j];
+                            await Shoes.create(size);
+                        } else if (type === 'pants') {
+                            size['waist'] = entry[j++];
+                            size['length'] = entry[j];
+                            await Pants.create(size);
+                        } else if (type === 'suits') {
+                            size['chest'] = entry[j++];
+                            size['sleeve'] = entry[j++];
+                            await Suits.create(size);
+                        } else {
+                            throw new InternalErrorException("Item type not valid");
+                        }
+
+                        // Add to array for final result
+                        newItems.push(newItem);
                     }
+                    
+                    // Resolve promise
+                    resolve(newItems);
                 }
             );
         } catch (e) {
