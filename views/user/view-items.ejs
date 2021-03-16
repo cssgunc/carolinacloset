@@ -125,14 +125,18 @@
 				</div>
 			<% } %>
 			<div class="col-10 w-100">
-				<h1 style = "text-transform:capitalize;"><%= title ? title : "Current Inventory"%></h1>
+				<h1 style="text-transform:capitalize;"><%= title ? title : "Current Inventory"%></h1>
 				<div class="row row-cols-1 row-cols-md-3 g-4">
 							<% if (response && response.items) {%>
 							<% response.items.forEach((item) => {%>
 								<% if (item.count > 0) {%>
 									<div class="col">
-									<div class="card mb-3" style="width: 16rem;" >
-										<img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
+									<div class="card mb-3" style="width: 16rem;">
+										<% if (item.image) {%>
+											<img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
+										<% } else {%>
+											<img src="/static/favicon.png" class="card-img-top" alt="...">
+										<% } %>
 										<div class="card-body">
 										<h5 class="card-title"><%= item.name%></h5>
 										<ul class="list-group list-group-flush">
