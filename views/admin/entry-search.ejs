@@ -32,7 +32,25 @@
                   <% } %>
                   <div class="card-body">
                     <h5 class="card-title"><%= item.name %></h5>
-                    <div class="btn-group" role="group">
+                    <ul class="list-group list-group-flush">
+											<li class="list-group-item">Color: <%= item.color%></li>
+											<% if (item.shoes) {%>
+												<li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
+											<% } %>
+											<% if (item.pants) {%>
+												<li class="list-group-item">Waist Size: <%= item.pants.dataValues.waist%></li>
+												<li class="list-group-item">Length: <%= item.pants.dataValues.length%></li>
+											<% } %>
+											<% if (item.shirts) {%>
+												<li class="list-group-item">Size: <%= item.shirts.dataValues.size%></li>
+											<% } %>
+											<% if (item.suits) {%>
+												<li class="list-group-item">Chest Size: <%= item.suits.dataValues.chest%></li>
+												<li class="list-group-item">Sleeve Length: <%= item.suits.dataValues.sleeve%></li>
+											<% } %>
+											<li class="list-group-item">In Stock: <%= item.count%></li>
+										</ul>
+                    <div class="btn-group" role="group" style="margin: 1rem auto 0">
                       <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
                         data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
                         data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
