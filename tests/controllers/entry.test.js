@@ -268,56 +268,58 @@ describe('Entry Routes - Entry Workflow', () => {
 
 describe('Entry Routes - Import CSV', () => {
     // TODO Create new test files for CSV item import
-    // describe('POST /entry/import - upload items CSV short format', () => {
-    //     it('expect success 200 status and success message in request body', (done) => {
-    //         const filePath = 'tests/_files/testItemsShort.csv'
-    //         supertest(app).post('/entry/import')
-    //             .set(testUtil.adminAuthHeaders)
-    //             .attach('file', filePath)
-    //             .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
-    //             .expect(200)
-    //             .end(async (err, res) => {
-    //                 // Clear imported volunteers
-    //                 await dbUtil.preTestSetup();
-    //                 if (err) done(err);
-    //                 else done();
-    //             });
-    //     });
-    // });
+    describe('POST /entry/import - upload items CSV with exported format', () => {
+        it('expect success 200 status and success message in request body', (done) => {
+            const filePath = 'tests/_files/testItemsExported.csv'
+            supertest(app).post('/entry/import')
+                .set(testUtil.adminAuthHeaders)
+                .field('fromExport', 'on')
+                .attach('file', filePath)
+                .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported items
+                    await dbUtil.preTestSetup();
+                    if (err) done(err);
+                    else done();
+                });
+        });
+    });
 
-    // describe('POST /entry/import - upload items CSV long format', () => {
-    //     it('expect success 200 status and success message in request body', (done) => {
-    //         const filePath = 'tests/_files/testItemsLong.csv'
-    //         supertest(app).post('/entry/import')
-    //             .set(testUtil.adminAuthHeaders)
-    //             .attach('file', filePath)
-    //             .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
-    //             .expect(200)
-    //             .end(async (err, res) => {
-    //                 // Clear imported volunteers
-    //                 await dbUtil.preTestSetup();
-    //                 if (err) done(err);
-    //                 else done();
-    //             });
-    //     });
-    // });
+    describe('POST /entry/import - upload items CSV no header', () => {
+        it('expect success 200 status and success message in request body', (done) => {
+            const filePath = 'tests/_files/testItemsNoHeader.csv'
+            supertest(app).post('/entry/import')
+                .set(testUtil.adminAuthHeaders)
+                .attach('file', filePath)
+                .expect((res) => testUtil.matchResponseText(res, CSV_SUCCESS_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported items
+                    await dbUtil.preTestSetup();
+                    if (err) done(err);
+                    else done();
+                });
+        });
+    });
 
-    // describe('POST /entry/import - upload invalid items CSV', () => {
-    //     it('expect success 200 status and error message in request body', (done) => {
-    //         const filePath = 'tests/_files/testItemsInvalid.csv'
-    //         supertest(app).post('/entry/import')
-    //             .set(testUtil.adminAuthHeaders)
-    //             .attach('file', filePath)
-    //             .expect((res) => testUtil.matchResponseText(res, CSV_FAIL_MESSAGE)) // checks for success message in response html body
-    //             .expect(200)
-    //             .end(async (err, res) => {
-    //                 // Clear imported volunteers
-    //                 await dbUtil.preTestSetup();
-    //                 if (err) done(err);
-    //                 else done();
-    //             });
-    //     });
-    // });
+    describe('POST /entry/import - upload invalid items CSV', () => {
+        it('expect success 200 status and error message in request body', (done) => {
+            const filePath = 'tests/_files/testItemsInvalid.csv'
+            supertest(app).post('/entry/import')
+                .set(testUtil.adminAuthHeaders)
+                .field('fromExport', 'on')
+                .attach('file', filePath)
+                .expect((res) => testUtil.matchResponseText(res, CSV_FAIL_MESSAGE)) // checks for success message in response html body
+                .expect(200)
+                .end(async (err, res) => {
+                    // Clear imported items
+                    await dbUtil.preTestSetup();
+                    if (err) done(err);
+                    else done();
+                });
+        });
+    });
 
     describe('POST /entry/import - invalid filetype for CSV upload', () => {
         it('expect success 200 status and filetype error message in request body', (done) => {

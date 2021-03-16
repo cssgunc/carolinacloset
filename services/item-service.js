@@ -783,32 +783,38 @@ exports.importCsv = async function (data, fromExport, withHeaders) {
                         item['color'] = entry[j++];
                         item['count'] = entry[j++];
 
-                        let newItem = await Item.create(item);
-                        size['id'] = newItem.get('id');
+                        try {
+                            let newItem = await Item.create(item);
 
-                        let type = item['type'];
+                            size['id'] = newItem.get('id');
 
-                        // Add size field depending on the item
-                        if (type === 'shirts') {
-                            size['size'] = entry[j];
-                            await Shirts.create(size);
-                        } else if (type === 'shoes') {
-                            size['size'] = entry[j];
-                            await Shoes.create(size);
-                        } else if (type === 'pants') {
-                            size['waist'] = entry[j++];
-                            size['length'] = entry[j];
-                            await Pants.create(size);
-                        } else if (type === 'suits') {
-                            size['chest'] = entry[j++];
-                            size['sleeve'] = entry[j++];
-                            await Suits.create(size);
-                        } else {
-                            throw new InternalErrorException("Item type not valid");
+                            let type = item['type'];
+
+                            // Add size field depending on the item
+                            if (type === 'shirts') {
+                                size['size'] = entry[j];
+                                await Shirts.create(size);
+                            } else if (type === 'shoes') {
+                                size['size'] = entry[j];
+                                await Shoes.create(size);
+                            } else if (type === 'pants') {
+                                size['waist'] = entry[j++];
+                                size['length'] = entry[j];
+                                await Pants.create(size);
+                            } else if (type === 'suits') {
+                                size['chest'] = entry[j++];
+                                size['sleeve'] = entry[j++];
+                                await Suits.create(size);
+                            } else {
+                                throw new InternalErrorException("Item type not valid");
+                            }
+
+                            // Add to array for final result
+                            newItems.push(newItem);
+                        } catch (e) {
+                            console.error("A problem occurred when importing the items", e);
+                            reject(e);
                         }
-
-                        // Add to array for final result
-                        newItems.push(newItem);
                     }
                     
                     // Resolve promise

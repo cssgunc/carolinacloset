@@ -20,32 +20,31 @@
       </div>
     </div>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-          <% if (response && response.items) {%>
-          <% response.items.forEach((item) => {%>
-            <% if (item.count > 0) {%>
-              <div class="col">
-                <div class="card mb-3" style="width: 16rem;">
-                  <img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
-                  <div class="card-body">
-                    <h5 class="card-title"><%= item.name %></h5>
-                    <div class="btn-group" role="group">
-                      <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
-                        data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                        data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
-                      <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
-                        data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                        data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
-                      <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
-                        data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                        data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
-                      </div>
-                    </div>
-                    </div>
+      <% if (response && response.items) {%>
+      <% response.items.forEach((item) => {%>
+        <% if (item.count > 0) {%>
+          <div class="col">
+            <div class="card mb-3" style="width: 16rem;">
+              <img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title"><%= item.name %></h5>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
+                    data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                    data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
+                  <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
+                    data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                    data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
+                  <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
+                    data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                    data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
+                  </div>
                 </div>
               </div>
-            <% } %>
-          <% }); %>
-          <% } %>
+          </div>             
+        <% } %>
+      <% }); %>
+      <% } %>
     </div>
   </div>
   <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
