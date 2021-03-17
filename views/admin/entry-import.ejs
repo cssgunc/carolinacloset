@@ -13,16 +13,13 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="alert alert-secondary">
-          <p>Expected formats:</p>
+          <p>Expected format examples:</p>
           <ul>
-            <li>item name, quantity</li>
-            <li>item id, item name, count, createdAt, updatedAt (export format)</li>
+            <li>(id), name, type, gender, image, brand, color, count, (size), (waist), (length), (chest), (sleeve)</li>
           </ul>
-          <p>The following fields are required:</p>
-          <ul>
-            <li>item name</li>
-            <li>count</li>
-          </ul>
+          <p>These fields are expected in this order</p>
+          <p>The id field is required if you're importing a file exported from this program.</p>
+          <p>The size, waist, length, chest, and sleeve fields depend on the type of item, but are expected in this order</p>
         </div>
       </div>
     </div>
@@ -30,6 +27,14 @@
       <div class="col-sm-12">
         <form method="POST" encType="multipart/form-data">
           <label for="file">Upload a CSV file</label>
+          <div class="form-group">
+            <input class="form-check-input" type="checkbox" id="fromExport" name='fromExport'>
+            <label class="form-check-label" for="fromExport">File was exported from this program</label>
+          </div>
+          <div class="form-group">
+            <input class="form-check-input" type="checkbox" id="withHeaders" name='withHeaders'>
+            <label class="form-check-label" for="withHeaders">File has column headers in the first row</label>
+          </div>
           <div class="form-group">
             <input type="file" class="form-control-file" id="file" name="file">
           </div>

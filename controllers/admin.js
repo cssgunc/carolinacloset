@@ -8,12 +8,13 @@ const express = require("express"),
     userIsAdmin = require("./util/auth.js").userIsAdmin,
     dbUtil = require("../db/db-util"),
     copyTo = require('pg-copy-streams').to,
-    { Client } = require('pg'),
+    pgp = require('pg-promise'),
+    { Pool } = require('pg'),
     fs = require('fs');
 
 /**
  * Route serving the admin home page
- */ 
+ */
 router.get('/', [userIsAdmin], async function (req, res, next) {
     let response = {};
     res.render("admin/admin.ejs", { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
@@ -64,7 +65,7 @@ router.post('/users/edit', [userIsAdmin], async function (req, res, next) {
             res.status(403).send("Cannot edit ORDER admin");
             return;
         }
-        
+
         let type = req.body.type;
         let pid = req.body.pid;
         let email = req.body.email;
@@ -158,7 +159,7 @@ router.post('/users/import', [userIsAdmin], async function (req, res, next) {
                 let result = await userService.appendCsvUsers(file);
                 if (result) response.success = "CSV file successfully imported!";
                 else response.error = "An unknown error occurred.";
-    
+
             } catch (e) {
                 response.error = exceptionHandler.retrieveException(e);
             }
@@ -178,45 +179,142 @@ router.get('/backup', [userIsAdmin], async function (req, res, next) {
 });
 
 /**
- * Route serving a CSV copy of the Items table
+ * Creates the query string for downloading items CSVs depending on the item type
+ * @param {string} itemType from shirts, pants, shoes, suits denotes the type of item to download
+ * @returns a copy query string for the given item type
  */
-router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
-    let data = '';
-
-    let client = new Client({
-        database: process.env.DATABASE_NAME,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        host: process.env.DATABASE_HOST,
-        port: process.env.DATABASE_PORT
-    });
-
-    if (process.env.NODE_ENV === 'prod') {
-        client.host = process.env.POSTGRESQL_SERVICE_HOST;
-        client.port = process.env.POSTGRESQL_SERVICE_PORT;
+let createDownloadItemQuery = function(itemType) {
+    if (itemType === 'shirts' || itemType === 'shoes') {
+        return pgp.as.format(
+            `COPY 
+            (SELECT
+                items.id,
+                name, 
+                type, 
+                gender, 
+                image, 
+                brand, 
+                color, 
+                count, 
+                $1:name.size
+            FROM items INNER JOIN $1:name USING(id))
+            TO STDOUT With CSV HEADER`, 
+            [itemType]);
+    } else if (itemType === 'pants') {
+        return `COPY 
+            (SELECT
+                items.id,
+                name, 
+                type, 
+                gender, 
+                image, 
+                brand, 
+                color, 
+                count, 
+                waist,
+                length
+            FROM items INNER JOIN pants USING(id))
+            TO STDOUT With CSV HEADER`
+    } else if (itemType === 'suits') {
+        return `COPY 
+            (SELECT
+                items.id,
+                name, 
+                type, 
+                gender, 
+                image, 
+                brand, 
+                color, 
+                count, 
+                chest,
+                sleeve
+            FROM items INNER JOIN suits USING(id))
+            TO STDOUT With CSV HEADER`
+    } else {
+        console.error("Invalid itemType passed, failed to create query");
+        return null;
     }
+}
 
-    client.connect(function (pgErr, client, done) {
-        if (pgErr) {
-            console.log(pgErr);
-            res.sendStatus(500);
-        }
-        var stream = client.query(copyTo(`COPY (SELECT * FROM items) TO STDOUT With CSV HEADER`));
-        stream.on('data', chunk => {
-            data += chunk;
-        })
-        stream.on('end', response => {
-            done;
-            res.set('Content-Type', 'text/csv');
-            res.send(data);
-        });
-        stream.on('error', err => {
-            done;
-            console.log(err);
-            res.sendStatus(500);
-        })
-    });
+let pool = new Pool({
+    database: process.env.DATABASE_NAME,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    host: process.env.DATABASE_HOST,
+    port: process.env.DATABASE_PORT,
+    max: 5,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
 });
+
+/**
+ * Route function for streaming and returning CSV data of the requested item type
+ * Expects a type query parameter specifying the item type to be downloaded
+ * @param {request} req 
+ * @param {response} res 
+ * @param {function} next 
+ */
+let downloadItemCSV = async function (req, res, next) {
+    let itemType = req.query.type;
+
+    if (!(['shirts', 'pants', 'shoes', 'suits'].includes(itemType))) {
+        res.sendStatus(400);
+    } else {
+        let data = '';
+
+        if (process.env.NODE_ENV === 'prod') {
+            pool.host = process.env.POSTGRESQL_SERVICE_HOST;
+            pool.port = process.env.POSTGRESQL_SERVICE_PORT;
+        }
+
+        pool.connect(function (pgErr, client, done) {
+            if (pgErr) {
+                console.log(pgErr);
+                res.sendStatus(500);
+            }
+
+            const query = createDownloadItemQuery(itemType);
+            if (query === null) {
+                res.sendStatus(500);
+            } else {
+                var stream = client.query(copyTo(query));
+                stream.on('data', chunk => {
+                    data += chunk;
+                })
+                stream.on('end', response => {
+                    done();
+                    res.set('Content-Type', 'text/csv');
+                    res.send(data);
+                });
+                stream.on('error', err => {
+                    done();
+                    console.log(err);
+                    res.sendStatus(500);
+                });
+            }
+        });
+    }
+}
+
+/**
+ * Route serving a CSV copy of the Shirts table
+ */
+router.get('/backup/shirts.csv', [userIsAdmin], downloadItemCSV);
+
+/**
+ * Route serving a CSV copy of the Pants table
+ */
+ router.get('/backup/pants.csv', [userIsAdmin], downloadItemCSV);
+
+ /**
+ * Route serving a CSV copy of the Shoes table
+ */
+router.get('/backup/shoes.csv', [userIsAdmin], downloadItemCSV);
+
+/**
+ * Route serving a CSV copy of the Suits table
+ */
+ router.get('/backup/suits.csv', [userIsAdmin], downloadItemCSV);
 
 /**
  * Route serving a CSV copy of the Transactions table
@@ -224,21 +322,12 @@ router.get('/backup/items.csv', [userIsAdmin], async function (req, res, next) {
 router.get('/backup/transactions.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
-    let client = new Client({
-        database: process.env.DATABASE_NAME,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        host: process.env.DATABASE_HOST,
-        port: process.env.DATABASE_PORT
-
-    });
-
     if (process.env.NODE_ENV === 'prod') {
-        client.host = process.env.POSTGRESQL_SERVICE_HOST;
-        client.port = process.env.POSTGRESQL_SERVICE_PORT;
+        pool.host = process.env.POSTGRESQL_SERVICE_HOST;
+        pool.port = process.env.POSTGRESQL_SERVICE_PORT;
     }
 
-    client.connect(function (pgErr, client, done) {
+    pool.connect(function (pgErr, client, done) {
         if (pgErr) {
             console.log(pgErr);
             res.sendStatus(500);
@@ -248,12 +337,12 @@ router.get('/backup/transactions.csv', [userIsAdmin], async function (req, res, 
             data += chunk;
         })
         stream.on('end', response => {
-            done;
+            done();
             res.set('Content-Type', 'text/csv');
             res.send(data);
         });
         stream.on('error', err => {
-            done;
+            done();
             console.log(err);
             res.sendStatus(500);
         })
@@ -266,20 +355,12 @@ router.get('/backup/transactions.csv', [userIsAdmin], async function (req, res, 
 router.get('/backup/users.csv', [userIsAdmin], async function (req, res, next) {
     let data = '';
 
-    let client = new Client({
-        database: process.env.DATABASE_NAME,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        host: process.env.DATABASE_HOST,
-        port: process.env.DATABASE_PORT
-    });
-
     if (process.env.NODE_ENV === 'prod') {
-        client.host = process.env.POSTGRESQL_SERVICE_HOST;
-        client.port = process.env.POSTGRESQL_SERVICE_PORT;
+        pool.host = process.env.POSTGRESQL_SERVICE_HOST;
+        pool.port = process.env.POSTGRESQL_SERVICE_PORT;
     }
 
-    client.connect(function (pgErr, client, done) {
+    pool.connect(function (pgErr, client, done) {
         if (pgErr) {
             console.log(pgErr);
             res.sendStatus(500);
@@ -289,12 +370,12 @@ router.get('/backup/users.csv', [userIsAdmin], async function (req, res, next) {
             data += chunk;
         })
         stream.on('end', response => {
-            done;
+            done();
             res.set('Content-Type', 'text/csv');
             res.send(data);
         });
         stream.on('error', err => {
-            done;
+            done();
             console.log(err);
             res.sendStatus(500);
         })

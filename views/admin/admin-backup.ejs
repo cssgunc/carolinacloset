@@ -19,9 +19,34 @@
         </form>
       </div>
       <div class="col-sm-12">
-        <form method="GET" action="/admin/backup/items.csv">
+        <form method="GET" action="/admin/backup/shirts.csv">
           <div class="form-group">
-            <input class="btn btn-primary btn-lg" type="submit" value="Download Items">
+            <input type="hidden" name="type" value="shirts" /> 
+            <input class="btn btn-primary btn-lg" type="submit" value="Download Shirts">
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-12">
+        <form method="GET" action="/admin/backup/pants.csv">
+          <div class="form-group">
+            <input type="hidden" name="type" value="pants" /> 
+            <input class="btn btn-primary btn-lg" type="submit" value="Download Pants">
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-12">
+        <form method="GET" action="/admin/backup/shoes.csv">
+          <div class="form-group">
+            <input type="hidden" name="type" value="shoes" /> 
+            <input class="btn btn-primary btn-lg" type="submit" value="Download Shoes">
+          </div>
+        </form>
+      </div>
+      <div class="col-sm-12">
+        <form method="GET" action="/admin/backup/suits.csv">
+          <div class="form-group">
+            <input type="hidden" name="type" value="suits" /> 
+            <input class="btn btn-primary btn-lg" type="submit" value="Download Suits">
           </div>
         </form>
       </div>

@@ -1,3 +1,3 @@
-12,Blue Pants,,pants,
-13,White Shirt,,female,1
-Brown Shoes,,shoes,male,brown,"Sperry's",2
+id,name,type,gender,image,brand,color,count,size,createdAt,updatedAt
+a306721a-5685-420b-a7db-e0615d4491aa,female Target shirts,shirts,female,,Target,multicolored,ten,S,2021-02-05 13:56:55.927-05,2021-02-05 13:56:55.927-05
+e02a237a-1ec5-4d6e-a86c-fda70dc0fd76,male UNC shoes,shoes,male,,UNC,navy,eleven,10,2021-02-05 13:57:45.643-05,2021-02-05 13:57:45.643-05
