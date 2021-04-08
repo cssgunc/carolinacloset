@@ -33,7 +33,7 @@
                 <div class="card-body">
                   <h5 class="card-title"><%= item.name %></h5>
                   <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Color: <%= item.color%></li>
+                    <li class="list-group-item">Color: <%= item.color.charAt(0).toUpperCase() + item.color.slice(1)%></li>
                     <% if (item.shoes) {%>
                       <li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
                     <% } %>
