@@ -109,7 +109,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form name="editForm" id="editForm" action="/entry/edit" method="POST">
+          <form name="editForm" id="editForm" action="/entry/edit" method="POST" onsubmit="return setBase64(event)">
             <div class="form-group">
               <input class="form-control" type="text" name="id" id="editModalId" readonly hidden aria-label="item id">
             </div>
@@ -142,8 +142,33 @@
                 <option value="multicolored">Multicolored</option>
               </select>
             </div>
+            <div class="form-group ">
+              <label for="brand">Upload an image</label>
+              <input type="file" name="image" id="imageUpload">
+            </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary" id="submitEdit">Submit</button>
+            <script>
+              async function setBase64(e) {
+                e.preventDefault();
+
+                file = document.getElementById("imageUpload").files[0];
+                if (file == null) {
+                  e.target.submit();
+                  return;
+                }
+                var reader = new FileReader(e);
+                e.preventDefault();
+                reader.readAsDataURL(file);
+                reader.onload = async function () {
+                  e.target.submit();
+                };
+                
+                reader.onerror = function (error) {
+                  console.log('Error: ', error);
+                };
+				      }
+            </script>
           </form>
         </div>
       </div>
