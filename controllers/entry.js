@@ -285,7 +285,7 @@ router.post("/edit", [userIsAdmin], async function (req, res) {
     let color = req.body.color;
     let name = gender.charAt(0).toUpperCase() + gender.slice(1) + " " + brand + " " + type.charAt(0).toUpperCase() + type.slice(1);
     try {
-        await itemService.editItem(id, name, type, gender, image, brand, color);
+        await itemService.editItem(id, name, gender, image, brand, color);
     } catch (e) {
         response.error = exceptionHandler.retrieveException(e);
     }
