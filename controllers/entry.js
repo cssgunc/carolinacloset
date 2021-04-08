@@ -122,7 +122,7 @@ router.post("/manual", [userIsAdmin], async function (req, res) {
                 return;
             }
         }
-        let item = await itemService.createItem((gender + " " + brand + " " + type), type, gender, image, brand, color, count, size);
+        let item = await itemService.createItem((gender.charAt(0).toUpperCase() + gender.slice(1) + " " + brand + " " + type.charAt(0).toUpperCase() + type.slice(1)), type, gender, image, brand, color, count, size);
         if (item) {
             response.success = 'New item successfully created, id: ' + item.id;
         } else {

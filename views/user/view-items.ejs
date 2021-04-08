@@ -127,47 +127,49 @@
 			<div class="col-10 w-100">
 				<h1 style="text-transform:capitalize;"><%= title ? title : "Current Inventory"%></h1>
 				<div class="row row-cols-1 row-cols-md-3 g-4">
-							<% if (response && response.items) {%>
-							<% response.items.forEach((item) => {%>
-								<% if (item.count > 0) {%>
-									<div class="col">
-									<div class="card mb-3" style="width: 16rem;">
+					<% if (response && response.items) {%>
+						<% response.items.forEach((item) => {%>
+							<% if (item.count > 0) {%>
+								<div class="col" style="margin-right: 0;">
+									<div class="card mb-3" style="width: 16rem; height: 36rem;">
 										<% if (item.image) {%>
 											<img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
 										<% } else {%>
-											<img src="/static/favicon.png" class="card-img-top" alt="...">
+											<img src="/static/favicon.png" class="card-img-top" height="254px" witdth="254px" alt="...">
 										<% } %>
 										<div class="card-body">
-										<h5 class="card-title"><%= item.name%></h5>
-										<ul class="list-group list-group-flush">
-											<li class="list-group-item">Color: <%= item.color%></li>	
-											<% if (item.shoes) {%>
-												<li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
-											<% } %>
-											<% if (item.pants) {%>
-												<li class="list-group-item">Waist Size: <%= item.pants.dataValues.waist%></li>
-												<li class="list-group-item">Length: <%= item.pants.dataValues.length%></li>
-											<% } %>
-											<% if (item.shirts) {%>
-												<li class="list-group-item">Size: <%= item.shirts.dataValues.size%></li>
-											<% } %>
-											<% if (item.suits) {%>
-												<li class="list-group-item">Chest Size: <%= item.suits.dataValues.chest%></li>
-												<li class="list-group-item">Sleeve Length: <%= item.suits.dataValues.sleeve%></li>
-											<% } %>
+											<h5 class="card-title"><%= item.name%></h5>
+											<ul class="list-group list-group-flush">
+												<li class="list-group-item">Color: <%= item.color%></li>
+												<% if (item.shoes) {%>
+													<li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
+												<% } %>
+												<% if (item.pants) {%>
+													<li class="list-group-item">Waist Size: <%= item.pants.dataValues.waist%></li>
+													<li class="list-group-item">Length: <%= item.pants.dataValues.length%></li>
+												<% } %>
+												<% if (item.shirts) {%>
+													<li class="list-group-item">Size: <%= item.shirts.dataValues.size%></li>
+												<% } %>
+												<% if (item.suits) {%>
+													<li class="list-group-item">Chest Size: <%= item.suits.dataValues.chest%></li>
+													<li class="list-group-item">Sleeve Length: <%= item.suits.dataValues.sleeve%></li>
+												<% } %>
 												<li class="list-group-item">In Stock: <%= item.count%></li>
-												<li class="list-group-item"><div class="btn-group">
-													<div class="btn-group" role="group">
-														<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>">Add to Cart</button>
+												<li class="list-group-item">
+													<div class="btn-group">
+														<div class="btn-group" role="group">
+															<button type="button" class="btn btn-success addToCartButton" data-id="<%= item.id %>" data-name="<%= item.name %>">Add to Cart</button>
+														</div>
 													</div>
-												</div></li>
+												</li>
 											</ul>
-									</div>
+										</div>
 									</div>
 								</div>
-								<% } %>
-							<% }); %>
 							<% } %>
+						<% }); %>
+					<% } %>
 				</div>
 			</div>
 		</div>
