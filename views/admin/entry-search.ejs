@@ -20,54 +20,52 @@
       </div>
     </div>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-          <% if (response && response.items) {%>
-          <% response.items.forEach((item) => {%>
-            <% if (item.count > 0) {%>
-              <div class="col">
-                <div class="card mb-3" style="width: 16rem;">
-                  <% if (item.image) {%>
-                    <img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
-                  <% } else {%>
-                    <img src="/static/favicon.png" class="card-img-top" alt="...">
-                  <% } %>
-                  <div class="card-body">
-                    <h5 class="card-title"><%= item.name %></h5>
-                    <ul class="list-group list-group-flush">
-											<li class="list-group-item">Color: <%= item.color%></li>
-											<% if (item.shoes) {%>
-												<li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
-											<% } %>
-											<% if (item.pants) {%>
-												<li class="list-group-item">Waist Size: <%= item.pants.dataValues.waist%></li>
-												<li class="list-group-item">Length: <%= item.pants.dataValues.length%></li>
-											<% } %>
-											<% if (item.shirts) {%>
-												<li class="list-group-item">Size: <%= item.shirts.dataValues.size%></li>
-											<% } %>
-											<% if (item.suits) {%>
-												<li class="list-group-item">Chest Size: <%= item.suits.dataValues.chest%></li>
-												<li class="list-group-item">Sleeve Length: <%= item.suits.dataValues.sleeve%></li>
-											<% } %>
-											<li class="list-group-item">In Stock: <%= item.count%></li>
-										</ul>
-                    <div class="btn-group" role="group" style="margin: 1rem auto 0">
-                      <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
-                        data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                        data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
-                      <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
-                        data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                        data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
-                      <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
-                        data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                        data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
-                      </div>
-                    </div>
-                    </div>
+      <% if (response && response.items) {%>
+        <% response.items.forEach((item) => {%>
+          <% if (item.count > 0) {%>
+            <div class="col" style="padding-right: 0;">
+              <div class="card mb-3" style="width: 16rem; height: 35rem;">
+                <% if (item.image) {%>
+                  <img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
+                <% } else {%>
+                  <img src="/static/favicon.png" class="card-img-top" alt="...">
+                <% } %>
+                <div class="card-body">
+                  <h5 class="card-title"><%= item.name %></h5>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Color: <%= item.color%></li>
+                    <% if (item.shoes) {%>
+                      <li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
+                    <% } %>
+                    <% if (item.pants) {%>
+                      <li class="list-group-item">Waist Size: <%= item.pants.dataValues.waist%></li>
+                      <li class="list-group-item">Length: <%= item.pants.dataValues.length%></li>
+                    <% } %>
+                    <% if (item.shirts) {%>
+                      <li class="list-group-item">Size: <%= item.shirts.dataValues.size%></li>
+                    <% } %>
+                    <% if (item.suits) {%>
+                      <li class="list-group-item">Chest Size: <%= item.suits.dataValues.chest%></li>
+                      <li class="list-group-item">Sleeve Length: <%= item.suits.dataValues.sleeve%></li>
+                    <% } %>
+                    <li class="list-group-item">In Stock: <%= item.count%></li>
+                  </ul>
+                  <div class="btn-group" role="group" style="margin: 1rem auto 0">
+                    <button type="button" class="btn btn-success" title="Add" aria-label="Add" data-toggle="modal"
+                      data-target="#addModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                      data-count="<%= item.count %>"><i class="fas fa-plus"></i></button>
+                    <button type="button" class="btn btn-danger" title="Remove" aria-label="Remove" data-toggle="modal"
+                      data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                      data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
+                    <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
+                      data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
+                      data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
+                  </div>
                 </div>
               </div>
-          </div>             
-        <% } %>
-      <% }); %>
+            </div>           
+          <% } %>
+        <% }); %>
       <% } %>
     </div>
   </div>
