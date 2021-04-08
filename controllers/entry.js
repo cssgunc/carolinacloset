@@ -278,12 +278,12 @@ router.post("/edit", [userIsAdmin], async function (req, res) {
     let response = {};
 
     let id = req.body.id;
-    let name = req.body.name;
     let type = req.body.type;
     let gender = req.body.gender;
     let image = req.body.image;
     let brand = req.body.brand;
     let color = req.body.color;
+    let name = gender.charAt(0).toUpperCase() + gender.slice(1) + " " + brand + " " + type.charAt(0).toUpperCase() + type.slice(1);
     try {
         await itemService.editItem(id, name, type, gender, image, brand, color);
     } catch (e) {

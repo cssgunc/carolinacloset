@@ -58,7 +58,8 @@
                       data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
                       data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
                     <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
-                      data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-gender="<%= item.gender %>"
+                      data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-type="<%= item.type %>"
+                      data-gender="<%= item.gender %>" data-brand="<%= item.brand %>" data-color="<%= item.color %>"
                       data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
                   </div>
                 </div>
@@ -114,13 +115,31 @@
             </div>
             <div class="form-group">
               <label for="editModalName">Item Name</label>
-              <input class="form-control" type="text" name="name" id="editModalName" placeholder="Ex. Black Gucci Shoes">
+              <input class="form-control" type="text" name="name" id="editModalName" readonly>
+            </div>
+            <div class="form-group">
+              <label for="editModalType">Item Type</label>
+              <input class="form-control" type="text" name="type" id="editModalType" readonly>
             </div>
             <div class="form-group">
               <label for="editModalGender">Gender</label>
               <select class="form-control custom-select" id="editModalGender" name="gender">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editModalBrand">Brand</label>
+              <input class="form-control" type="text" name="brand" id="editModalBrand">
+            </div>
+            <div class="form-group">
+              <label for="editModalColor">Color:</label>
+              <select class="form-control custom-select" id="editModalColor" name="color">
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="navy">Navy</option>
+                <option value="blue">Blue</option>
+                <option value="multicolored">Multicolored</option>
               </select>
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
