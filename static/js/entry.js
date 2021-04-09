@@ -21,6 +21,7 @@ $(document).ready(function () {
         var gender = button.data('gender');
         var brand = button.data('brand');
         var color = button.data('color');
+        var image = button.data('image');
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this);
@@ -30,6 +31,7 @@ $(document).ready(function () {
         modal.find('#editModalGender').val(gender);
         modal.find('#editModalBrand').val(brand);
         modal.find('#editModalColor').val(color);
+        modal.find('#editModalImage').val(image);
     });
 
     $('#removeModal').on('show.bs.modal', function (event) {

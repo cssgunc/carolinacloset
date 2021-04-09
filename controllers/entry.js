@@ -144,7 +144,6 @@ router.post("/manual/update", [userIsAdmin], async function (req, res) {
     let id = req.body.id;
     let quantity = parseInt(req.body.quantity);
 
-
     try {
         if (quantity > 0) {
             await itemService.addItems(id, quantity, res.locals.onyen, res.locals.onyen);
@@ -285,8 +284,11 @@ router.post("/edit", [userIsAdmin], async function (req, res) {
     let color = req.body.color;
     let name = gender.charAt(0).toUpperCase() + gender.slice(1) + " " + brand + " " + type.charAt(0).toUpperCase() + type.slice(1);
     let image = null;
+    
     if (req.body.takenImage != null && req.body.takenImage != "") {
         image = await imageService.resizeImageString(req.body.takenImage);
+    } else {
+        image = req.body.currentImage;
     }
     try {
         await itemService.editItem(id, name, gender, image, brand, color);

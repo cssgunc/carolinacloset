@@ -60,7 +60,7 @@
                     <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
                       data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-type="<%= item.type %>"
                       data-gender="<%= item.gender %>" data-brand="<%= item.brand %>" data-color="<%= item.color %>"
-                      data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
+                      data-image="<%= item.image %>" data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
                   </div>
                 </div>
               </div>
@@ -146,20 +146,16 @@
               <label for="brand">Upload an image</label>
               <input type="file" name="image" id="imageUpload">
               <input type="hidden" name="takenImage" id="takenImage">
-
+              <input type="hidden" name="currentImage" id="editModalImage">
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary" id="submitEdit">Submit</button>
             <script>
-              function submitForm(event) {
-                event.target.submit()
-              }
               async function setBase64(e) {
                 e.preventDefault();
 
                 file = document.getElementById("imageUpload").files[0];
                 if (file == null) {
-                  console.log("here")
                   e.target.submit();
                   return;
                 }
@@ -167,7 +163,7 @@
                 e.preventDefault();
                 reader.readAsDataURL(file);
                 reader.onload = async function () {
-                  takenImage.value = await reader.result
+                  takenImage.value = await reader.result;
                   e.target.submit();
                 };
 
@@ -175,9 +171,7 @@
                   console.log('Error: ', error);
                 };
 				      }
-
-            </script>
-            
+            </script>          
           </form>
         </div>
       </div>

@@ -157,7 +157,6 @@
 					function startup() {
 						video = document.getElementById('video');
 						canvas = document.getElementById('canvas');
-						console.log(video)
 						startbutton = document.getElementById('startbutton');
 						navigator.mediaDevices.getUserMedia({ video: true, audio: false })
 							.then(function (stream) {
