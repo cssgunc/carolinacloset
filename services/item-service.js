@@ -616,26 +616,24 @@ exports.createItem = async function (name, type, gender, image, brand, color, co
 /**
  * Updates an existing item in the Items table
  * Does not allow editing of count
- * @param {uuid} id 
- * @param {string} name 
- * @param {enum} type 
- * @param {enum} gender 
+ * @param {uuid} id
+ * @param {string} name
+ * @param {enum} gender
  * @param {Blob} image
- * @param {string} brand 
- * @param {enum} color 
+ * @param {string} brand
+ * @param {enum} color
  */
-exports.editItem = async function (id, name, type, gender, image, brand, color) {
+exports.editItem = async function (id, name, gender, image, brand, color) {
     try {
         let item = await Item.update({
             name: name,
-            type: type,
             gender: gender,
             image: image,
             brand: brand,
             color: color,
         }, {
             where: { id, id },
-            fields: ['name', 'type', 'gender', 'image', 'brand', 'color'],
+            fields: ['name', 'gender', 'image', 'brand', 'color'],
             returning: true
         });
         return item;

@@ -24,16 +24,16 @@
         <% response.items.forEach((item) => {%>
           <% if (item.count > 0) {%>
             <div class="col" style="padding-right: 0;">
-              <div class="card mb-3" style="width: 16rem; height: 35rem;">
+              <div class="card mb-3" style="width: 16rem; height: 36rem;">
                 <% if (item.image) {%>
                   <img src="data:image/jpeg;base64,<%= item.image %>" class="card-img-top" alt="...">
                 <% } else {%>
-                  <img src="/static/favicon.png" class="card-img-top" alt="...">
+                  <img src="/static/favicon.png" class="card-img-top" height="254px" witdth="254px" alt="...">
                 <% } %>
                 <div class="card-body">
                   <h5 class="card-title"><%= item.name %></h5>
                   <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Color: <%= item.color%></li>
+                    <li class="list-group-item">Color: <%= item.color.charAt(0).toUpperCase() + item.color.slice(1)%></li>
                     <% if (item.shoes) {%>
                       <li class="list-group-item">Shoe Size: <%= item.shoes.dataValues.size%></li>
                     <% } %>
@@ -58,8 +58,9 @@
                       data-target="#removeModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
                       data-count="<%= item.count %>"><i class="fas fa-minus"></i></button>
                     <button type="button" class="btn btn-secondary" title="Edit" aria-label="Edit" data-toggle="modal"
-                      data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>"
-                      data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
+                      data-target="#editModal" data-id="<%= item.id %>" data-name="<%= item.name %>" data-type="<%= item.type %>"
+                      data-gender="<%= item.gender %>" data-brand="<%= item.brand %>" data-color="<%= item.color %>"
+                      data-image="<%= item.image %>" data-count="<%= item.count %>"><i class="fas fa-pencil-alt"></i></button>
                   </div>
                 </div>
               </div>
@@ -98,8 +99,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -109,16 +109,69 @@
           </button>
         </div>
         <div class="modal-body">
-          <form name="editForm" id="editForm" action="/entry/edit" method="POST">
+          <form name="editForm" id="editForm" action="/entry/edit" method="POST" onsubmit="return setBase64(event)">
             <div class="form-group">
               <input class="form-control" type="text" name="id" id="editModalId" readonly hidden aria-label="item id">
             </div>
             <div class="form-group">
               <label for="editModalName">Item Name</label>
-              <input class="form-control" type="text" name="name" id="editModalName" placeholder="Ex. Black Gucci Shoes">
+              <input class="form-control" type="text" name="name" id="editModalName" readonly>
+            </div>
+            <div class="form-group">
+              <label for="editModalType">Item Type</label>
+              <input class="form-control" type="text" name="type" id="editModalType" readonly>
+            </div>
+            <div class="form-group">
+              <label for="editModalGender">Gender</label>
+              <select class="form-control custom-select" id="editModalGender" name="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editModalBrand">Brand</label>
+              <input class="form-control" type="text" name="brand" id="editModalBrand">
+            </div>
+            <div class="form-group">
+              <label for="editModalColor">Color:</label>
+              <select class="form-control custom-select" id="editModalColor" name="color">
+                <option value="white">White</option>
+                <option value="black">Black</option>
+                <option value="navy">Navy</option>
+                <option value="blue">Blue</option>
+                <option value="multicolored">Multicolored</option>
+              </select>
+            </div>
+            <div class="form-group ">
+              <label for="brand">Upload an image</label>
+              <input type="file" name="image" id="imageUpload">
+              <input type="hidden" name="takenImage" id="takenImage">
+              <input type="hidden" name="currentImage" id="editModalImage">
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary" id="submitEdit">Submit</button>
+            <script>
+              async function setBase64(e) {
+                e.preventDefault();
+
+                file = document.getElementById("imageUpload").files[0];
+                if (file == null) {
+                  e.target.submit();
+                  return;
+                }
+                var reader = new FileReader(e);
+                e.preventDefault();
+                reader.readAsDataURL(file);
+                reader.onload = async function () {
+                  takenImage.value = await reader.result;
+                  e.target.submit();
+                };
+
+                reader.onerror = function (error) {
+                  console.log('Error: ', error);
+                };
+				      }
+            </script>          
           </form>
         </div>
       </div>
