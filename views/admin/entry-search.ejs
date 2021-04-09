@@ -145,15 +145,21 @@
             <div class="form-group ">
               <label for="brand">Upload an image</label>
               <input type="file" name="image" id="imageUpload">
+              <input type="hidden" name="takenImage" id="takenImage">
+
             </div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary" id="submitEdit">Submit</button>
             <script>
+              function submitForm(event) {
+                event.target.submit()
+              }
               async function setBase64(e) {
                 e.preventDefault();
 
                 file = document.getElementById("imageUpload").files[0];
                 if (file == null) {
+                  console.log("here")
                   e.target.submit();
                   return;
                 }
@@ -161,6 +167,7 @@
                 e.preventDefault();
                 reader.readAsDataURL(file);
                 reader.onload = async function () {
+                  takenImage.value = await reader.result
                   e.target.submit();
                 };
 
@@ -168,7 +175,9 @@
                   console.log('Error: ', error);
                 };
 				      }
+
             </script>
+            
           </form>
         </div>
       </div>
