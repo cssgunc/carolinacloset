@@ -7,8 +7,8 @@ const { v4: uuidv4 } = require("uuid"),
     Order = require("../db/sequelize").orders,
     Transaction = require("../db/sequelize").transactions,
     Sequelize = require("sequelize"),
-    sequelize = require("../db/sequelize"),
     userService = require("./user-service"),
+    orderService = require("./order-service"),
     BadRequestException = require("../exceptions/bad-request-exception"),
     InternalErrorException = require("../exceptions/internal-error-exception"),
     exceptionHandler = require("../exceptions/exception-handler"),
@@ -653,12 +653,11 @@ exports.editItem = async function (id, name, gender, image, brand, color) {
  * Creates a new transaction to add a specified quantity of an item
  * @param {uuid} itemId - id of item to transact
  * @param {number} quantity - quantity of item to transact
- * @param {string} onyen - onyen of visitor who is taking or donating items
- * @param {string} adminOnyen - onyen of admin who is helping the visitor
+ * @param {string} adminOnyen - onyen of admin who is creating the transaction
  */
-exports.addItems = async function (itemId, quantity, onyen, adminOnyen) {
+exports.addItems = async function (itemId, quantity, adminOnyen) {
     try {
-        await this.createTransaction(itemId, quantity, onyen, adminOnyen);
+        await this.createTransaction(itemId, quantity, adminOnyen, adminOnyen);
     } catch (e) {
         if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
         else throw e;
@@ -674,21 +673,30 @@ exports.addItems = async function (itemId, quantity, onyen, adminOnyen) {
  */
 exports.removeItems = async function (itemId, quantity, onyen, adminOnyen) {
     try {
-        await this.createTransaction(itemId, -quantity, onyen, adminOnyen);
-        let user = await userService.getUser(onyen);
+        if (onyen === adminOnyen) { // admin is manually updating item count
+            await this.createTransaction(itemId, -quantity, adminOnyen, adminOnyen);
+        } else { // admin is checking out for a visitor
+            let item = await this.getItem(itemId);
+            if (!item) {
+                throw new BadRequestException(`Item with id ${id} not found`);
+            }
+            item.quantity = quantity;
 
-        // Update first item date
-        // Create new user if they don't exist
-        if (!user) {
-            await userService.createUser(onyen, 'user', null, null);
-            await userService.updatefirstItemDate(onyen, new Date());
-        }
-        else if (!user.get('firstItemDate')) {
-            await userService.updatefirstItemDate(onyen, new Date());
-        }
+            // Update first item date
+            // Create new user if they don't exist
+            let user = await userService.getUser(onyen);
+            if (!user) {
+                await userService.createUser(onyen, 'user', null, null);
+                await userService.updatefirstItemDate(onyen, new Date());
+            } else if (!user.get('firstItemDate')) {
+                await userService.updatefirstItemDate(onyen, new Date());
+            }
 
-        // Update num items received
-        await userService.incrementItemsReceived(onyen, quantity);
+            await orderService.createOrder([item], onyen);
+
+            // Update num items received
+            await userService.incrementItemsReceived(onyen, quantity);
+        }
     } catch (e) {
         if (e instanceof InternalErrorException) throw exceptionHandler.retrieveException(e);
         else throw e;
