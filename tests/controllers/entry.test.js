@@ -215,7 +215,7 @@ describe('Entry Routes - Entry Workflow', () => {
         it('expect success HTTP 302 status', (done) => {
             let requestBody = {
                 id: itemId,
-                count: 1,
+                quantity: 1,
                 onyen: testUtil.userAuthHeaders.uid
             };
             supertest(app).post('/entry/remove')
@@ -229,7 +229,7 @@ describe('Entry Routes - Entry Workflow', () => {
         it('expect success HTTP 200 status', (done) => {
             let requestBody = {
                 id: itemId,
-                count: 1,
+                quantity: 1,
                 onyen: 'onyen'
             };
             supertest(app).post('/entry/remove')

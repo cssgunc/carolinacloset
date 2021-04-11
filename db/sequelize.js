@@ -37,7 +37,6 @@ if (process.env.POSTGRESQL_SERVICE_PORT) {
     options.port = process.env.DATABASE_PORT;
 }
 
-
 let sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, options);
 
 ; (async () => {
@@ -63,10 +62,6 @@ sequelize.items.hasOne(sequelize.suits, { foreignKey: 'id', as: "suits" })
 sequelize.items.hasOne(sequelize.shirts, { foreignKey: 'id', as: "shirts" })
 sequelize.items.hasOne(sequelize.pants, { foreignKey: 'id', as: "pants" })
 sequelize.items.hasOne(sequelize.shoes, { foreignKey: 'id', as: "shoes" })
-
-
-
-
 
 //define relationships
 sequelize.transactions.belongsTo(sequelize.users, { foreignKey: 'onyen' });

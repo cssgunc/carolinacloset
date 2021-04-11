@@ -146,7 +146,7 @@ router.post("/manual/update", [userIsAdmin], async function (req, res) {
 
     try {
         if (quantity > 0) {
-            await itemService.addItems(id, quantity, res.locals.onyen, res.locals.onyen);
+            await itemService.addItems(id, quantity, res.locals.onyen);
         } else if (quantity < 0) {
             await itemService.removeItems(id, -quantity, res.locals.onyen, res.locals.onyen);
         }
@@ -186,7 +186,7 @@ router.post("/add", [userIsAdmin], async function (req, res) {
     let quantity = parseInt(req.body.quantity);
 
     if (quantity > 0) {
-        await itemService.addItems(id, quantity, res.locals.onyen, res.locals.onyen);
+        await itemService.addItems(id, quantity, res.locals.onyen);
     }
 
     res.redirect(url.format({
@@ -197,7 +197,8 @@ router.post("/add", [userIsAdmin], async function (req, res) {
 /**
  * Route receiving quantity to remove from an existing item
  * Expects an item id, visitor onyen, and quantity in request body
- * If the visitor onyen is not in the user database, or their account info is not filled out
+ * If there is no onyen, simply decrease the count of the item
+ * If the onyen is not in the user database, or account info is not filled out
  * the admin is shown a view to update this info
  * Redirects to /entry/search
  */
@@ -208,22 +209,26 @@ router.post("/remove", [userIsAdmin], async function (req, res) {
     let onyen = req.body.onyen;
     let quantity = parseInt(req.body.quantity);
 
-    if (quantity > 0) {
-        await itemService.removeItems(id, quantity, onyen, res.locals.onyen);
-    }
+    if (onyen) {
+        if (quantity > 1) { // prevent visitors from checking out with more than one of the same item
+            response.error = 'Visitors cannot checkout more than one of each item. Please try again';
+            res.render('admin/entry.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType });
+            return;
+        } else if (quantity == 1) {
+            await itemService.removeItems(id, quantity, onyen, res.locals.onyen);
 
-    let user = await userService.getUser(onyen);
-
-    if (!user) {
-        user = await userService.createUser(onyen, 'user', null, null);
-    }
-    // If user is missing account info, render a view for the admin to fill out the user's info
-    if (!user.get('pid') || !user.get('email')) {
-        response.onyen = onyen;
-        response.pid = user.get('pid');
-        response.email = user.get('email');
-        res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
-        return;
+            let user = await userService.getUser(onyen);
+            // If user is missing account info, render a view for the admin to fill out the user's info
+            if (!user.get('pid') || !user.get('email')) {
+                response.onyen = onyen;
+                response.pid = user.get('pid');
+                response.email = user.get('email');
+                res.render('admin/entry-update-info.ejs', { response: response, onyen: res.locals.onyen, userType: res.locals.userType })
+                return;
+            }
+        }
+    } else if (quantity > 0) { // no onyen specified, so just update the count to remove items from inventory
+        await itemService.removeItems(id, quantity, res.locals.onyen, res.locals.onyen);
     }
 
     res.redirect(url.format({
